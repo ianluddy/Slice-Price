@@ -1,6 +1,8 @@
+from threading import Queue
 from threading import Thread
 from parsers import dominos
-from worker import Worker
+from collector import Collector
+from keeper import Keeper
 from flask import Flask
 from utils import *
 
@@ -15,14 +17,18 @@ setup_logger(app, configuration["log"])
 # DB
 from pizza import models
 
-# Parsers
-parsers = [
-    dominos.Dominos()
-]
+# Data queue
+data_queue = Queue()
 
-# Worker
-worker = Worker(parsers, models.db, configuration["sync_freq"])
-thread = Thread(target=worker.run)
+# Collection
+parsers = [dominos.Dominos()]
+collector = Collector(parsers, configuration["sync_freq"], data_queue)
+thread = Thread(target=collector.run)
+thread.start()
+
+# Persistence
+keeper = Keeper(data_queue)
+thread = Thread(target=collector.run)
 thread.start()
 
 # Views
