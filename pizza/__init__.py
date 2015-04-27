@@ -1,16 +1,32 @@
-from flask import Flask, url_for
-import os
+from threading import Thread
+from parsers import dominos
+from worker import Worker
+from flask import Flask
+from utils import *
 
-pizza = Flask(__name__)
+# Config
+configuration = read_config_file("D:\pizza.json")
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = configuration["database"]
 
-# Determines the destination of the build. Only usefull if you're using Frozen-Flask
-pizza.config['FREEZER_DESTINATION'] = os.path.dirname(os.path.abspath(__file__))+'/../build'
+# Logging
+setup_logger(app, configuration["log"])
 
-# Function to easily find your assets
-# In your template use <link rel=stylesheet href="{{ static('filename') }}">
-pizza.jinja_env.globals['static'] = (
-    lambda filename: url_for('static', filename = filename)
-)
+# DB
+from pizza import models
 
+# Parsers
+parsers = [
+    dominos.Dominos()
+]
+
+# Worker
+worker = Worker(parsers, models.db, configuration["sync_freq"])
+thread = Thread(target=worker.run)
+thread.start()
+
+# Views
 from pizza import views
-from pizza import main
+
+# Run
+app.run()

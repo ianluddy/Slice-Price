@@ -1,7 +1,6 @@
+from lxml import html
+import requests
 from logging.handlers import RotatingFileHandler
-from devices import emulator
-import os
-import datetime
 import logging
 import json
 
@@ -18,3 +17,8 @@ def setup_logger(app, log_file):
     app.logger.addHandler(handler)
     app.logger.addHandler(logging.StreamHandler())
     app.logger.setLevel(logging.INFO)
+
+def get(url):
+    page = requests.get(url)
+    tree = html.fromstring(page.text)
+    return tree
