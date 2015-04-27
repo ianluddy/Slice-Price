@@ -13,3 +13,4 @@ pizza.jinja_env.globals['static'] = (
 )
 
 from pizza import views
+from pizza import main
