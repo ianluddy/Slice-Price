@@ -1,3 +1,4 @@
+from uuid import uuid5, NAMESPACE_DNS
 from lxml import html
 import requests
 from logging.handlers import RotatingFileHandler
@@ -9,14 +10,20 @@ def read_config_file(config_file):
         cfg_json = json.loads(f.read())
     return cfg_json
 
+def make_uuid(string):
+    return str(uuid5(NAMESPACE_DNS, string))
+
 def setup_logger(app, log_file):
-    handler = RotatingFileHandler(log_file, maxBytes=10000, backupCount=1)
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    logger = logging.getLogger()
+    handler = RotatingFileHandler(log_file, maxBytes=10000, backupCount=2) # File handler
+    formatter = logging.Formatter('%(asctime)s:%(levelname)s:[%(module)s:%(lineno)d]:[%(threadName)s]:%(message)s')
     handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
-    app.logger.addHandler(logging.StreamHandler())
-    app.logger.setLevel(logging.INFO)
+    logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+    ch = logging.StreamHandler() # Stream handler
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
 
 def get(url):
     page = requests.get(url)

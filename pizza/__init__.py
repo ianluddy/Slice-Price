@@ -1,35 +1,36 @@
-from threading import Queue
+from Queue import Queue
 from threading import Thread
-from parsers import dominos
+from vendors import dominos
+from database import Database
 from collector import Collector
 from keeper import Keeper
+from flask_pymongo import PyMongo, MongoClient
 from flask import Flask
-from utils import *
+from utils import setup_logger, read_config_file
 
 # Config
-configuration = read_config_file("D:\pizza.json")
+cfg = read_config_file("D:\pizza.json")
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = configuration["database"]
 
 # Logging
-setup_logger(app, configuration["log"])
+setup_logger(app, cfg["log_file"])
 
 # DB
-from pizza import models
-
-# Data queue
-data_queue = Queue()
+PyMongo(app)
+app.config['MONGO_DBNAME'] = cfg["database"]["name"]
+db_client = MongoClient(cfg["database"]["host"], cfg["database"]["port"])
+db_wrapper = Database(
+    db_client[cfg["database"]["name"]],
+    reset_db=cfg["database"]["reset"]
+)
 
 # Collection
-parsers = [dominos.Dominos()]
-collector = Collector(parsers, configuration["sync_freq"], data_queue)
-thread = Thread(target=collector.run)
-thread.start()
+pizza_queue = Queue()
+vendors = [dominos.Dominos()]
+Thread(target=Collector(vendors, cfg["collection_freq"], pizza_queue).run).start()
 
 # Persistence
-keeper = Keeper(data_queue)
-thread = Thread(target=collector.run)
-thread.start()
+Thread(target=Keeper(db_wrapper, pizza_queue).run).start()
 
 # Views
 from pizza import views
