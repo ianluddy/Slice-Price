@@ -1,12 +1,16 @@
 import abc
 from ..objects.pizza import Pizza
 from ..utils import make_uuid
+from selenium import webdriver
 
 class Vendor():
     __metaclass__  = abc.ABCMeta
 
     # Toppings normaliser. For converting things like "Smoked Bacon Rashers" to "bacon"
     toppings = {}
+    # web_driver = webdriver.Firefox()
+    web_driver = webdriver.Chrome('C:\\chromeDRIVER.exe', service_args=['--ignore-ssl-errors=true'])
+    # web_driver = webdriver.PhantomJS('C:\\phantomjs.exe', service_args=['--ignore-ssl-errors=true'])
 
     def __init__(self):
         self.name = self.__class__.__name__

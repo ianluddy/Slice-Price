@@ -1,6 +1,4 @@
 from uuid import uuid5, NAMESPACE_DNS
-from lxml import html
-import requests
 from logging.handlers import RotatingFileHandler
 import logging
 import json
@@ -24,8 +22,3 @@ def setup_logger(app, log_file):
     ch.setLevel(logging.INFO)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
-
-def get(url):
-    page = requests.get(url)
-    tree = html.fromstring(page.text)
-    return tree
