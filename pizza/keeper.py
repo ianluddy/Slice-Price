@@ -1,3 +1,4 @@
+import logging
 
 class Keeper():
 
@@ -5,5 +6,11 @@ class Keeper():
         self.db = db
         self.queue = queue
 
+    def _keep(self, batch):
+        self.db.insert_pizzas(batch["vendor"], batch["pizza"])
+
     def run(self):
-        pass
+        logging.info("Keeper Running")
+        while True:
+            self._keep(self.queue.get())
+            self.queue.task_done()
