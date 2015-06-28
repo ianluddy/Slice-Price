@@ -1,16 +1,19 @@
 import abc
+import logging
 from ..objects.pizza import Pizza
 from ..utils import make_uuid
-from selenium import webdriver
 
 class Vendor():
-    __metaclass__  = abc.ABCMeta
+    __metaclass__ = abc.ABCMeta
 
-    # Toppings normaliser. For converting things like "Smoked Bacon Rashers" to "bacon"
+    # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "bacon"
     toppings = {}
-    # web_driver = webdriver.Firefox()
-    web_driver = webdriver.Chrome('C:\\chromeDRIVER.exe', service_args=['--ignore-ssl-errors=true'])
-    # web_driver = webdriver.PhantomJS('C:\\phantomjs.exe', service_args=['--ignore-ssl-errors=true'])
+
+    # Diameter dict. For converting "large" to 13.5
+    diameters = {}
+
+    # Slice dict. For converting "large" to 10
+    slices = {}
 
     def __init__(self):
         self.name = self.__class__.__name__
@@ -22,24 +25,47 @@ class Vendor():
     def _normalise_topping(self, topping):
         return self.toppings[topping] if topping in self.toppings else topping
 
+    def _diameter_from_size(self, size):
+        return self.diameters.get(size, -1)
+
+    def _slices_from_size(self, size):
+        return self.slices.get(size, -1)
+
     def _new_pizza(self, name, toppings, size, diameter, price, base, slices):
+        print "+PIZZA: %s %s %s %s %s %s %s" % (name, toppings, size, diameter, price, base, slices)
         return Pizza(self.id, name, self._normalise_toppings(toppings), size, diameter, price, base, slices)
+
+    def get(self):
+
+        def _get(func):
+            try:
+                return func()
+            except Exception, e:
+                logging.error("GET Error [%s] [%s]" % (self.name, str(func)), exc_info=True)
+
+        return {
+            "vendor": self.id,
+            "pizza": _get(self._get_pizzas),
+            "meals": _get(self._get_meals),
+            "sides": _get(self._get_sides),
+            "desserts": _get(self._get_desserts)
+        }
 
     #### Implement ####
 
     @abc.abstractmethod
-    def get_pizzas(self):
+    def _get_pizzas(self):
         """ Get list of Pizzas """
 
     @abc.abstractmethod
-    def get_meals(self):
+    def _get_meals(self):
         """ Get list of Meals """
 
     @abc.abstractmethod
-    def get_sides(self):
+    def _get_sides(self):
         """ Get list of Sides """
 
     @abc.abstractmethod
-    def get_desserts(self):
+    def _get_desserts(self):
         """ Get list of Desserts """
 

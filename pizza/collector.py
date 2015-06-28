@@ -11,16 +11,7 @@ class Collector():
 
     def _collect(self):
         for vendor in self.vendors:
-            self.queue.put(self._get_vendor_data(vendor))
-
-    def _get_vendor_data(self, vendor):
-        return {
-            "vendor": vendor.id,
-            "pizza": vendor.get_pizzas(),
-            "meals": vendor.get_meals(),
-            "sides": vendor.get_sides(),
-            "desserts": vendor.get_desserts()
-        }
+            self.queue.put(vendor.get())
 
     def run(self):
         logging.info("Collector Running")

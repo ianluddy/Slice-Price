@@ -7,7 +7,14 @@ class Keeper():
         self.queue = queue
 
     def _keep(self, batch):
-        self.db.insert_pizzas(batch["vendor"], batch["pizza"])
+
+        def _insert(func, vendor, data):
+            if data:
+                func(vendor, data)
+            else:
+                logging.error("Empty data set [%s]" % str(func))
+
+        _insert(self.db.insert_pizzas, batch["vendor"], batch["pizza"])
 
     def run(self):
         logging.info("Keeper Running")
