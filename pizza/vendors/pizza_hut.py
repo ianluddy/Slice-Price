@@ -1,9 +1,10 @@
-class Dominos(Vendor, Parser):
+from pizza.objects.vendor import Vendor
+from pizza.objects.parser import Parser
+
+class PizzaHut(Vendor, Parser):
 
     toppings = {
-        "smoked bacon rashers": "bacon",
-        "baby spinach": "spinach",
-        "sunblush baby tomatoes": "tomatoes"
+
     }
 
     diameters = {
@@ -16,8 +17,7 @@ class Dominos(Vendor, Parser):
     slices = {
         "large": 10,
         "medium": 8,
-        "small": 6,
-        "personal": 4
+        "small": 6
     }
 
     def _get_pizzas(self):

@@ -64,29 +64,74 @@ class Dominos(Vendor, Parser):
         return _get_links("Gourmet Pizzas") + _get_links("Speciality Pizzas")
 
     def _parse_pizza_group(self, link):
-        # Wait
-        self.web_driver.get(link)
-        self._wait_for_alert()
-        sleep(2)
-        self._wait_for_css(".pizza-name > h1")
 
-        # Get pizza group info
-        title = self._get_css_txt(".pizza-name > h1").lower()
-        toppings = [t.strip().lower() for t in self._get_css_txt(".selected-toppings p").split(",")]
-        pizzas = []
+        def _wait_for_load():
+            self.web_driver.get(link)
+            self._wait_for_alert()
+            sleep(2)
+            self._wait_for_css(".pizza-name > h1")
 
-        def _select_size(element):
-            element.click()
-            sleep(1)
+        def _get_group_info():
+            title = self._get_css_txt(".pizza-name > h1").lower()
+            toppings = [t.strip().lower() for t in self._get_css_txt(".selected-toppings p").split(",")]
+            return title, toppings
+
+        # def _select_size(element):
+        #     element.click()
+        #     sleep(1)
+        #     size = self._get_css_txt("#size-selector > .selection > span").split(" ")[0].lower()
+        #     price = self._get_str_fl(self._get_css_txt(".pizza-price > h2"))
+        #     return size, self._diameter_from_size(size), self._slices_from_size(size), price
+
+        def _open_size_panel():
+            if not self.web_driver.find_elements_by_class_name("pizza-size"):
+                self.web_driver.find_element_by_id("size").click()
+                self._wait_for_cl("pizza-size")
+
+        def _open_crust_panel():
+            if not self.web_driver.find_elements_by_class_name("crust-type"):
+                self.web_driver.find_element_by_id("crust").click()
+                self._wait_for_cl("crust-type")
+
+        def _get_size_elements():
+            return self.web_driver.find_elements_by_class_name("pizza-size")
+
+        def _get_crust_elements():
+            return self.web_driver.find_elements_by_class_name("crust-type")
+
+        def _snapshot_selection():
             size = self._get_css_txt("#size-selector > .selection > span").split(" ")[0].lower()
             price = self._get_str_fl(self._get_css_txt(".pizza-price > h2"))
-            return size, self._diameter_from_size(size), self._slices_from_size(size), price
+            return self._new_pizza(
+                title,
+                toppings,
+                size,
+                self._diameter_from_size(size),
+                price,
+                "classic",
+                self._slices_from_size(size)
+            )
 
         # Grab details for each size
-        self.web_driver.find_element_by_id("size").click()
-        self._wait_for_cl("pizza-size")
-        for btn in self.web_driver.find_elements_by_class_name("pizza-size"):
-            size, diameter, slices, price = _select_size(btn)
-            pizzas.append(self._new_pizza(title, toppings, size, diameter, price, "classic", slices))
+        # self.web_driver.find_element_by_id("size").click()
+        # self._wait_for_cl("pizza-size")
+        # for btn in self.web_driver.find_elements_by_class_name("pizza-size"):
+        #     size, diameter, slices, price = _select_size(btn)
+        #     pizzas.append(self._new_pizza(title, toppings, size, diameter, price, "classic", slices))
+
+        pizzas = []
+        _wait_for_load()
+        title, toppings = _get_group_info()
+
+        _open_size_panel()
+        for size_btn in _get_size_elements():
+            _open_size_panel()
+            size_btn.click()
+            sleep(1)
+            _open_crust_panel()
+            for crust_btn in _get_crust_elements():
+                crust_btn.click()
+                sleep(1)
+                pizzas.append(_snapshot_selection())
 
         return pizzas
