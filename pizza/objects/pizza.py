@@ -1,35 +1,31 @@
+from time import time
+from hashlib import md5
 
 class Pizza():
 
     SLICES_PER_PERSON = 3
+    ATTRIBUTES = ["vendor_id", "name", "toppings", "size", "diameter", "price", "base", "slices"]
 
-    def __init__(self, vendor_id, name, toppings, size, diameter, price, base, slices):
-        self.vendor_id = vendor_id
-        self.name = name
-        self.toppings = toppings
-        self.size = size
-        self.diameter = diameter
-        self.price = price
-        self.base = base
-        self.slices = slices
+    def __init__(self, **kwargs):
+        for mandatory in self.ATTRIBUTES:
+            assert kwargs.get(mandatory), "%s missing" % str(mandatory)
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
 
     def to_dict(self):
-        return {
-            "vendor_id": self.vendor_id,
-            "name": self.name,
-            "toppings": self.toppings,
-            "size": self.size,
-            "diameter": self.diameter,
-            "base": self.base,
-            "slices": self.slices,
-            "price": self.price,
+        pizza_dict = {
             "score": self._score(),
             "area": self._area(),
             "area_per_slice": self._area_per_slice(),
             "cost_psi": self._cost_per_square_inch(),
             "cost_per_slice": self._cost_per_slice(),
-            "serves": self._serves()
+            "serves": self._serves(),
+            "hash": md5(self.vendor_id + self.name + self.size + self.base).hexdigest(),
+            "stamp": time()
         }
+        for mandatory in self.ATTRIBUTES:
+            pizza_dict[mandatory] = getattr(self, mandatory)
+        return pizza_dict
 
     def _score(self):
         # Overall score

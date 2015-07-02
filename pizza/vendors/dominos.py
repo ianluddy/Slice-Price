@@ -1,8 +1,7 @@
-from pizza.objects.vendor import Vendor
-from pizza.objects.parser import Parser
 from time import sleep
+from pizza.objects.vendor import Vendor
 
-class Dominos(Vendor, Parser):
+class Dominos(Vendor):
 
     toppings = {
         "smoked bacon rashers": "bacon",
@@ -41,14 +40,22 @@ class Dominos(Vendor, Parser):
         self._wait_for_css(".btn.btn-neutral.btn-large")
         self.web_driver.find_element_by_css_selector(".btn.btn-neutral.btn-large").click()
 
+    def _acknowledge_dialog(self, containing_text, confirm):
+        self._wait_for_css(".modal", timeout=0.5)
+        for modal in self.web_driver.find_elements_by_class_name("modal"):
+            if modal.is_displayed():
+                if containing_text in modal.text.encode("utf-8").lower():
+                    if confirm:
+                        modal.find_elements_by_class_name("btn-positive")[0].click()
+                    else:
+                        modal.find_elements_by_class_name("btn-negative")[0].click()
+                    self._wait_for_css_to_clear(".modal-backdrop.fade.in", timeout=2)
+
     #### Pizzas ####
 
     def _get_pizzas(self):
-        self._login()
-        pizzas = []
         for link in self._get_pizza_links():
-            pizzas += self._parse_pizza_group(link)
-        return pizzas
+            self._parse_pizza_group(link)
 
     def _get_pizza_links(self):
         self._wait_for_cl("pizza")
@@ -68,7 +75,7 @@ class Dominos(Vendor, Parser):
         def _wait_for_load():
             self.web_driver.get(link)
             self._wait_for_alert()
-            sleep(2)
+            self._wait_for_alert_to_clear()
             self._wait_for_css(".pizza-name > h1")
 
         def _get_group_info():
@@ -76,62 +83,57 @@ class Dominos(Vendor, Parser):
             toppings = [t.strip().lower() for t in self._get_css_txt(".selected-toppings p").split(",")]
             return title, toppings
 
-        # def _select_size(element):
-        #     element.click()
-        #     sleep(1)
-        #     size = self._get_css_txt("#size-selector > .selection > span").split(" ")[0].lower()
-        #     price = self._get_str_fl(self._get_css_txt(".pizza-price > h2"))
-        #     return size, self._diameter_from_size(size), self._slices_from_size(size), price
-
         def _open_size_panel():
-            if not self.web_driver.find_elements_by_class_name("pizza-size"):
-                self.web_driver.find_element_by_id("size").click()
-                self._wait_for_cl("pizza-size")
+            self._wait_for_id("size")
+            if self._get_css("#size.selected"):
+                return None
+            self.web_driver.find_element_by_id("size").click()
+            self._wait_for_cl("pizza-size")
 
         def _open_crust_panel():
-            if not self.web_driver.find_elements_by_class_name("crust-type"):
-                self.web_driver.find_element_by_id("crust").click()
-                self._wait_for_cl("crust-type")
+            self._wait_for_id("crust")
+            if self._get_css("#crust.selected"):
+                return None
+            self.web_driver.find_element_by_id("crust").click()
+            self._wait_for_cl("crust-type")
 
         def _get_size_elements():
+            _open_size_panel()
             return self.web_driver.find_elements_by_class_name("pizza-size")
 
+        def _get_sizes():
+            return [btn.text.encode("utf-8").lower() for btn in _get_size_elements()]
+
+        def _get_size_btn(size):
+            for btn in _get_size_elements():
+                if btn.text.encode("utf-8").lower() == size:
+                    return btn
+
         def _get_crust_elements():
+            _open_crust_panel()
             return self.web_driver.find_elements_by_class_name("crust-type")
 
-        def _snapshot_selection():
+        def _snapshot_selection(crust):
             size = self._get_css_txt("#size-selector > .selection > span").split(" ")[0].lower()
             price = self._get_str_fl(self._get_css_txt(".pizza-price > h2"))
-            return self._new_pizza(
-                title,
-                toppings,
-                size,
-                self._diameter_from_size(size),
-                price,
-                "classic",
-                self._slices_from_size(size)
-            )
+            self._new_pizza(title, toppings, size, self._diameter_from_size(size), price, crust,
+                            self._slices_from_size(size))
 
-        # Grab details for each size
-        # self.web_driver.find_element_by_id("size").click()
-        # self._wait_for_cl("pizza-size")
-        # for btn in self.web_driver.find_elements_by_class_name("pizza-size"):
-        #     size, diameter, slices, price = _select_size(btn)
-        #     pizzas.append(self._new_pizza(title, toppings, size, diameter, price, "classic", slices))
+        def _get_pizzas_per_size(size_txt):
+            _get_size_btn(size_txt).click()
+            self._acknowledge_dialog("selected crust is not available", True)
+            for crust_btn in _get_crust_elements():
+                try:
+                    sleep(0.5)
+                    crust_btn.click()
+                    crust_btn.click() # hmmm
+                    sleep(0.5)
+                    _snapshot_selection(crust_btn.text.encode("utf-8").lower())
+                except Exception, e:
+                    print str(e)
+                    print "crust fail"
 
-        pizzas = []
         _wait_for_load()
         title, toppings = _get_group_info()
-
-        _open_size_panel()
-        for size_btn in _get_size_elements():
-            _open_size_panel()
-            size_btn.click()
-            sleep(1)
-            _open_crust_panel()
-            for crust_btn in _get_crust_elements():
-                crust_btn.click()
-                sleep(1)
-                pizzas.append(_snapshot_selection())
-
-        return pizzas
+        for size in _get_sizes():
+            _get_pizzas_per_size(size)

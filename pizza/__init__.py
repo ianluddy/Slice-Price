@@ -13,7 +13,7 @@ cfg = read_config_file("D:\pizza.json")
 app = Flask(__name__)
 
 # Logging
-setup_logger(app, cfg["log_file"])
+setup_logger(app, cfg["logging"]["file"], cfg["logging"]["level"])
 
 # DB
 PyMongo(app)
@@ -26,8 +26,7 @@ db_wrapper = Database(
 
 # Collection
 pizza_queue = Queue()
-vendors = [dominos.Dominos()]
-Thread(target=Collector(vendors, cfg["collection_freq"], pizza_queue).run).start()
+Thread(target=Collector(cfg["collection_freq"], pizza_queue).run).start()
 
 # Persistence
 Thread(target=Keeper(db_wrapper, pizza_queue).run).start()

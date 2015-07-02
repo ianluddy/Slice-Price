@@ -1,9 +1,11 @@
 import abc
 import logging
-from ..objects.pizza import Pizza
-from ..utils import make_uuid
 
-class Vendor():
+from ..objects.parser import Parser
+from ..objects.pizza import Pizza
+from ..utils import make_uuid, wrapped_execute
+
+class Vendor(Parser):
     __metaclass__ = abc.ABCMeta
 
     # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "bacon"
@@ -18,6 +20,13 @@ class Vendor():
     def __init__(self):
         self.name = self.__class__.__name__
         self.id = make_uuid(self.__class__.__name__)
+        self._reset_data()
+
+    def _reset_data(self):
+        self.pizzas = []
+        self.sides = []
+        self.desserts = []
+        self.meals = []
 
     def _normalise_toppings(self, topping_list):
         return sorted([self._normalise_topping(topping) for topping in topping_list])
@@ -32,26 +41,34 @@ class Vendor():
         return self.slices.get(size, -1)
 
     def _new_pizza(self, name, toppings, size, diameter, price, base, slices):
-        print "+PIZZA: %s %s %s %s %s %s %s" % (name, toppings, size, diameter, price, base, slices)
-        return Pizza(self.id, name, self._normalise_toppings(toppings), size, diameter, price, base, slices)
+        new_pizza = wrapped_execute(lambda: Pizza(vendor_id=self.id, name=name,
+                                                  toppings=self._normalise_toppings(toppings), size=size,
+                                                  diameter=diameter, price=price, base=base, slices=slices))
+        if new_pizza:
+            self.pizzas.append(new_pizza)
 
-    def get(self):
+    def parse(self):
+        self._reset_data()
+        self._login()
 
-        def _get(func):
-            try:
-                return func()
-            except Exception, e:
-                logging.error("GET Error [%s] [%s]" % (self.name, str(func)), exc_info=True)
+        wrapped_execute(self._get_pizzas)
+        wrapped_execute(self._get_desserts)
+        wrapped_execute(self._get_sides)
+        wrapped_execute(self._get_meals)
 
         return {
             "vendor": self.id,
-            "pizza": _get(self._get_pizzas),
-            "meals": _get(self._get_meals),
-            "sides": _get(self._get_sides),
-            "desserts": _get(self._get_desserts)
+            "pizza": self.pizzas,
+            "meals": self.meals,
+            "sides": self.sides,
+            "desserts": self.desserts
         }
 
     #### Implement ####
+
+    @abc.abstractmethod
+    def _login(self):
+        """ Login to site, set address etc. """
 
     @abc.abstractmethod
     def _get_pizzas(self):
@@ -68,4 +85,3 @@ class Vendor():
     @abc.abstractmethod
     def _get_desserts(self):
         """ Get list of Desserts """
-

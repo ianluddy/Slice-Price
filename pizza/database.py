@@ -16,6 +16,17 @@ class Database():
         self.db.desserts.drop()
         self.db.sides.drop()
 
-    def insert_pizzas(self, vendor_id, pizzas):
-        self.db.pizzas.remove({"vendor_id": vendor_id})
-        self.db.pizzas.insert([pizza.to_dict() for pizza in pizzas])
+    def insert_batch(self, collection, data):
+        to_insert = []
+        to_remove = []
+        for obj in data:
+            json_obj = obj.to_dict()
+            to_insert.append(json_obj)
+            to_remove.append(json_obj["hash"])
+        if to_remove:
+            collection.remove({"hash": {"$in": to_remove}})
+        if to_insert:
+            collection.insert(to_insert)
+
+    def insert_pizzas(self, pizzas):
+        self.insert_batch(self.db.pizzas, pizzas)
