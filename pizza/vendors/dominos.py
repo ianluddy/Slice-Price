@@ -26,9 +26,6 @@ class Dominos(Vendor):
     def _get_meals(self):
         return []
 
-    def _get_sides(self):
-        return []
-
     def _get_desserts(self):
         return []
 
@@ -50,6 +47,11 @@ class Dominos(Vendor):
                     else:
                         modal.find_elements_by_class_name("btn-negative")[0].click()
                     self._wait_for_css_to_clear(".modal-backdrop.fade.in", timeout=2)
+
+    #### Sides ####
+
+    def _get_sides(self):
+        return []
 
     #### Pizzas ####
 
@@ -74,14 +76,9 @@ class Dominos(Vendor):
 
         def _wait_for_load():
             self.web_driver.get(link)
-            self._wait_for_alert()
-            self._wait_for_alert_to_clear()
+            self._wait_for_alert(timeout=0.5)
+            self._wait_for_alert_to_clear(timeout=0.5)
             self._wait_for_css(".pizza-name > h1")
-
-        def _get_group_info():
-            title = self._get_css_txt(".pizza-name > h1").lower()
-            toppings = [t.strip().lower() for t in self._get_css_txt(".selected-toppings p").split(",")]
-            return title, toppings
 
         def _open_size_panel():
             self._wait_for_id("size")
@@ -109,31 +106,48 @@ class Dominos(Vendor):
                 if btn.text.encode("utf-8").lower() == size:
                     return btn
 
-        def _get_crust_elements():
-            _open_crust_panel()
-            return self.web_driver.find_elements_by_class_name("crust-type")
+        def _get_selected_price():
+            return self._get_str_fl(self._get_css_str('.pizza-price > h2'))
 
-        def _snapshot_selection(crust):
-            size = self._get_css_txt("#size-selector > .selection > span").split(" ")[0].lower()
-            price = self._get_str_fl(self._get_css_txt(".pizza-price > h2"))
-            self._new_pizza(title, toppings, size, self._diameter_from_size(size), price, crust,
-                            self._slices_from_size(size))
+        def _get_selected_title():
+            return self._get_css_str('.pizza-name > h1')
+
+        def _get_selected_toppings():
+            return [t.strip().lower() for t in self._get_css_str('.selected-toppings p').split(",")]
+
+        def _crusts_remaining():
+            return int(self._script('return $("button.crust-type").length')) > 0
+
+        def _select_crust():
+            return self._script(
+                '$(".crust-item").first().find("button.crust-type").click(); $(".crust-item").first().remove();'
+            )
+
+        def _get_selected_crust():
+            return self._get_css_str('button.crust-type:first')
 
         def _get_pizzas_per_size(size_txt):
             _get_size_btn(size_txt).click()
             self._acknowledge_dialog("selected crust is not available", True)
-            for crust_btn in _get_crust_elements():
-                try:
-                    sleep(0.5)
-                    crust_btn.click()
-                    crust_btn.click() # hmmm
-                    sleep(0.5)
-                    _snapshot_selection(crust_btn.text.encode("utf-8").lower())
-                except Exception, e:
-                    print str(e)
-                    print "crust fail"
+            size = size_txt.split(" ")[0]
+            _open_crust_panel()
+            self._wait_for_js()
+            while _crusts_remaining():
+                crust = _get_selected_crust()
+                _select_crust()
+                self._wait_for_js()
+                self._new_pizza(
+                    title,
+                    toppings,
+                    size,
+                    self._diameter_from_size(size),
+                    _get_selected_price(),
+                    crust,
+                    self._slices_from_size(size)
+                )
 
         _wait_for_load()
-        title, toppings = _get_group_info()
+        title = _get_selected_title()
+        toppings = _get_selected_toppings()
         for size in _get_sizes():
             _get_pizzas_per_size(size)

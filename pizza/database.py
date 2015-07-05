@@ -21,8 +21,9 @@ class Database():
         to_remove = []
         for obj in data:
             json_obj = obj.to_dict()
-            to_insert.append(json_obj)
-            to_remove.append(json_obj["hash"])
+            if json_obj: # Return None if incomplete object
+                to_insert.append(json_obj)
+                to_remove.append(json_obj["hash"])
         if to_remove:
             collection.remove({"hash": {"$in": to_remove}})
         if to_insert:

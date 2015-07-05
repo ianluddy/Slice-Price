@@ -1,6 +1,7 @@
 import selenium.webdriver.support.ui as ui
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
+from time import sleep
 import re
 import abc
 
@@ -76,6 +77,12 @@ class Parser(object):
         except TimeoutException:
             return
 
+    def _wait_for_js(self):
+        sleep(0.5)
+
+    def _script(self, script):
+        return self.web_driver.execute_script(script)
+
     def _wait_for_alert_to_clear(self, timeout=2):
         try:
             ui.WebDriverWait(self.web_driver, timeout).until(
@@ -84,8 +91,12 @@ class Parser(object):
         except TimeoutException:
             return
 
-    def _get_css_txt(self, selector):
-        return self.web_driver.find_element_by_css_selector(selector).text.encode("utf-8")
+    def _get_css_str(self, selector):
+        while True:
+            string = self._script('return $("%s").text()' % selector).encode("utf-8").lower()
+            if string:
+                return string
+            sleep(0.2)
 
     def _get_id_txt(self, selector):
         return self.web_driver.find_element_by_id(selector).text.encode("utf-8")
