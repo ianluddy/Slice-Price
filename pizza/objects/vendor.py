@@ -50,7 +50,8 @@ class Vendor(Parser):
     def _new_side(self, name, price, size, quantity):
         self._new_product(self.sides, Side, name=name, price=price, size=size, quantity=quantity)
 
-    def _new_product(self, group, product, **kwargs):
+    @staticmethod
+    def _new_product(group, product, **kwargs):
         new_product = wrapped_execute(lambda: product(**kwargs))
         if new_product:
             print str(new_product)
@@ -60,10 +61,10 @@ class Vendor(Parser):
         self._reset_data()
         self._login()
 
-        wrapped_execute(self._get_pizzas)
-        wrapped_execute(self._get_desserts)
         wrapped_execute(self._get_sides)
-        wrapped_execute(self._get_meals)
+        # wrapped_execute(self._get_pizzas)
+        # wrapped_execute(self._get_desserts)
+        # wrapped_execute(self._get_meals)
 
         return {
             "vendor": self.id,

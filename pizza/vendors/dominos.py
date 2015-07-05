@@ -51,7 +51,23 @@ class Dominos(Vendor):
     #### Sides ####
 
     def _get_sides(self):
-        return []
+
+        while not self._sides_ready():
+            sleep(0.3)
+
+        for side_id in self._get_side_ids():
+            print side_id
+            side_name = self._get_side_name(side_id)
+            print side_name
+
+    def _sides_ready(self):
+        return int(self._script('return $("#Sides .product").length')) > 0
+
+    def _get_side_name(self, side_id):
+        return self._get_css_str("#Sides #%s h1:first" % str(side_id))
+
+    def _get_side_ids(self):
+        return list(set(self._script('return $("#Sides .product").map(function(){ return parseInt($(this).attr("id"));}).get();')))
 
     #### Pizzas ####
 
