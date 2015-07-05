@@ -31,3 +31,6 @@ class Database():
 
     def insert_pizzas(self, pizzas):
         self.insert_batch(self.db.pizzas, pizzas)
+
+    def insert_sides(self, sides):
+        self.insert_batch(self.db.sides, sides)

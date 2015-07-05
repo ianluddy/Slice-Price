@@ -1,6 +1,4 @@
 import abc
-import logging
-
 from ..objects.parser import Parser
 from ..objects.pizza import Pizza
 from ..objects.side import Side
@@ -10,13 +8,47 @@ class Vendor(Parser):
     __metaclass__ = abc.ABCMeta
 
     # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "bacon"
-    toppings = {}
+    topping_normaliser = {
+        "bacon": ["smoked bacon rashers"],
+        "spinach": ["baby spinach"],
+        "tomatoes": ["sunblush baby tomatoes"]
+    }
 
     # Diameter dict. For converting "large" to 13.5
-    diameters = {}
+    diameter_reference = {}
 
     # Slice dict. For converting "large" to 10
-    slices = {}
+    slice_reference = {}
+
+    # Sides normaliser. For converting "Frank's RedHot Wings" to "chicken"
+    side_normaliser = {
+        "combo": ["mix box", "combo"],
+        "dip": ["dip"],
+        "chicken": ["wing", "chick", "kicker"],
+        "garlic bread": ["garlic pizza bread"],
+        "dough balls": ["dough ball"],
+        "potato wedges": ["potato", "wedge"],
+        "nachos": ["nacho"],
+        "coleslaw": ["slaw"],
+    }
+
+    @staticmethod
+    def _new_product(group, product, **kwargs):
+        new_product = wrapped_execute(lambda: product(**kwargs))
+        if new_product:
+            print str(new_product)
+            group.append(new_product)
+
+    @staticmethod
+    def _normalise_data(normaliser, data):
+        data = data.lower()
+        if data in normaliser:
+            return data
+        for key, values in normaliser.iteritems():
+            for value in values:
+                if value in data:
+                    return key
+        return data
 
     def __init__(self):
         self.name = self.__class__.__name__
@@ -29,40 +61,32 @@ class Vendor(Parser):
         self.desserts = []
         self.meals = []
 
-    def _normalise_toppings(self, topping_list):
-        return sorted([self._normalise_topping(topping) for topping in topping_list])
-
-    def _normalise_topping(self, topping):
-        return self.toppings[topping] if topping in self.toppings else topping
-
     def _diameter_from_size(self, size):
-        return self.diameters.get(size, -1)
+        return self.diameter_reference.get(size, -1)
 
     def _slices_from_size(self, size):
-        return self.slices.get(size, -1)
+        return self.slice_reference.get(size, -1)
 
     def _new_pizza(self, name, toppings, size, diameter, price, base, slices):
+        normalised_toppings = sorted([self._normalise_data(self.topping_normaliser, topping) for topping in toppings])
         self._new_product(
-            self.pizzas, Pizza, vendor_id=self.id, name=name, toppings=self._normalise_toppings(toppings), size=size,
+            self.pizzas, Pizza, vendor_id=self.id, name=name, toppings=normalised_toppings, size=size,
             diameter=diameter, price=price, base=base, slices=slices
         )
 
-    def _new_side(self, name, price, size, quantity):
-        self._new_product(self.sides, Side, name=name, price=price, size=size, quantity=quantity)
-
-    @staticmethod
-    def _new_product(group, product, **kwargs):
-        new_product = wrapped_execute(lambda: product(**kwargs))
-        if new_product:
-            print str(new_product)
-            group.append(new_product)
+    def _new_side(self, name, price, size, quantity, description=None):
+        side_type = self._normalise_data(self.side_normaliser, name)
+        self._new_product(
+            self.sides, Side, vendor_id=self.id, name=name, price=price, size=size, quantity=quantity,
+            description=description, type=side_type
+        )
 
     def parse(self):
         self._reset_data()
         self._login()
 
+        wrapped_execute(self._get_pizzas)
         wrapped_execute(self._get_sides)
-        # wrapped_execute(self._get_pizzas)
         # wrapped_execute(self._get_desserts)
         # wrapped_execute(self._get_meals)
 

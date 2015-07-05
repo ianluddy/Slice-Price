@@ -3,20 +3,14 @@ from pizza.objects.vendor import Vendor
 
 class Dominos(Vendor):
 
-    toppings = {
-        "smoked bacon rashers": "bacon",
-        "baby spinach": "spinach",
-        "sunblush baby tomatoes": "tomatoes"
-    }
-
-    diameters = {
+    diameter_reference = {
         "large": 13.5,
         "medium": 11.5,
         "small": 9.5,
         "personal": 7
     }
 
-    slices = {
+    slice_reference = {
         "large": 10,
         "medium": 8,
         "small": 6,
@@ -51,20 +45,57 @@ class Dominos(Vendor):
     #### Sides ####
 
     def _get_sides(self):
+        self.web_driver.get("https://www.dominos.co.uk/menu")
+        self._wait_for_alert(timeout=1)
 
         while not self._sides_ready():
             sleep(0.3)
 
         for side_id in self._get_side_ids():
-            print side_id
-            side_name = self._get_side_name(side_id)
-            print side_name
+            name = self._get_side_name(side_id)
+            description = self._get_side_description(side_id)
+            size = "standard"
+            self._select_side(side_id)
+            self._wait_for_js()
+            while self._side_variants_remaining(side_id):
+                quantity = self._get_side_variant_quantity(side_id)
+                price = self._get_side_variant_price(side_id)
+                self._new_side(
+                    name, price, size, quantity, description
+                )
+                self._mark_side_variant_parsed(side_id)
 
     def _sides_ready(self):
         return int(self._script('return $("#Sides .product").length')) > 0
 
     def _get_side_name(self, side_id):
         return self._get_css_str("#Sides #%s h1:first" % str(side_id))
+
+    def _side_variants_remaining(self, side_id):
+        return self._script('return $("#%s .product-variants > .variant").length' % str(side_id)) > 0
+
+    def _get_side_variant_quantity(self, side_id):
+        quantity = self._get_str_int(self._get_side_variant_description(side_id))
+        if quantity:
+            return quantity
+        return 1
+
+    def _get_side_variant_description(self, side_id):
+        return self._get_css_str('#%s .product-variants > .variant:first h1' % str(side_id))
+
+    def _get_side_variant_price(self, side_id):
+        return self._get_str_fl(
+            self._get_css_str('#%s .product-variants > .variant:first h2' % str(side_id) )
+        )
+
+    def _mark_side_variant_parsed(self, side_id):
+        self._script('$("#%s .product-variants > .variant").first().removeClass("variant").hide()' % str(side_id))
+
+    def _get_side_description(self, side_id):
+        return self._get_css_str("#Sides #%s p:first" % str(side_id))
+
+    def _select_side(self, side_id):
+        self._script('$("#%s .btn-positive[resource-name=Choose]").click()' % str(side_id))
 
     def _get_side_ids(self):
         return list(set(self._script('return $("#Sides .product").map(function(){ return parseInt($(this).attr("id"));}).get();')))
@@ -129,7 +160,7 @@ class Dominos(Vendor):
             return self._get_css_str('.pizza-name > h1')
 
         def _get_selected_toppings():
-            return [t.strip().lower() for t in self._get_css_str('.selected-toppings p').split(",")]
+            return [t.strip().lower() for t in self._get_css_str('.selected-toppings p').lower().split(",")]
 
         def _crusts_remaining():
             return int(self._script('return $("button.crust-type").length')) > 0

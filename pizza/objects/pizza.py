@@ -2,25 +2,17 @@ from hashlib import md5
 from product import Product
 
 class Pizza(Product):
-
     SLICES_PER_PERSON = 3
 
     def __init__(self, **kwargs):
         super(Pizza, self).__init__(**kwargs)
+        self.category = "pizza"
+        self.type = "pizza"
         self.size = kwargs["size"]
         self.base = kwargs["base"]
         self.toppings = kwargs["toppings"]
         self.diameter = kwargs["diameter"]
         self.slices = kwargs["slices"]
-
-    def __str__(self):
-        return "Pizza - %s %s %s %s %s" % (
-            str(self.name),
-            self.size,
-            self.price,
-            str(self.base),
-            str(self.toppings)
-        )
 
     def to_dict(self):
         pizza_dict = super(Pizza, self).to_dict()

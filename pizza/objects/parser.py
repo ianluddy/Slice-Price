@@ -78,7 +78,7 @@ class Parser(object):
             return
 
     def _wait_for_js(self):
-        sleep(0.5)
+        sleep(0.3)
 
     def _script(self, script):
         return self.web_driver.execute_script(script)
@@ -93,7 +93,7 @@ class Parser(object):
 
     def _get_css_str(self, selector):
         while True:
-            string = self._script('return $("%s").text()' % selector).encode("utf-8").lower()
+            string = self._script('return $("%s").text()' % selector).encode("utf-8")
             if string:
                 return string
             sleep(0.2)
@@ -104,7 +104,13 @@ class Parser(object):
     #### STRING ####
 
     def _get_str_int(self, string):
-        return int(re.search(r'\d+', string).group())
+        try:
+            return int(re.search(r'\d+', string).group())
+        except AttributeError:
+            return None
 
     def _get_str_fl(self, string):
         return float(re.findall("\d+.\d+", string)[0])
+
+    def _strip_to_ascii(self, string):
+        return ''.join([i if ord(i) < 128 else '' for i in string])

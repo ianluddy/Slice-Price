@@ -5,14 +5,9 @@ class Side(Product):
 
     def __init__(self, **kwargs):
         super(Side, self).__init__(**kwargs)
+        self.category = "side"
+        self.type = kwargs["type"]
         self.quantity = kwargs["quantity"]
-
-    def __str__(self):
-        return "Side - %s %s %s" % (
-            str(self.name),
-            self.price,
-            self.quantity,
-        )
 
     def to_dict(self):
         side_dict = super(Side, self).to_dict()
@@ -29,7 +24,7 @@ class Side(Product):
         return valid
 
     def _hash(self):
-        return md5(self.vendor_id + self.name + self.quantity).hexdigest()
+        return md5(self.vendor_id + self.name + str(self.quantity)).hexdigest()
 
     def _score(self):
         return float(self.quantity) / float(self.price) * 100

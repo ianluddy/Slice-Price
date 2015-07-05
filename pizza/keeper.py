@@ -8,6 +8,7 @@ class Keeper():
 
     def _keep(self, batch):
         self.db.insert_pizzas(batch["pizza"])
+        self.db.insert_sides(batch["sides"])
 
     def run(self):
         logging.info("Keeper Running")
