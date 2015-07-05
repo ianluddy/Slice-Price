@@ -5,6 +5,14 @@ class Pizza(Product):
 
     SLICES_PER_PERSON = 3
 
+    def __init__(self, **kwargs):
+        super(Pizza, self).__init__(**kwargs)
+        self.size = kwargs["size"]
+        self.base = kwargs["base"]
+        self.toppings = kwargs["toppings"]
+        self.diameter = kwargs["diameter"]
+        self.slices = kwargs["slices"]
+
     def __str__(self):
         return "Pizza - %s %s %s %s %s" % (
             str(self.name),

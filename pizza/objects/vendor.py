@@ -41,14 +41,6 @@ class Vendor(Parser):
     def _slices_from_size(self, size):
         return self.slices.get(size, -1)
 
-    # def _new_pizza(self, name, toppings, size, diameter, price, base, slices):
-    #     new_pizza = wrapped_execute(lambda: Pizza(vendor_id=self.id, name=name,
-    #                                               toppings=self._normalise_toppings(toppings), size=size,
-    #                                               diameter=diameter, price=price, base=base, slices=slices))
-    #     if new_pizza:
-    #         print str(new_pizza)
-    #         self.pizzas.append(new_pizza)
-
     def _new_pizza(self, name, toppings, size, diameter, price, base, slices):
         self._new_product(
             self.pizzas, Pizza, vendor_id=self.id, name=name, toppings=self._normalise_toppings(toppings), size=size,

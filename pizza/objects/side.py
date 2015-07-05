@@ -3,6 +3,10 @@ from hashlib import md5
 
 class Side(Product):
 
+    def __init__(self, **kwargs):
+        super(Side, self).__init__(**kwargs)
+        self.quantity = kwargs["quantity"]
+
     def __str__(self):
         return "Side - %s %s %s" % (
             str(self.name),
@@ -25,7 +29,7 @@ class Side(Product):
         return valid
 
     def _hash(self):
-        return md5(self.vendor_id + self.name + self.size + self.base).hexdigest()
+        return md5(self.vendor_id + self.name + self.quantity).hexdigest()
 
     def _score(self):
-        return 10
+        return float(self.quantity) / float(self.price) * 100
