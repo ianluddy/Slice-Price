@@ -4,6 +4,7 @@ from vendors import dominos
 from database import Database
 from collector import Collector
 from keeper import Keeper
+from flask.ext.autodoc import Autodoc
 from flask_pymongo import PyMongo, MongoClient
 from flask import Flask
 from utils import setup_logger, read_config_file
@@ -11,6 +12,7 @@ from utils import setup_logger, read_config_file
 # Config
 cfg = read_config_file("D:\pizza.json")
 app = Flask(__name__)
+documentor = Autodoc(app)
 
 # Logging
 setup_logger(app, cfg["logging"]["file"], cfg["logging"]["level"])
