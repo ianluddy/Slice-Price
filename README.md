@@ -1,2 +1,2 @@
-# Slice-Price
-Pizza comparison app
+# Slice Scanner
+Pizza comparison
