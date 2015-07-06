@@ -9,6 +9,12 @@ def read_config_file(config_file):
         cfg_json = json.loads(f.read())
     return cfg_json
 
+def list_to_string(list):
+    string = ""
+    for item in list:
+        string += item + ", "
+    return string[0:len(string) - 2]
+
 def make_uuid(string):
     return str(uuid5(NAMESPACE_DNS, string))
 

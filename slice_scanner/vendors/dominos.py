@@ -112,6 +112,7 @@ class Dominos(Vendor):
 
     def _get_pizza_links(self):
         self._wait_for_cl("pizza")
+        self._wait_for_js()
 
         def _get_links(section):
             links = []
@@ -164,7 +165,7 @@ class Dominos(Vendor):
             return self._get_css_str('.pizza-name > h1')
 
         def _get_selected_toppings():
-            return [t.strip().lower() for t in self._get_css_str('.selected-toppings p').lower().split(",")]
+            return [t.strip() for t in self._get_css_str('.selected-toppings p').split(",")]
 
         def _crusts_remaining():
             return int(self._script('return $("button.crust-type").length')) > 0

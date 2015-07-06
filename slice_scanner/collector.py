@@ -14,7 +14,7 @@ class Collector(object):
         self.queue = queue
 
     def _start_webdriver(self):
-        return webdriver.Chrome('C:\\chromeDRIVER.exe', service_args=['--ignore-ssl-errors=true'])
+        return webdriver.Chrome('C:\\chromeDRIVER.exe')#, service_args=['--ignore-ssl-errors=true'])
         # return self.web_driver = webdriver.PhantomJS('C:\\phantomjs.exe', service_args=['--ignore-ssl-errors=true'])
         # return self.web_driver = webdriver.Firefox()
 

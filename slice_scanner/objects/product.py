@@ -11,23 +11,12 @@ class Product():
         self.description = kwargs.get("description")
         self.quantity = kwargs.get("quantity", 1)
 
-    def __str__(self):
-        return "%s %s %s %s %s" % (
-            self.category,
-            self.type,
-            self.name,
-            self.price,
-            self.quantity
-        )
-
     def to_dict(self):
         if self._valid():
             product_dict = {}
             product_dict["vendor_id"] = self.vendor_id
             product_dict["name"] = self.name
             product_dict["price"] = self.price
-            product_dict["category"] = self.category
-            product_dict["type"] = self.type
             product_dict["description"] = self.description
             product_dict["stamp"] = time()
             product_dict["hash"] = self._hash()
@@ -36,10 +25,21 @@ class Product():
         return None
 
     def _valid(self):
-        for required in ["name", "price", "vendor_id", "type", "category"]:
+        for required in ["name", "price", "vendor_id"]:
             if getattr(self, required) is None:
                 return False
         return True
+
+    @staticmethod
+    def _normalise_data(normaliser, data):
+        if data in normaliser:
+            return data
+        lower_case = data.lower()
+        for key, values in normaliser.iteritems():
+            for value in values:
+                if value in lower_case:
+                    return key
+        return data
 
     @abc.abstractmethod
     def _hash(self):

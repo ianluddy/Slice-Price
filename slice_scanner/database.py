@@ -46,6 +46,15 @@ class Database():
     def get_diameters(self):
         return self._distinct(self.db.pizzas, "diameter")
 
+    def get_styles(self):
+        return self._distinct(self.db.pizzas, "style")
+
+    def get_base_styles(self):
+        return self._distinct(self.db.pizzas, "base_style")
+
+    def get_side_types(self):
+        return self._distinct(self.db.sides, "type")
+
     def get_pizza(self, **kwargs):
         return self._serialise(self.db.pizzas.find())
 

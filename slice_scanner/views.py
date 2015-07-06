@@ -44,6 +44,21 @@ def toppings():
 def diameters():
     return json_response(db.get_diameters())
 
+@app.route('/styles')
+@documentor.doc()
+def styles():
+    return json_response(db.get_styles())
+
+@app.route('/base_styles')
+@documentor.doc()
+def base_styles():
+    return json_response(db.get_base_styles())
+
+@app.route('/side_types')
+@documentor.doc()
+def side_types():
+    return json_response(db.get_side_types())
+
 @app.route('/sizes')
 @documentor.doc()
 def sizes():

@@ -12,30 +12,11 @@ class Vendor(Parser):
     name = None
     site = None
 
-    # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "bacon"
-    topping_normaliser = {
-        "bacon": ["smoked bacon rashers"],
-        "spinach": ["baby spinach"],
-        "tomatoes": ["sunblush baby tomatoes"]
-    }
-
     # Diameter dict. For converting "large" to 13.5
     diameter_reference = {}
 
     # Slice dict. For converting "large" to 10
     slice_reference = {}
-
-    # Sides normaliser. For converting "Frank's RedHot Wings" to "chicken"
-    side_normaliser = {
-        "combo": ["mix box", "combo"],
-        "dip": ["dip"],
-        "chicken": ["wing", "chick", "kicker"],
-        "garlic bread": ["garlic pizza bread"],
-        "dough balls": ["dough ball"],
-        "potato wedges": ["potato", "wedge"],
-        "nachos": ["nacho"],
-        "coleslaw": ["slaw"],
-    }
 
     @staticmethod
     def _new_product(group, product, **kwargs):
@@ -78,17 +59,15 @@ class Vendor(Parser):
         return self.slice_reference.get(size, -1)
 
     def _new_pizza(self, name, toppings, size, diameter, price, base, slices):
-        normalised_toppings = sorted([self._normalise_data(self.topping_normaliser, topping) for topping in toppings])
         self._new_product(
-            self.pizzas, Pizza, vendor_id=self.id, name=name, toppings=normalised_toppings, size=size,
+            self.pizzas, Pizza, vendor_id=self.id, name=name, toppings=toppings, size=size,
             diameter=diameter, price=price, base=base, slices=slices
         )
 
     def _new_side(self, name, price, size, quantity, description=None):
-        side_type = self._normalise_data(self.side_normaliser, name)
         self._new_product(
             self.sides, Side, vendor_id=self.id, name=name, price=price, size=size, quantity=quantity,
-            description=description, type=side_type
+            description=description
         )
 
     def parse(self):
