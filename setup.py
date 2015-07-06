@@ -9,9 +9,14 @@ setup(
     author_email='ianluddy@gmail.com',
     include_package_data=True,
     zip_safe=False,
+    install_requires=[
+        "flask",
+        "flask_autodoc",
+        "flask_pymongo"
+    ],
     entry_points={
         'console_scripts': [
-            'pizza = pizza:run',
+            'slice_scanner = slice_scanner:run',
         ]
     }
 )
