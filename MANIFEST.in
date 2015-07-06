@@ -1,0 +1,3 @@
+recursive-include pizza/objects *
+recursive-include pizza/static *
+recursive-include pizza/vendors *
