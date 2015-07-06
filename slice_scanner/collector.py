@@ -25,9 +25,15 @@ class Collector(object):
             self.queue.put(session.parse())
         web_driver.quit()
 
+    def vendor_info(self):
+        vendor_info = {}
+        for vendor in self.vendors:
+            vendor_dict = vendor.to_dict()
+            vendor_info[vendor_dict["id"]] = vendor_dict
+        return vendor_info
+
     def run(self):
         logging.info("Collector Running")
         while True:
-            # self._collect()
-            time.sleep(self.cron.next())
             self._collect()
+            time.sleep(self.cron.next())

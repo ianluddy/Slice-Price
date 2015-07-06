@@ -3,6 +3,10 @@ from slice_scanner.objects.vendor import Vendor
 
 class Dominos(Vendor):
 
+    id = "dominos"
+    name = "Dominos Pizza"
+    site = "https://www.dominos.co.uk/"
+
     diameter_reference = {
         "large": 13.5,
         "medium": 11.5,

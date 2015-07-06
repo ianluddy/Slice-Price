@@ -2,10 +2,15 @@ import abc
 from ..objects.parser import Parser
 from ..objects.pizza import Pizza
 from ..objects.side import Side
-from ..utils import make_uuid, wrapped_execute
+from ..utils import wrapped_execute
 
 class Vendor(Parser):
     __metaclass__ = abc.ABCMeta
+
+    # Vendor information
+    id = None
+    name = None
+    site = None
 
     # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "bacon"
     topping_normaliser = {
@@ -51,9 +56,14 @@ class Vendor(Parser):
         return data
 
     def __init__(self):
-        self.name = self.__class__.__name__
-        self.id = make_uuid(self.__class__.__name__)
         self._reset_data()
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "site": self.site
+        }
 
     def _reset_data(self):
         self.pizzas = []

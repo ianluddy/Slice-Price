@@ -9,5 +9,9 @@
         "file": "D:\\pizza.log",
         "level": 20
     },
-    "collection_freq": "0 * * * *"
+    "collection_freq": "0 * * * *",
+    "web_server": {
+        "host": "localhost",
+        "port": 5001
+    }
 }

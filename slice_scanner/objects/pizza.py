@@ -17,6 +17,11 @@ class Pizza(Product):
     def to_dict(self):
         pizza_dict = super(Pizza, self).to_dict()
         if pizza_dict:
+            pizza_dict["diameter"] = self.diameter
+            pizza_dict["toppings"] = self.toppings
+            pizza_dict["slices"] = self.slices
+            pizza_dict["base"] = self.base
+            pizza_dict["size"] = self.size
             pizza_dict["area"] = self._area()
             pizza_dict["area_per_slice"] = self._area_per_slice()
             pizza_dict["cost_psi"] = self._cost_per_square_inch()
