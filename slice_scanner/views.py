@@ -1,3 +1,4 @@
+from flask import request
 from slice_scanner.utils import json_response
 from slice_scanner import app
 from slice_scanner import documentor
@@ -19,50 +20,92 @@ def docs():
 def index():
     return app.send_static_file('index.html')
 
+### Pizza API ####
+
 @app.route('/pizza')
 @documentor.doc()
 def pizza():
-    return json_response(db.get_pizza())
+    return json_response(db.get_pizza(
+        toppings=request.args.get("toppings"),
+        style=request.args.get("style"),
+        base_style=request.args.get("base_style"),
+        diameter=request.args.get("diameter"),
+        slices=request.args.get("slices"),
+        sort_by=request.args.get("sort_by"),
+        sort_dir=request.args.get("sort_dir"),
+        page=request.args.get("page"),
+    ))
+
+@app.route('/pizza/toppings')
+@documentor.doc()
+def pizza_toppings():
+    return json_response(db.distinct("pizzas", "toppings"))
+
+@app.route('/pizza/diameters')
+@documentor.doc()
+def pizza_diameters():
+    return json_response(db.distinct("pizzas", "diameter"))
+
+@app.route('/pizza/styles')
+@documentor.doc()
+def pizza_styles():
+    return json_response(db.distinct("pizzas", "style"))
+
+@app.route('/pizza/slices')
+@documentor.doc()
+def pizza_slices():
+    return json_response(db.distinct("pizzas", "slices"))
+
+@app.route('/pizza/bases')
+@documentor.doc()
+def pizza_bases():
+    return json_response(db.distinct("pizzas", "base_style"))
+
+@app.route('/pizza/sizes')
+@documentor.doc()
+def pizza_sizes():
+    return json_response(db.distinct("pizzas", "size"))
+
+@app.route('/pizza/prices')
+@documentor.doc()
+def pizza_prices():
+    return json_response(db.range("pizzas", "price"))
+
+@app.route('/pizza/scores')
+@documentor.doc()
+def pizza_scores():
+    return json_response(db.range("pizzas", "score"))
+
+### Side API ####
 
 @app.route('/sides')
 @documentor.doc()
 def sides():
-    return json_response(db.get_sides())
+    return json_response(db.all("sides"))
+
+@app.route('/sides/types')
+@documentor.doc()
+def sides_types():
+    return json_response(db.distinct("sides", "type"))
+
+@app.route('/sides/scores')
+@documentor.doc()
+def sides_scores():
+    return json_response(db.range("sides", "score"))
+
+@app.route('/sides/prices')
+@documentor.doc()
+def sides_prices():
+    return json_response(db.range("sides", "price"))
+
+### Vendor API ####
 
 @app.route('/vendors')
 @documentor.doc()
 def vendors():
-    return json_response(db.get_vendors())
+    return json_response(db.vendor_info)
 
-@app.route('/toppings')
-@documentor.doc()
-def toppings():
-    return json_response(db.get_toppings())
-
-@app.route('/diameters')
-@documentor.doc()
-def diameters():
-    return json_response(db.get_diameters())
-
-@app.route('/styles')
-@documentor.doc()
-def styles():
-    return json_response(db.get_styles())
-
-@app.route('/base_styles')
-@documentor.doc()
-def base_styles():
-    return json_response(db.get_base_styles())
-
-@app.route('/side_types')
-@documentor.doc()
-def side_types():
-    return json_response(db.get_side_types())
-
-@app.route('/sizes')
-@documentor.doc()
-def sizes():
-    return json_response(db.get_sizes())
+#### Introspector ####
 
 # TODO - remove this
 @app.route('/eval/<stmt>')
