@@ -34,5 +34,5 @@ class Collector(object):
     def run(self):
         logging.info("Collector Running")
         while True:
-            self._collect()
             time.sleep(self.cron.next())
+            self._collect()
