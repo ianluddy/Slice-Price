@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(
-    name='Slice Scanner',
+    name='slice_scanner',
     version='1.0',
     long_description=__doc__,
-    packages=['pizza'],
+    packages=['slice_scanner'],
     url='ianluddy@gmail.com',
     author_email='ianluddy@gmail.com',
     include_package_data=True,
