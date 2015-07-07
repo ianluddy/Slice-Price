@@ -81,7 +81,12 @@ def pizza_scores():
 @app.route('/sides')
 @documentor.doc()
 def sides():
-    return json_response(db.all("sides"))
+    return json_response(db.get_sides(
+        type=request.args.get("type"),
+        sort_by=request.args.get("sort_by"),
+        sort_dir=request.args.get("sort_dir"),
+        page=request.args.get("page")
+    ))
 
 @app.route('/sides/types')
 @documentor.doc()

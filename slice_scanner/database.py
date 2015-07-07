@@ -42,6 +42,17 @@ class Database():
     def insert_side(self, side):
         self.insert_product(self.db.sides, side)
 
+    def get_sides(self, **kwargs):
+        return self.query(
+            "sides",
+            {
+                "type": self._in(kwargs.get("type")),
+            },
+            sort_by=kwargs.get("sort_by"),
+            sort_dir=kwargs.get("sort_dir"),
+            page=kwargs.get("page")
+        )
+
     def get_pizza(self, **kwargs):
         return self.query(
             "pizzas",

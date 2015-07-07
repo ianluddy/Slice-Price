@@ -15,7 +15,6 @@ def list_to_string(list):
         string += item + ", "
     return string[0:len(string) - 2]
 
-
 def make_uuid(string):
     return str(uuid5(NAMESPACE_DNS, string))
 
