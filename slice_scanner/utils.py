@@ -15,6 +15,7 @@ def list_to_string(list):
         string += item + ", "
     return string[0:len(string) - 2]
 
+
 def make_uuid(string):
     return str(uuid5(NAMESPACE_DNS, string))
 
@@ -47,3 +48,6 @@ def setup_logger(app, log_file, log_level):
     ch.setLevel(log_level)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
+
+def strip_dict(dictionary):
+    return dict((k, v) for k, v in dictionary.iteritems() if v not in [None, {}, []] and k not in [None, {}, []])
