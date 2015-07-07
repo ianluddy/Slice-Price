@@ -5,13 +5,12 @@ from vendors import dominos
 from selenium import webdriver
 
 class Collector(object):
-    vendors = [
-        dominos.Dominos()
-    ]
 
     def __init__(self, frequency, queue):
         self.cron = CronTab(frequency)
-        self.queue = queue
+        self.vendors = [
+            dominos.Dominos(queue)
+        ]
 
     def _start_webdriver(self):
         return webdriver.Chrome('C:\\chromeDRIVER.exe')#, service_args=['--ignore-ssl-errors=true'])
@@ -22,7 +21,7 @@ class Collector(object):
         web_driver = self._start_webdriver()
         for session in self.vendors:
             session.set_driver(web_driver)
-            self.queue.put(session.parse())
+            session.parse()
         web_driver.quit()
 
     def vendor_info(self):

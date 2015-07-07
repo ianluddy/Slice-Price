@@ -1,3 +1,5 @@
+from objects.pizza import Pizza
+from objects.side import Side
 import logging
 
 class Keeper():
@@ -6,9 +8,11 @@ class Keeper():
         self.db = db
         self.queue = queue
 
-    def _keep(self, batch):
-        self.db.insert_pizzas(batch["pizza"])
-        self.db.insert_sides(batch["sides"])
+    def _keep(self, product):
+        if type(product) is Pizza:
+            self.db.insert_pizza(product)
+        elif type(product) is Side:
+            self.db.insert_side(product)
 
     def run(self):
         logging.info("Keeper Running")

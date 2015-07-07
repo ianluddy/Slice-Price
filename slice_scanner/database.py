@@ -15,24 +15,21 @@ class Database():
         self.db.desserts.drop()
         self.db.sides.drop()
 
-    def insert_batch(self, collection, data):
-        to_insert = []
-        to_remove = []
-        for obj in data:
-            json_obj = obj.to_dict()
-            if json_obj: # Return None if incomplete object
-                to_insert.append(json_obj)
-                to_remove.append(json_obj["hash"])
-        if to_remove:
-            collection.remove({"hash": {"$in": to_remove}})
-        if to_insert:
-            collection.insert(to_insert)
+    #### Setters ####
 
-    def insert_pizzas(self, pizzas):
-        self.insert_batch(self.db.pizzas, pizzas)
+    def insert_product(self, collection, product):
+        print product
+        json_product = product.to_dict()
+        collection.remove({"hash": json_product["hash"]})
+        collection.insert(json_product)
 
-    def insert_sides(self, sides):
-        self.insert_batch(self.db.sides, sides)
+    def insert_pizza(self, pizza):
+        self.insert_product(self.db.pizzas, pizza)
+
+    def insert_side(self, side):
+        self.insert_product(self.db.sides, side)
+
+    #### Getters ####
 
     def get_vendors(self):
         return self.vendor_info
