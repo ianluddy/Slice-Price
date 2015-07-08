@@ -4,10 +4,12 @@ var page_main = undefined;
 var page_title =  undefined;
 var spinner = undefined;
 var pizza_info = {};
+var vendor_info = {};
 
 $(document).ready(function () {
     create_components();
     load_counts();
+    load_vendors();
 
     // Cache
     page_main = $("#page_main");
@@ -53,6 +55,10 @@ function load_counts(){
     ajax_load("stats", {}, update_counts);
 }
 
+function load_vendors(){
+    ajax_load("vendors", {}, function(input){vendor_info=input;});
+}
+
 function update_counts(input){
     stats = input;
     $("#pizza_cnt").text(input["pizza"]);
@@ -67,7 +73,10 @@ function load_pizza(){
         ajax_load("pizza", {}),
         ajax_load("pizza/bases", {}, function(input){pizza_info["bases"] = input;}),
         ajax_load("pizza/toppings", {}, function(input){pizza_info["toppings"] = input;}),
-        ajax_load("pizza/styles", {}, function(input){pizza_info["styles"] = input;})
+        ajax_load("pizza/styles", {}, function(input){pizza_info["styles"] = input;}),
+        ajax_load("pizza/sizes", {}, function(input){pizza_info["sizes"] = input;}),
+        ajax_load("pizza/diameters", {}, function(input){pizza_info["diameters"] = input;}),
+        ajax_load("pizza/slices", {}, function(input){pizza_info["slices"] = input;})
     ).done(draw_pizza);
 }
 
@@ -79,6 +88,7 @@ function draw_pizza(input){
     //clear();
 
     //$(page_title).html(pizza_title_tmpl({"title": "Pizza"}));
+    pizza_info["vendors"] = vendor_info;
     $(page_main).html(pizza_tmpl(pizza_info));
 }
 

@@ -30,6 +30,8 @@ def raw_response(response_string):
     return response
 
 def json_response(response):
+    if type(response) is list:
+        response = sorted(response)
     if type(response) in [dict, list]:
         response = json.dumps(response)
     response = make_response(response)
