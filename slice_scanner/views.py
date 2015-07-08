@@ -1,4 +1,5 @@
-from flask import request
+import os
+from flask import request, send_from_directory
 from slice_scanner.utils import json_response
 from slice_scanner import app
 from slice_scanner import documentor
@@ -19,6 +20,18 @@ def docs():
 @documentor.doc()
 def index():
     return app.send_static_file('index.html')
+
+# @app.route('/<path:path>')
+# def static_file(path):
+#     return app.send_static_file(os.path.join('static', path))
+#
+# @app.route('/js/<path:path>')
+# def send_js(path):
+#     return send_from_directory(os.path.join('static', 'js'), path)
+#
+# @app.route('/css/<path:path>')
+# def send_css(path):
+#     return send_from_directory('css', path)
 
 ### Pizza API ####
 

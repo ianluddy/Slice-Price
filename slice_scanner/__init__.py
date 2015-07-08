@@ -10,8 +10,10 @@ from flask import Flask
 from utils import setup_logger, read_config_file
 
 # Config
-cfg = read_config_file("D:\slice\slice.json")
-app = Flask(__name__)
+# cfg = read_config_file("D:\slice\slice.json")
+cfg = read_config_file("C:\Git\pizza\slice.json")
+print cfg
+app = Flask(__name__, static_url_path='')
 documentor = Autodoc(app)
 
 # Logging
