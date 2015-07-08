@@ -7482,10 +7482,12 @@ body.skin-3 {
 /* Slice Scanner */
 .sl-nav-header{
     padding: 5px;
-    padding-bottom: 10px;
+    padding-bottom: 13px;
     padding-top: 10px;
     font-size: 1.3em;
-    text-indent: 12px;
+    text-indent: 19px;
+    border-left: 4px solid #19aa8d;
+    margin-bottom: 1px;
 }
 .sl-filter-list{
     margin-bottom: 15px;
@@ -7496,4 +7498,27 @@ body.skin-3 {
 }
 .sl-filter-list li span{
     font-size: 0.9em;
+}
+
+#spinner{
+    position: absolute;
+    display: none;
+    left: 55%;
+    top: 40%;
+}
+
+.table{
+    background-color: #ffffff;
+    border: 1px solid #e7eaec;
+    border-bottom: 0;
+    padding: 30px 20px 20px 20px;
+}
+.sl-filter-wrapper button{
+    margin: 2px;
+}
+.sl-table-wrapper{
+
+}
+.sl-filter-group{
+    margin-bottom: 13px;
 }

@@ -21,18 +21,6 @@ def docs():
 def index():
     return app.send_static_file('index.html')
 
-# @app.route('/<path:path>')
-# def static_file(path):
-#     return app.send_static_file(os.path.join('static', path))
-#
-# @app.route('/js/<path:path>')
-# def send_js(path):
-#     return send_from_directory(os.path.join('static', 'js'), path)
-#
-# @app.route('/css/<path:path>')
-# def send_css(path):
-#     return send_from_directory('css', path)
-
 ### Pizza API ####
 
 @app.route('/pizza')
@@ -122,6 +110,20 @@ def sides_prices():
 @documentor.doc()
 def vendors():
     return json_response(db.vendor_info)
+
+### Stats API ####
+
+@app.route('/stats')
+@documentor.doc()
+def stats():
+    return json_response({
+        "pizza": db.count("pizzas"),
+        "sides": db.count("sides"),
+        "desserts": db.count("desserts"),
+        "drinks": db.count("drinks"),
+        "combos": db.count("combos"),
+        "vendors": len(db.vendor_info.keys())
+    })
 
 #### Introspector ####
 

@@ -7,7 +7,7 @@ class Database():
     """
     Wrapper for the database layer
     """
-    PAGE_SIZE = 3
+    PAGE_SIZE = 15
 
     def __init__(self, db, reset_db, vendor_info):
         self.db = db
@@ -81,6 +81,9 @@ class Database():
 
     def all(self, collection_name):
         return self._serialise(self._get_collection(collection_name).find())
+
+    def count(self, collection_name):
+        return self._get_collection(collection_name).find().count()
 
     def distinct(self, collection_name, key):
         return self._get_collection(collection_name).find().distinct(key)
