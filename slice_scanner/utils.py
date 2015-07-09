@@ -52,3 +52,6 @@ def setup_logger(app, log_file, log_level):
 
 def strip_dict(dictionary):
     return dict((k, v) for k, v in dictionary.iteritems() if v not in [None, {}, []] and k not in [None, {}, []])
+
+def float_to_two_places(x):
+    return int(x * 100) / 100.0

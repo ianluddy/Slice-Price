@@ -7513,14 +7513,11 @@ body.skin-3 {
     border-bottom: 0;
     padding: 30px 20px 20px 20px;
 }
-.sl-filter-wrapper button{
-    margin: 2px;
-}
-.sl-table-wrapper{
-
+#sl-filter-wrapper button{
+    margin: 1px;
 }
 .sl-filter-group{
-    margin-bottom: 13px;
+    margin-bottom: 11px;
 }
 .sl-caption{
     font-size: 0.65em;

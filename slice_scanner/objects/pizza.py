@@ -1,4 +1,4 @@
-from ..utils import list_to_string
+from ..utils import list_to_string, float_to_two_places
 from hashlib import md5
 from product import Product
 
@@ -75,27 +75,27 @@ class Pizza(Product):
 
     def _score(self):
         # Overall score
-        return ( float(self._area()) * float(len(self.toppings)) / float(self.price) ) * 100
+        return int(( float(self._area()) * float(len(self.toppings)) / float(self.price) ) * 10)
 
     def _area(self):
         # Area in square inches
-        return ((self.diameter / 2.0) ** 2 ) * 3.14
+        return float_to_two_places(((self.diameter / 2.0) ** 2 ) * 3.14)
 
     def _area_per_slice(self):
         # Slice area in square inches
-        return float(self._area()) / self.slices
+        return float_to_two_places(float(self._area()) / self.slices)
 
     def _serves(self):
         # Number of people satisfied
-        return float(self.slices) / self.SLICES_PER_PERSON
+        return int(float(self.slices) / self.SLICES_PER_PERSON)
 
     def _cost_per_slice(self):
         # Cost per slice
-        return float(self.price) / self.slices
+        return float_to_two_places(float(self.price) / self.slices)
 
     def _cost_per_square_inch(self):
         # Cost per square inch
-        return float(self.price) / self._area()
+        return float_to_two_places(float(self.price) / self._area())
 
     def to_dict(self):
         pizza_dict = super(Pizza, self).to_dict()
