@@ -7,7 +7,7 @@ var pizza_info = {};
 var vendor_info = {};
 
 $(document).ready(function () {
-    create_components();
+    //create_components();
     load_counts();
     load_vendors();
 
@@ -32,6 +32,7 @@ function create_components(){
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green'
     });
+    $('.footable').footable();
 }
 
 function compile_templates(){
@@ -75,7 +76,7 @@ function update_counts(input){
 function load_pizza(){
     show_loader();
     $.when(
-        ajax_load("pizza", {}),
+        ajax_load("pizza", {}, function(input){pizza_info["pizza"] = input;}),
         ajax_load("pizza/bases", {}, function(input){pizza_info["bases"] = input;}),
         ajax_load("pizza/toppings", {}, function(input){pizza_info["toppings"] = input;}),
         ajax_load("pizza/styles", {}, function(input){pizza_info["styles"] = input;}),
@@ -92,6 +93,7 @@ function pizza_filters(){
 function draw_pizza(){
     pizza_info["vendors"] = vendor_info;
     $(page_main).html(pizza_tmpl(pizza_info));
+    create_components();
     add_body_handlers();
     hide_loader();
 }
