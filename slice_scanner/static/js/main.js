@@ -21,6 +21,12 @@ $(document).ready(function () {
     ).done(templates_loaded);
 });
 
+function templates_loaded(){
+    attach_templates();
+    compile_templates();
+    add_tab_handlers();
+}
+
 function create_components(){
     $('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
@@ -37,18 +43,16 @@ function attach_templates(input){
     $("#tmpl_holder").html(input);
 }
 
-function templates_loaded(){
-    attach_templates();
-    compile_templates();
-    add_handlers();
-}
-
-function add_handlers(){
+function add_tab_handlers(){
     $("#side-menu li.tab").on("click", function(){
         $(this).addClass("active").siblings().removeClass("active");
         window[$(this).attr("target")]();
     });
     $("#side-menu li.tab").first().click();
+}
+
+function add_body_handlers(){
+    $(".sl-btn").on("mouseout", function(){$(this).removeClass("focus").blur();});
 }
 
 function load_counts(){
@@ -69,6 +73,7 @@ function update_counts(input){
 }
 
 function load_pizza(){
+    show_loader();
     $.when(
         ajax_load("pizza", {}),
         ajax_load("pizza/bases", {}, function(input){pizza_info["bases"] = input;}),
@@ -84,12 +89,11 @@ function pizza_filters(){
     return {}
 }
 
-function draw_pizza(input){
-    //clear();
-
-    //$(page_title).html(pizza_title_tmpl({"title": "Pizza"}));
+function draw_pizza(){
     pizza_info["vendors"] = vendor_info;
     $(page_main).html(pizza_tmpl(pizza_info));
+    add_body_handlers();
+    hide_loader();
 }
 
 function clear(){
@@ -113,14 +117,17 @@ function toaster(){
     }, 1300);
 }
 
+/* Helpers */
 
-function ajax_load(func, args, callback){
-    show_loader();
+function ajax_load(func, args, callback, loader){
+    if(loader == true)
+        show_loader();
     return $.ajax({
         url: func,
         data: args
     }).done(function(input){
-        hide_loader();
+        if(loader == true)
+            hide_loader();
         if (callback)
             callback(input);
     });

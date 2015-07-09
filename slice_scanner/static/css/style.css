@@ -7522,3 +7522,18 @@ body.skin-3 {
 .sl-filter-group{
     margin-bottom: 13px;
 }
+.sl-caption{
+    font-size: 0.65em;
+    color: #1ab394;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.sl-btn.focus, .sl-btn:focus, .sl-btn:hover{
+    opacity: 0.5 !important;
+}
+.sl-btn.active{
+    opacity: 1 !important;
+}
+#spinner{
+    z-index: 100;
+}
