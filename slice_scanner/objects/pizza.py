@@ -24,7 +24,7 @@ class Pizza(Product):
         "Tomato Sauce": ["domino's own tomato sauce"],
         "Tomatoes": ["tomatoes"],
         "Chicken": ["chicken breast strips"],
-        "Jalapenos": ["jalapeno"],
+        "Jalapenos": ["jalap"],
         "Pepperoni": ["pepperoni"],
         "Beef": ["beef"],
         "Pork": ["pork"],
@@ -53,11 +53,11 @@ class Pizza(Product):
 
     def __str__(self):
         return "%s %s %s %s %s %s %s %s" % (
-            str(self.vendor_id),
-            str(self.name),
-            str(self.base),
-            [str(t) for t in self.toppings],
-            str(self.style),
+            self.vendor_id,
+            self.name,
+            self.base,
+            [t for t in self.toppings],
+            self.style,
             self.price,
             self.size,
             self.diameter,

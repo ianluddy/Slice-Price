@@ -120,7 +120,13 @@ class Parser(object):
 
     @staticmethod
     def _normalise_parsed_data(kwargs):
+
+        def _punify(data):
+            return data.encode("punycode").split("-")[0]
+
         for key, value in kwargs.iteritems():
             if type(value) in [str, unicode]:
-                kwargs[key] = value.encode("punycode").split("-")[0]
+                kwargs[key] = _punify(value)
+            elif type(value) in [list]:
+                kwargs[key] = [_punify(item) for item in value]
         return kwargs
