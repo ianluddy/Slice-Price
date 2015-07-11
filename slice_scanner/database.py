@@ -115,7 +115,9 @@ class Database():
             return {"$lt": arguments}
 
     def _in(self, arguments):
-        if arguments not in [None, []]:
+        if arguments is not None:
+            if arguments == []:
+                return {"$in": arguments}
             return {"$in": json.loads(arguments)}
 
     def _serialise(self, cursor):

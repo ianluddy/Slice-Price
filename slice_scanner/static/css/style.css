@@ -7503,8 +7503,9 @@ body.skin-3 {
 #spinner{
     position: absolute;
     display: none;
-    left: 55%;
+    left: 47%;
     top: 40%;
+    z-index: 100;
 }
 
 .table{
@@ -7531,6 +7532,18 @@ body.skin-3 {
 .sl-btn.active{
     opacity: 1 !important;
 }
-#spinner{
-    z-index: 100;
+#table_title strong{
+    color: #1ab394;
+}
+.ibox-content{
+    min-height: 400px;
+}
+#no_result h5{
+    font-size: 1.3em;
+}
+#no_result span{
+    font-size: 1.5em;
+    margin-right: 8px;
+    position: relative;
+    top: 3px;
 }

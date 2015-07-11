@@ -1,10 +1,15 @@
+/* Constants */
+var FADE = 200;
+
 /* Globals */
+var filter_stamp = null;
 var stats = {};
-var spinner, page_title, page_main;
+var page_title, page_main;
 var pizza_info = {};
 var vendor_list = [];
 var vendor_info = {};
-var title_tmpl, filter_group_tmpl, pizza_table_head_tmpl, pizza_table_row_tmpl, table_tmpl, table_page_tmpl;
+var title_tmpl, filter_group_tmpl, pizza_table_head_tmpl, pizza_table_row_tmpl, table_tmpl, table_page_tmpl,
+    table_title_tmpl, spinner_tmpl, no_result_tmpl;
 
 $(document).ready(function () {
     load_counts();
@@ -29,6 +34,10 @@ function init_checkboxes(){
     });
 }
 
+function redraw_footable(){
+    $('.footable').trigger('footable_redraw');
+}
+
 function init_footable(){
     $('.footable').footable();
 }
@@ -36,7 +45,6 @@ function init_footable(){
 function cache_elements(){
     page_main = $("#page_main");
     page_title = $("#page_title");
-    spinner = $("#spinner");
 }
 
 function compile_templates(){
@@ -46,6 +54,9 @@ function compile_templates(){
     pizza_table_row_tmpl = Handlebars.compile($("#pizza_table_row_tmpl").html());
     table_tmpl = Handlebars.compile($("#table_tmpl").html());
     table_page_tmpl = Handlebars.compile($("#table_page_tmpl").html());
+    table_title_tmpl = Handlebars.compile($("#table_title_tmpl").html());
+    spinner_tmpl = Handlebars.compile($("#spinner_tmpl").html());
+    no_result_tmpl = Handlebars.compile($("#no_result_tmpl").html());
 }
 
 function attach_templates(input){
@@ -86,35 +97,45 @@ function update_counts(input){
     $("#combo_cnt").text(input["combos"]);
 }
 
-function load_pizza_page(){
-    show_loader();
-    $.when(
-        //ajax_load("pizza", {}, function(input){pizza_info["pizza"] = input;}),
-        ajax_load("pizza/bases", {}, function(input){pizza_info["bases"] = input;}),
-        ajax_load("pizza/toppings", {}, function(input){pizza_info["toppings"] = input;}),
-        ajax_load("pizza/styles", {}, function(input){pizza_info["styles"] = input;}),
-        ajax_load("pizza/sizes", {}, function(input){pizza_info["sizes"] = input;}),
-        ajax_load("pizza/diameters", {}, function(input){pizza_info["diameters"] = input;}),
-        ajax_load("pizza/slices", {}, function(input){pizza_info["slices"] = input;})
-    ).done(draw_page_pizza);
+function get_table(){
+    return $("#sl-table-wrapper");
 }
 
-//function reload_pizza(){
-//    $.when(
-//        ajax_load("pizza", {}, function(input){pizza_info["pizza"] = input;})
-//    ).done(draw_page_pizza);
-//}
+function load_pizza_page(){
+    show_loader(page_main, function(){
+        $.when(
+            ajax_load("pizza/bases", {}, function(input){pizza_info["bases"] = input;}),
+            ajax_load("pizza/toppings", {}, function(input){pizza_info["toppings"] = input;}),
+            ajax_load("pizza/styles", {}, function(input){pizza_info["styles"] = input;}),
+            ajax_load("pizza/sizes", {}, function(input){pizza_info["sizes"] = input;}),
+            ajax_load("pizza/diameters", {}, function(input){pizza_info["diameters"] = input;}),
+            ajax_load("pizza/slices", {}, function(input){pizza_info["slices"] = input;})
+        ).done(draw_pizza_page);
+    });
+}
+
+function draw_pizza_page(){
+    draw_table_template();
+
+    // Add filters
+    var filter_wrapper = $("#sl-filter-wrapper");
+    remove_filter_handler();
+    add_filter(filter_wrapper, "vendors", vendor_list, "danger", "btn-outline", "active");
+    add_filter(filter_wrapper, "crusts", pizza_info["bases"], "warning", "btn-outline", "active");
+    add_filter(filter_wrapper, "toppings", pizza_info["toppings"], "primary", "btn-outline", "");
+    add_filter(filter_wrapper, "sizes", pizza_info["diameters"], "info", "btn-circle btn-outline", "active");
+    add_filter(filter_wrapper, "slices", pizza_info["slices"], "info", "btn-circle btn-outline", "active");
+    add_filter_handler(update_pizza_table);
+    init_checkboxes();
+
+    // Add table
+    add_pizza_table();
+
+    add_body_handlers();
+}
 
 function draw_table_template(){
-    $(page_main).html(table_page_tmpl());
-}
-
-function refresh_pizza(){
-
-}
-
-function get_pizza_filters(){
-    return {}
+    $(page_main).append(table_page_tmpl());
 }
 
 function add_filter(dom, id, items, theme, style, active){
@@ -126,6 +147,14 @@ function add_filter(dom, id, items, theme, style, active){
         "style": style,
         "active": active
     }));
+}
+
+function add_filter_handler(func){
+    $("#sl-filter-wrapper").on("click.filter", ".sl-btn", func);
+}
+
+function remove_filter_handler(){
+    $("#sl-filter-wrapper").off("click.filter", ".sl-btn");
 }
 
 function get_filter(id){
@@ -152,42 +181,53 @@ function add_table(title, page_size, head_tmpl, body_tmpl, data){
         "body": body_tmpl({"data": data})
     }));
     init_footable();
-}
-
-function draw_page_pizza(){
-    draw_table_template();
-
-    // Add filters
-    var filter_wrapper = $("#sl-filter-wrapper");
-    add_filter(filter_wrapper, "vendors", vendor_list, "danger", "btn-outline", "active");
-    add_filter(filter_wrapper, "crusts", pizza_info["bases"], "warning", "btn-outline", "active");
-    add_filter(filter_wrapper, "toppings", pizza_info["toppings"], "primary", "btn-outline", "");
-    add_filter(filter_wrapper, "sizes", pizza_info["diameters"], "info", "btn-circle btn-outline", "active");
-    add_filter(filter_wrapper, "slices", pizza_info["slices"], "info", "btn-circle btn-outline", "active");
-    init_checkboxes();
-
-    // Add table
-    add_pizza_table();
-
-    add_body_handlers();
-    hide_loader();
+    hide_loader(page_main);
 }
 
 function add_pizza_table(){
-    console.log(get_filters())
     ajax_load("pizza", get_filters(), function(input){
         add_table("Pizza", "15", pizza_table_head_tmpl, pizza_table_row_tmpl, input);
     });
 }
 
+function update_table_header(items, item_count, vendor_count){
+    $("#table_title").html(table_title_tmpl({"item_count": item_count, "items": items, "vendor_count": vendor_count}))
+}
+
 function update_pizza_table(){
-    ajax_load("pizza", get_filters(), function(input){
-        console.log(input.length)
+    show_loader(get_table(), function(){
+        ajax_load("pizza", get_filters(), function(input){
+            update_table_header("Pizza(s)", input.length, get_filter("vendors").length);
+            update_table_contents(pizza_table_row_tmpl, {"data": input});
+            hide_loader(get_table());
+        })
     });
+}
+
+function delayed_event(filter_stamp, func){
+
+}
+
+function update_table_contents(tmpl, data){
+    if( data.data.length < 1){
+        $("#footable_head").hide();
+        $("#footable_body").hide();
+        $("#footable_footer").hide();
+        if( $("#no_result").length == 0 )
+            $("#table_wrapper .ibox-content").append(no_result_tmpl());
+    }else{
+        $("#no_result").remove();
+        $("#footable_head").show();
+        $("#footable_body").show();
+        $("#footable_footer").show();
+        $("#footable_body").html(tmpl(data));
+        redraw_footable();
+    }
 }
 
 function get_filters(){
     return {
+        "vendors": JSON.stringify(get_filter("vendors")),
         "base_style": JSON.stringify(get_filter("crusts")),
         "toppings": JSON.stringify(get_filter("toppings")),
         "diameter": JSON.stringify(get_num_filter("sizes")),
@@ -218,26 +258,26 @@ function toaster(){
 
 /* Helpers */
 
-function ajax_load(func, args, callback, loader){
-    if(loader == true)
-        show_loader();
+function ajax_load(func, args, callback){
     return $.ajax({
         url: func,
         data: args
     }).done(function(input){
-        if(loader == true)
-            hide_loader();
         if (callback)
             callback(input);
     });
 }
 
-function show_loader(){
-    $(page_main).animate({"opacity": 0.4}, 200);
-    $(spinner).fadeIn(200);
+function show_loader(dom, func){
+    console.log("show")
+    $(dom).animate({"opacity": 0.4}, FADE).append($(spinner_tmpl()).fadeIn(FADE));
+    setTimeout(func, FADE);
 }
 
-function hide_loader(){
-    $(page_main).animate({"opacity": 1}, 200);
-    $(spinner).fadeOut(200);
+function hide_loader(dom){
+    console.log("hide")
+    setTimeout(function(){
+        $(dom).animate({"opacity": 1}, FADE);
+        $("#spinner").fadeOut(FADE, function(){$(this).remove()});
+    });
 }
