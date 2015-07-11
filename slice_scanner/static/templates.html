@@ -23,7 +23,7 @@
         <th data-type="numeric">Size</th>
         <th data-type="numeric" data-sort-initial="descending">Score</th>
         <th>Base</th>
-        <th>Vendor</th>
+        <th data-sort-ignore="true"></th>
         <th data-hide="all">Description</th>
         <th data-hide="all">Area</th>
         <th data-hide="all">Slices</th>
@@ -45,7 +45,7 @@
             <td>{{this.diameter}}"</td>
             <td>{{this.score}}</td>
             <td><span class="label label-warning">{{this.base}}</span></td>
-            <td><span class="label label-danger" style="text-transform:uppercase">{{this.vendor_id}}</span></td>
+            <td><img src="img/{{vendor_id}}.png" height="55" width="55"></td>
             <td>{{this.description}}</td>
             <td>{{this.area}} Inch<sup>2</sup></td>
             <td>{{this.slices}}</td>

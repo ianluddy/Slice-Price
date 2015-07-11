@@ -1,8 +1,9 @@
 /* Constants */
-var FADE = 200;
+var FADE = TASK_DELAY;
+var TASK_DELAY = 800;
 
 /* Globals */
-var filter_stamp = null;
+var tasks = {};
 var stats = {};
 var page_title, page_main;
 var pizza_info = {};
@@ -15,11 +16,33 @@ $(document).ready(function () {
     load_counts();
     load_vendors();
     cache_elements();
+    setInterval(run_tasks, TASK_DELAY);
 
     $.when(
         ajax_load('templates.html', {}, attach_templates)
     ).done(templates_loaded);
 });
+
+function run_tasks(){
+    for( var func_id in tasks ){
+        var task = tasks[func_id];
+        if( task["stamp"] != undefined && task["stamp"] < Date.now() ){
+            task["stamp"] = undefined;
+            async(task["func"]);
+        }
+    }
+}
+
+function queue_task(func){
+    tasks[func.name] = {
+        "stamp": Date.now() + TASK_DELAY,
+        "func": func
+    }
+}
+
+function async(func){
+    setTimeout(func, 0);
+}
 
 function templates_loaded(){
     attach_templates();
@@ -66,6 +89,7 @@ function attach_templates(input){
 function add_tab_handlers(){
     $("#side-menu li.tab").on("click", function(){
         $(this).addClass("active").siblings().removeClass("active");
+        clear();
         window[$(this).attr("target")]();
     });
     $("#side-menu li.tab").first().click();
@@ -125,7 +149,7 @@ function draw_pizza_page(){
     add_filter(filter_wrapper, "toppings", pizza_info["toppings"], "primary", "btn-outline", "");
     add_filter(filter_wrapper, "sizes", pizza_info["diameters"], "info", "btn-circle btn-outline", "active");
     add_filter(filter_wrapper, "slices", pizza_info["slices"], "info", "btn-circle btn-outline", "active");
-    add_filter_handler(update_pizza_table);
+    add_filter_handler(function(){queue_task(update_pizza_table)});
     init_checkboxes();
 
     // Add table
@@ -186,7 +210,7 @@ function add_table(title, page_size, head_tmpl, body_tmpl, data){
 
 function add_pizza_table(){
     ajax_load("pizza", get_filters(), function(input){
-        add_table("Pizza", "15", pizza_table_head_tmpl, pizza_table_row_tmpl, input);
+        add_table("Pizza", "10", pizza_table_head_tmpl, pizza_table_row_tmpl, input);
     });
 }
 
@@ -202,10 +226,6 @@ function update_pizza_table(){
             hide_loader(get_table());
         })
     });
-}
-
-function delayed_event(filter_stamp, func){
-
 }
 
 function update_table_contents(tmpl, data){
@@ -241,7 +261,7 @@ function clear(){
 }
 
 function load_sides(){
-    console.log("sides");
+
 }
 
 function toaster(){
@@ -269,13 +289,11 @@ function ajax_load(func, args, callback){
 }
 
 function show_loader(dom, func){
-    console.log("show")
     $(dom).animate({"opacity": 0.4}, FADE).append($(spinner_tmpl()).fadeIn(FADE));
     setTimeout(func, FADE);
 }
 
 function hide_loader(dom){
-    console.log("hide")
     setTimeout(function(){
         $(dom).animate({"opacity": 1}, FADE);
         $("#spinner").fadeOut(FADE, function(){$(this).remove()});
