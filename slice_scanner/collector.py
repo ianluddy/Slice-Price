@@ -1,7 +1,7 @@
 import logging
 from crontab import CronTab
 import time
-from vendors import dominos, pizza_hut
+from vendors import dominos, pizza_hut, pizza_express, papa_johns
 from selenium import webdriver
 
 class Collector(object):
@@ -11,6 +11,8 @@ class Collector(object):
         self.vendors = [
             dominos.Dominos(queue),
             pizza_hut.PizzaHut(queue),
+            pizza_express.PizzaExpress(queue),
+            papa_johns.PapaJohns(queue),
         ]
 
     def _start_webdriver(self):

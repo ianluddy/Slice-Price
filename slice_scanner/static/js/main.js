@@ -108,6 +108,7 @@ function load_vendors(){
         vendor_info=input;
         for( var vendor_id in input){
             vendor_list.push(input[vendor_id].name)
+            // vendor_list.push(vendor_id);
         }
     });
 }
@@ -144,11 +145,12 @@ function draw_pizza_page(){
     // Add filters
     var filter_wrapper = $("#sl-filter-wrapper");
     remove_filter_handler();
-    add_filter(filter_wrapper, "vendors", vendor_list, "danger", "btn-outline", "active");
-    add_filter(filter_wrapper, "crusts", pizza_info["bases"], "warning", "btn-outline", "active");
-    add_filter(filter_wrapper, "toppings", pizza_info["toppings"], "primary", "btn-outline", "");
-    add_filter(filter_wrapper, "sizes", pizza_info["diameters"], "info", "btn-circle btn-outline", "active");
-    add_filter(filter_wrapper, "slices", pizza_info["slices"], "info", "btn-circle btn-outline", "active");
+
+    add_filter(filter_group_tmpl, filter_wrapper, "vendors", vendor_list, "danger", "btn-outline", "active");
+    add_filter(filter_group_tmpl, filter_wrapper, "crusts", pizza_info["bases"], "warning", "btn-outline", "active");
+    add_filter(filter_group_tmpl, filter_wrapper, "toppings", pizza_info["toppings"], "primary", "btn-outline", "");
+    add_filter(filter_group_tmpl, filter_wrapper, "sizes", pizza_info["diameters"], "info", "btn-circle btn-outline", "active");
+    add_filter(filter_group_tmpl, filter_wrapper, "slices", pizza_info["slices"], "info", "btn-circle btn-outline", "active");
     add_filter_handler(function(){queue_task(update_pizza_table)});
     init_checkboxes();
 
@@ -162,8 +164,8 @@ function draw_table_template(){
     $(page_main).append(table_page_tmpl());
 }
 
-function add_filter(dom, id, items, theme, style, active){
-    $(dom).append(filter_group_tmpl({
+function add_filter(tmpl, dom, id, items, theme, style, active){
+    $(dom).append(tmpl({
         "id": id,
         "title": id.toUpperCase(),
         "items": items,
@@ -183,7 +185,7 @@ function remove_filter_handler(){
 
 function get_filter(id){
     var filtered = [];
-    $("#" + id + " .sl-btn.active").each(function(){filtered.push($(this).text())});
+    $("#" + id + " .sl-btn.active").each(function(){filtered.push($(this).attr("filter_id"))});
     if (filtered.length > 0)
         return filtered;
     return undefined;
