@@ -103,14 +103,24 @@ class Parser(object):
 
     #### STRING ####
 
-    def _get_str_int(self, string):
+    @staticmethod
+    def _get_str_int(string):
         try:
             return int(re.search(r'\d+', string).group())
         except AttributeError:
             return None
 
-    def _get_str_fl(self, string):
+    @staticmethod
+    def _get_str_fl(string):
         return float(re.findall("\d+.\d+", string)[0])
 
-    def _strip_to_ascii(self, string):
+    @staticmethod
+    def _strip_to_ascii(string):
         return ''.join([i if ord(i) < 128 else '' for i in string])
+
+    @staticmethod
+    def _normalise_parsed_data(kwargs):
+        for key, value in kwargs.iteritems():
+            if type(value) in [str, unicode]:
+                kwargs[key] = value.encode("punycode").split("-")[0]
+        return kwargs

@@ -8,21 +8,27 @@ class Pizza(Product):
     # Crust normaliser. For converting "Thin & Crispy Crust" to "Thin"
     base_normaliser = {
         "Thin": ["thin"],
-        "Stuffed": ["stuffed", "decadence"],
+        "Stuffed": ["stuffed", "decadence", "cheesy bites"],
         "Italian": ["italian"],
-        "Classic": ["classic"],
+        "Pan": ["classic", "pan"], # TODO = verify that classic and pan are the same thing
         "Gluten Free": ["gluten"],
     }
 
-    # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "Bacon"
+    # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "Bacon", and "Spicy Minced Beef" to "Beef"
     topping_normaliser = {
-        "Bacon": ["smoked bacon rashers"],
-        "Spinach": ["baby spinach"],
-        "Tomatoes": ["sunblush baby tomatoes"],
-        "Onions": ["red onions"],
-        "Peppers": ["green and red peppers"],
+        "Bacon": ["bacon"],
+        "Spinach": ["spinach"],
+        "Onions": ["onion"],
+        "Olives": ["olives"],
+        "Peppers": ["green and red peppers", "mixed peppers"],
         "Tomato Sauce": ["domino's own tomato sauce"],
+        "Tomatoes": ["tomatoes"],
         "Chicken": ["chicken breast strips"],
+        "Jalapenos": ["jalapeno"],
+        "Pepperoni": ["pepperoni"],
+        "Beef": ["beef"],
+        "Pork": ["pork"],
+        "Create your own": ["freestyle", "create"], # TODO - put this somewhere else
     }
 
     # Pizza style normaliser. For normalising "Vegi Supreme" to "Vegetarian"
@@ -47,11 +53,11 @@ class Pizza(Product):
 
     def __str__(self):
         return "%s %s %s %s %s %s %s %s" % (
-            self.vendor_id,
-            self.name,
-            self.base,
-            self.toppings,
-            self.style,
+            str(self.vendor_id),
+            str(self.name),
+            str(self.base),
+            [str(t) for t in self.toppings],
+            str(self.style),
             self.price,
             self.size,
             self.diameter,
@@ -65,7 +71,12 @@ class Pizza(Product):
         return valid
 
     def _hash(self):
-        return md5(self.vendor_id + self.name + self.size + self.base).hexdigest()
+        to_hash = u""
+        to_hash += self.vendor_id
+        to_hash += self.name
+        to_hash += self.size
+        to_hash += self.base
+        return md5(to_hash).hexdigest()
 
     def _description(self, base, toppings):
         return "%s Base with %s" % (

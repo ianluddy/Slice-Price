@@ -8,7 +8,7 @@ class Product():
         self.vendor_id = kwargs["vendor_id"]
         self.name = kwargs["name"]
         self.price = kwargs["price"]
-        self.description = kwargs.get("description")
+        self.description = kwargs["description"] if kwargs.get("description") else None
         self.quantity = kwargs.get("quantity", 1)
 
     def to_dict(self):
@@ -32,13 +32,17 @@ class Product():
 
     @staticmethod
     def _normalise_data(normaliser, data):
+
         if data in normaliser:
             return data
+
         lower_case = data.lower()
+
         for key, values in normaliser.iteritems():
             for value in values:
                 if value in lower_case:
                     return key
+
         return data
 
     @abc.abstractmethod

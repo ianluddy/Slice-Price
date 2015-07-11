@@ -192,10 +192,8 @@ class Dominos(Vendor):
                     title,
                     toppings,
                     size,
-                    self._diameter_from_size(size),
                     _get_selected_price(),
-                    crust,
-                    self._slices_from_size(size)
+                    crust
                 )
 
         _wait_for_load()

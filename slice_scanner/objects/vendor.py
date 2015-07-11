@@ -20,7 +20,7 @@ class Vendor(Parser):
         self.queue = outgoing_queue # Queue for stuff we've parsed
 
     def _new_product(self, product, **kwargs):
-        new_product = wrapped_execute(lambda: product(**kwargs))
+        new_product = wrapped_execute(lambda: product(**self._normalise_parsed_data(kwargs)))
         if new_product:
             self.queue.put(new_product)
 
@@ -48,7 +48,9 @@ class Vendor(Parser):
     def _slices_from_size(self, size):
         return self.slice_reference.get(size, -1)
 
-    def _new_pizza(self, name, toppings, size, diameter, price, base, slices):
+    def _new_pizza(self, name, toppings, size, price, base):
+        slices = self._slices_from_size(size)
+        diameter = self._diameter_from_size(size)
         self._new_product(
             Pizza, vendor_id=self.id, name=name, toppings=toppings, size=size,
             diameter=diameter, price=price, base=base, slices=slices
