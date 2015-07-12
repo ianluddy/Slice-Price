@@ -7532,6 +7532,15 @@ body.skin-3 {
 .sl-btn.active{
     opacity: 1 !important;
 }
+.sl-btn{
+    padding: 3px 6px;
+    font-size: 0.95em;
+    color: #bbb;
+    font-weight: 500;
+}
+.sl-btn-active{
+    color: #444;
+}
 #table_title strong{
     color: #1ab394;
 }

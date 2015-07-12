@@ -125,8 +125,9 @@ class Parser(object):
             return data.encode("punycode").split("-")[0]
 
         for key, value in kwargs.iteritems():
-            if type(value) in [str, unicode]:
-                kwargs[key] = _punify(value)
-            elif type(value) in [list]:
-                kwargs[key] = [_punify(item) for item in value]
+            if key not in ["img"]:
+                if type(value) in [str, unicode]:
+                    kwargs[key] = _punify(value)
+                elif type(value) in [list]:
+                    kwargs[key] = [_punify(item) for item in value]
         return kwargs

@@ -1,5 +1,5 @@
 /* Constants */
-var FADE = TASK_DELAY;
+var FADE = 300;
 var TASK_DELAY = 800;
 
 /* Globals */
@@ -48,6 +48,10 @@ function templates_loaded(){
     attach_templates();
     compile_templates();
     add_tab_handlers();
+}
+
+function init_filters(){
+    $(".sl-btn").on("click", function(){$(this).toggleClass("sl-btn-active")});
 }
 
 function init_checkboxes(){
@@ -152,12 +156,15 @@ function draw_pizza_page(){
     add_filter(filter_group_tmpl, filter_wrapper, "sizes", pizza_info["diameters"], "info", "btn-circle btn-outline", "active");
     add_filter(filter_group_tmpl, filter_wrapper, "slices", pizza_info["slices"], "info", "btn-circle btn-outline", "active");
     add_filter_handler(function(){queue_task(update_pizza_table)});
-    init_checkboxes();
+    // init_checkboxes();
+    init_filters();
 
     // Add table
-    add_pizza_table();
+    // add_pizza_table();
 
-    add_body_handlers();
+    // add_body_handlers();
+
+    hide_loader(page_main);
 }
 
 function draw_table_template(){
@@ -173,6 +180,7 @@ function add_filter(tmpl, dom, id, items, theme, style, active){
         "style": style,
         "active": active
     }));
+    //    $(dom).find(".sl-btn").on("click", function(){$(this).toggleClass("sl-btn-active")});
 }
 
 function add_filter_handler(func){
@@ -185,7 +193,7 @@ function remove_filter_handler(){
 
 function get_filter(id){
     var filtered = [];
-    $("#" + id + " .sl-btn.active").each(function(){filtered.push($(this).attr("filter_id"))});
+    $("#" + id + " .sl-btn-active").each(function(){filtered.push($(this).attr("filter_id"))});
     if (filtered.length > 0)
         return filtered;
     return undefined;

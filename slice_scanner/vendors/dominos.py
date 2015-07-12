@@ -5,7 +5,7 @@ class Dominos(Vendor):
 
     id = "dominos"
     name = "Dominos Pizza"
-    site = "https://www.dominos.co.uk/"
+    site = "https://www.dominos.co.uk"
 
     diameter_reference = {
         "large": 13.5,
@@ -65,7 +65,7 @@ class Dominos(Vendor):
                 quantity = self._get_side_variant_quantity(side_id)
                 price = self._get_side_variant_price(side_id)
                 self._new_side(
-                    name, price, size, quantity, description
+                    name, price, size, quantity, None, description
                 )
                 self._mark_side_variant_parsed(side_id)
 
@@ -107,24 +107,52 @@ class Dominos(Vendor):
     #### Pizzas ####
 
     def _get_pizzas(self):
-        for link in self._get_pizza_links():
-            self._parse_pizza_group(link)
+        for product_id, product in self._get_pizza_links().iteritems():
+            self._parse_pizza_group(product["href"], product["img"])
 
     def _get_pizza_links(self):
+
+        def _mark_pizzas_unparsed(identifier):
+            self._script('$("%s").each(function(){$(this).addClass("unparsed")})' % identifier)
+
+        def _get_next_unparsed_id():
+            return self._script('return $(".product.unparsed:first").removeClass("unparsed").attr("data-productid")')
+
+        def _all_products_parsed():
+            return self._script('return $(".product.unparsed").length') == 0
+
+        def _get_product_img(product_id):
+            identifier = ".pizza.product[data-productid='%s'] .details .product-image" % product_id
+            return self._script('return $("%s").attr("lazy-src").toString();' % identifier)
+
+        def _get_product_link(product_id):
+            identifier = ".pizza.product[data-productid='%s'] .section-footer a" % product_id
+            return self._script('return $("%s").attr("href");' % identifier)
+
+        product_links = {}
+
         self._wait_for_cl("pizza")
         self._wait_for_js()
 
-        def _get_links(section):
-            links = []
-            for pizza in self.web_driver.find_element_by_id(section).find_elements_by_class_name("pizza"):
-                footer = pizza.find_elements_by_class_name("section-footer")[0]
-                order_button = footer.find_elements_by_class_name("order")[0].find_element_by_tag_name("a")
-                links.append(order_button.get_attribute("href"))
-            return links
+        speciality = "[id='Speciality Pizzas'] .pizza"
+        gourmet = "[id='Gourmet Pizzas'] .pizza"
 
-        return _get_links("Gourmet Pizzas") + _get_links("Speciality Pizzas")
+        self._wait_for_css(speciality)
+        self._wait_for_css(gourmet)
 
-    def _parse_pizza_group(self, link):
+        _mark_pizzas_unparsed(speciality)
+        _mark_pizzas_unparsed(gourmet)
+
+        while not _all_products_parsed():
+            product_id = _get_next_unparsed_id()
+            product_links[product_id] = {
+                "href": "%s%s" % (self.site, _get_product_link(product_id)),
+                "img": _get_product_img(product_id)
+            }
+
+        return product_links
+
+    def _parse_pizza_group(self, link, img):
 
         def _wait_for_load():
             self.web_driver.get(link)
@@ -193,7 +221,8 @@ class Dominos(Vendor):
                     toppings,
                     size,
                     _get_selected_price(),
-                    crust
+                    crust,
+                    img
                 )
 
         _wait_for_load()

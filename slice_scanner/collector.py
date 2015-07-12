@@ -9,8 +9,8 @@ class Collector(object):
     def __init__(self, frequency, queue):
         self.cron = CronTab(frequency)
         self.vendors = [
-            pizza_hut.PizzaHut(queue),
             dominos.Dominos(queue),
+            pizza_hut.PizzaHut(queue),
             pizza_express.PizzaExpress(queue),
             papa_johns.PapaJohns(queue),
         ]

@@ -48,18 +48,18 @@ class Vendor(Parser):
     def _slices_from_size(self, size):
         return self.slice_reference.get(size, -1)
 
-    def _new_pizza(self, name, toppings, size, price, base):
+    def _new_pizza(self, name, toppings, size, price, base, img):
         slices = self._slices_from_size(size)
         diameter = self._diameter_from_size(size)
         self._new_product(
             Pizza, vendor_id=self.id, name=name, toppings=toppings, size=size,
-            diameter=diameter, price=price, base=base, slices=slices
+            diameter=diameter, price=price, base=base, slices=slices, img=img
         )
 
-    def _new_side(self, name, price, size, quantity, description=None):
+    def _new_side(self, name, price, size, quantity, img, description=None):
         self._new_product(
             Side, vendor_id=self.id, name=name, price=price, size=size, quantity=quantity,
-            description=description
+            img=img, description=description
         )
 
     def parse(self):

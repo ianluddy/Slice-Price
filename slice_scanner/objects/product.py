@@ -9,6 +9,7 @@ class Product():
         self.name = kwargs["name"]
         self.price = kwargs["price"]
         self.description = kwargs["description"] if kwargs.get("description") else None
+        self.img = kwargs.get("img")
         self.quantity = kwargs.get("quantity", 1)
 
     def to_dict(self):
@@ -18,6 +19,7 @@ class Product():
             product_dict["name"] = self.name
             product_dict["price"] = self.price
             product_dict["description"] = self.description
+            product_dict["img"] = self.img
             product_dict["stamp"] = time()
             product_dict["hash"] = self._hash()
             product_dict["score"] = self._score()

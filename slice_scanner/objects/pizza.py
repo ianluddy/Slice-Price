@@ -52,7 +52,7 @@ class Pizza(Product):
         self.description = self._description(self.base, kwargs["toppings"])
 
     def __str__(self):
-        return "%s %s %s %s %s %s %s %s" % (
+        return "%s %s %s %s %s %s %s %s %s" % (
             self.vendor_id,
             self.name,
             self.base,
@@ -61,6 +61,7 @@ class Pizza(Product):
             self.price,
             self.size,
             self.diameter,
+            self.img,
         )
 
     def _valid(self):
