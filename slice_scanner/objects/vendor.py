@@ -7,7 +7,6 @@ from ..utils import wrapped_execute
 class Vendor(Parser):
     __metaclass__ = abc.ABCMeta
     id = None
-    name = None
     site = None
 
     # Diameter dict. For converting "large" to 13.5
@@ -38,7 +37,6 @@ class Vendor(Parser):
     def to_dict(self):
         return {
             "id": self.id,
-            "name": self.name,
             "site": self.site
         }
 
@@ -52,13 +50,13 @@ class Vendor(Parser):
         slices = self._slices_from_size(size)
         diameter = self._diameter_from_size(size)
         self._new_product(
-            Pizza, vendor_id=self.id, name=name, toppings=toppings, size=size,
+            Pizza, vendor=self.id, name=name, toppings=toppings, size=size,
             diameter=diameter, price=price, base=base, slices=slices, img=img
         )
 
     def _new_side(self, name, price, size, quantity, img, description=None):
         self._new_product(
-            Side, vendor_id=self.id, name=name, price=price, size=size, quantity=quantity,
+            Side, vendor=self.id, name=name, price=price, size=size, quantity=quantity,
             img=img, description=description
         )
 

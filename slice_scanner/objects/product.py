@@ -5,7 +5,7 @@ class Product():
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, **kwargs):
-        self.vendor_id = kwargs["vendor_id"]
+        self.vendor = kwargs["vendor"]
         self.name = kwargs["name"]
         self.price = kwargs["price"]
         self.description = kwargs["description"] if kwargs.get("description") else None
@@ -15,7 +15,7 @@ class Product():
     def to_dict(self):
         if self._valid():
             product_dict = {}
-            product_dict["vendor_id"] = self.vendor_id
+            product_dict["vendor"] = self.vendor
             product_dict["name"] = self.name
             product_dict["price"] = self.price
             product_dict["description"] = self.description
@@ -27,7 +27,7 @@ class Product():
         return None
 
     def _valid(self):
-        for required in ["name", "price", "vendor_id"]:
+        for required in ["name", "price", "vendor"]:
             if getattr(self, required) is None:
                 return False
         return True

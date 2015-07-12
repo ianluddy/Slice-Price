@@ -7559,3 +7559,35 @@ body.skin-3 {
 #footable_body tr:hover{
     background-color: #eee;
 }
+.sl-grid-product{
+    max-width: 256px;
+    /*display: inline-block;*/
+    /*min-width: 180px;*/
+    /*float: left;*/
+    /*margin-right: 20px;*/
+}
+.sl-label{
+    background-color: #f1f1f1;
+    padding: 4px;
+    display: inline-block;
+    margin-bottom: 3px;
+}
+.sl-product-img{
+    background-size: 100%;
+    background-color: #000;
+}
+.sl-product-vendor{
+    position: absolute;
+    bottom: 32px;
+    right: 16px;
+    height: 32px;
+    width: 100px;
+    padding-left: 4px;
+}
+#sl-table-control{
+    margin-bottom: 20px;
+    margin-right: 50px;
+}
+#sl-table-control > span{
+    float: right;
+}

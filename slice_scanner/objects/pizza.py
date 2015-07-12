@@ -53,7 +53,7 @@ class Pizza(Product):
 
     def __str__(self):
         return "%s %s %s %s %s %s %s %s %s" % (
-            self.vendor_id,
+            self.vendor,
             self.name,
             self.base,
             [t for t in self.toppings],
@@ -73,7 +73,7 @@ class Pizza(Product):
 
     def _hash(self):
         to_hash = u""
-        to_hash += self.vendor_id
+        to_hash += self.vendor
         to_hash += self.name
         to_hash += self.size
         to_hash += self.base

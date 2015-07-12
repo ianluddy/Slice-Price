@@ -22,7 +22,7 @@ class Side(Product):
 
     def __str__(self):
         return "%s %s %s %s %s" % (
-            self.vendor_id,
+            self.vendor,
             self.name,
             self.type,
             self.price,
@@ -37,7 +37,7 @@ class Side(Product):
         return valid
 
     def _hash(self):
-        return md5(self.vendor_id + self.name + str(self.quantity)).hexdigest()
+        return md5(self.vendor + self.name + str(self.quantity)).hexdigest()
 
     def _score(self):
         return float(self.quantity) / float(self.price) * 100

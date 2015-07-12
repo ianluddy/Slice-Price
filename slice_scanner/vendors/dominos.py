@@ -3,8 +3,7 @@ from slice_scanner.objects.vendor import Vendor
 
 class Dominos(Vendor):
 
-    id = "dominos"
-    name = "Dominos Pizza"
+    id = "Dominos Pizza"
     site = "https://www.dominos.co.uk"
 
     diameter_reference = {
@@ -49,6 +48,8 @@ class Dominos(Vendor):
     #### Sides ####
 
     def _get_sides(self):
+        return []
+
         self.web_driver.get("https://www.dominos.co.uk/menu")
         self._wait_for_alert(timeout=1)
 

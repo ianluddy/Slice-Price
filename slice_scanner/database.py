@@ -61,6 +61,7 @@ class Database():
                 "style": self._in(kwargs.get("style")),
                 "base_style": self._in(kwargs.get("base_style")),
                 "diameter": self._in(kwargs.get("diameter")),
+                "vendor": self._in(kwargs.get("vendor")),
                 "slices": self._in(kwargs.get("slices"))
             },
             sort_by=kwargs.get("sort_by"),

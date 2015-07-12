@@ -3,8 +3,7 @@ from slice_scanner.objects.vendor import Vendor
 
 class PizzaHut(Vendor):
 
-    id = "pizza_hut"
-    name = "Pizza Hut"
+    id = "Pizza Hut"
     site = "https://www.pizzahut.co.uk/"
 
     diameter_reference = {
@@ -35,6 +34,15 @@ class PizzaHut(Vendor):
 
         def _get_pizza_title(index):
             return self._script('return $($(".pizza-product").get(%s)).find("h3").text()' % index).strip()
+
+        def _get_pizza_img(index):
+            try:
+                return self._script(
+                    'return $($(".pizza-product").get(%s)).find(".well .product-pizza").css("background-image")' %
+                    index
+                ).strip().replace("url(", "").replace(")","")
+            except:
+                return None
 
         def _get_pizza_description(index):
             return self._script('return $($(".pizza-product").get(%s)).find("p").text()' % index).strip()
@@ -68,6 +76,7 @@ class PizzaHut(Vendor):
         for i in range(_get_pizza_count()):
             i += 5
             title = _get_pizza_title(i)
+            img = _get_pizza_img(i)
             toppings = [t.strip() for t in _get_pizza_description(i).split(",")]
 
             while True:
@@ -80,7 +89,7 @@ class PizzaHut(Vendor):
                         self._wait_for_js()
                         price = self._get_str_fl(_get_pizza_price(i))
                         if size:
-                            self._new_pizza(title, toppings, size, price, base)
+                            self._new_pizza(title, toppings, size, price, base, img)
                         else:
                             break
                 else:
@@ -95,7 +104,7 @@ class PizzaHut(Vendor):
         self._wait_for_id("optCollection")
         self._wait_for_js()
         self._get_id("optCollection").click()
-        self._get_id("ajax-postcode-txt").send_keys("sw185lt")
+        self._get_id("ajax-postcode-txt").send_keys("sw177lf")
         self._get_id("get-store-btn").click()
 
         self._wait_for_css('.store-start-order a:first')

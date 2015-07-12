@@ -3,18 +3,20 @@ var FADE = 300;
 var TASK_DELAY = 800;
 
 /* Globals */
+var sort_by = "score";
+var sort_dir = -1;
+var page = 0;
 var tasks = {};
 var stats = {};
 var page_title, page_main;
 var pizza_info = {};
-var vendor_list = [];
-var vendor_info = {};
+var vendor_info = [];
 var title_tmpl, filter_group_tmpl, pizza_table_head_tmpl, pizza_table_row_tmpl, table_tmpl, table_page_tmpl,
-    table_title_tmpl, spinner_tmpl, no_result_tmpl;
+    table_title_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl;
 
 $(document).ready(function () {
-    load_counts();
-    load_vendors();
+    ajax_load("stats", {}, update_counts);
+    ajax_load("vendors", {}, function(input){vendor_info = input;});
     cache_elements();
     setInterval(run_tasks, TASK_DELAY);
 
@@ -84,6 +86,7 @@ function compile_templates(){
     table_title_tmpl = Handlebars.compile($("#table_title_tmpl").html());
     spinner_tmpl = Handlebars.compile($("#spinner_tmpl").html());
     no_result_tmpl = Handlebars.compile($("#no_result_tmpl").html());
+    pizza_grid_tmpl = Handlebars.compile($("#pizza_grid_tmpl").html());
 }
 
 function attach_templates(input){
@@ -101,20 +104,6 @@ function add_tab_handlers(){
 
 function add_body_handlers(){
     $(".sl-btn").on("mouseout", function(){$(this).removeClass("focus").blur();});
-}
-
-function load_counts(){
-    ajax_load("stats", {}, update_counts);
-}
-
-function load_vendors(){
-    ajax_load("vendors", {}, function(input){
-        vendor_info=input;
-        for( var vendor_id in input){
-            vendor_list.push(input[vendor_id].name)
-            // vendor_list.push(vendor_id);
-        }
-    });
 }
 
 function update_counts(input){
@@ -150,12 +139,12 @@ function draw_pizza_page(){
     var filter_wrapper = $("#sl-filter-wrapper");
     remove_filter_handler();
 
-    add_filter(filter_group_tmpl, filter_wrapper, "vendors", vendor_list, "danger", "btn-outline", "active");
+    add_filter(filter_group_tmpl, filter_wrapper, "vendors", vendor_info, "danger", "btn-outline", "active");
     add_filter(filter_group_tmpl, filter_wrapper, "crusts", pizza_info["bases"], "warning", "btn-outline", "active");
     add_filter(filter_group_tmpl, filter_wrapper, "toppings", pizza_info["toppings"], "primary", "btn-outline", "");
     add_filter(filter_group_tmpl, filter_wrapper, "sizes", pizza_info["diameters"], "info", "btn-circle btn-outline", "active");
     add_filter(filter_group_tmpl, filter_wrapper, "slices", pizza_info["slices"], "info", "btn-circle btn-outline", "active");
-    add_filter_handler(function(){queue_task(update_pizza_table)});
+    add_filter_handler(function(){queue_task(fetch_pizza)});
     // init_checkboxes();
     init_filters();
 
@@ -165,6 +154,8 @@ function draw_pizza_page(){
     // add_body_handlers();
 
     hide_loader(page_main);
+    add_sort_handlers();
+    fetch_pizza();
 }
 
 function draw_table_template(){
@@ -181,6 +172,18 @@ function add_filter(tmpl, dom, id, items, theme, style, active){
         "active": active
     }));
     //    $(dom).find(".sl-btn").on("click", function(){$(this).toggleClass("sl-btn-active")});
+}
+
+function add_sort_handlers(){
+    $("#sl-sort-desc").on("click", sort_handler);
+    $("#sl-sort-asc").on("click", sort_handler);
+}
+
+function sort_handler(){
+    $(this).addClass("btn-primary").removeClass("btn-white");
+    $(this).siblings().addClass("btn-white").removeClass("btn-primary");
+    sort_dir = $(this).attr("sort_dir");
+    fetch_pizza();
 }
 
 function add_filter_handler(func){
@@ -201,41 +204,55 @@ function get_filter(id){
 
 function get_num_filter(id){
     var filtered = [];
-    $("#" + id + " .sl-btn.active").each(function(){filtered.push(parseFloat($(this).text()))});
+    $("#" + id + " .sl-btn-active").each(function(){filtered.push(parseFloat($(this).attr("filter_id")))});
     if (filtered.length > 0)
         return filtered;
     return undefined;
 }
+//
+//function add_table(title, page_size, head_tmpl, body_tmpl, data){
+//    $("#sl-table-wrapper").append(table_tmpl({
+//        "title": title,
+//        "page_size": page_size,
+//        "head": head_tmpl(),
+//        "body": body_tmpl({"data": data})
+//    }));
+//    init_footable();
+//    hide_loader(page_main);
+//}
 
-function add_table(title, page_size, head_tmpl, body_tmpl, data){
-    $("#sl-table-wrapper").append(table_tmpl({
-        "title": title,
-        "page_size": page_size,
-        "head": head_tmpl(),
-        "body": body_tmpl({"data": data})
-    }));
-    init_footable();
-    hide_loader(page_main);
-}
+//function add_pizza_table(){
+//    ajax_load("pizza", get_filters(), function(input){
+//        add_table("Pizza", "10", pizza_table_head_tmpl, pizza_table_row_tmpl, input);
+//    });
+//}
+//
+//function update_table_header(items, item_count, vendor_count){
+//    $("#table_title").html(table_title_tmpl({"item_count": item_count, "items": items, "vendor_count": vendor_count}))
+//}
 
-function add_pizza_table(){
-    ajax_load("pizza", get_filters(), function(input){
-        add_table("Pizza", "10", pizza_table_head_tmpl, pizza_table_row_tmpl, input);
-    });
-}
-
-function update_table_header(items, item_count, vendor_count){
-    $("#table_title").html(table_title_tmpl({"item_count": item_count, "items": items, "vendor_count": vendor_count}))
-}
-
-function update_pizza_table(){
+function fetch_pizza(){
     show_loader(get_table(), function(){
-        ajax_load("pizza", get_filters(), function(input){
-            update_table_header("Pizza(s)", input.length, get_filter("vendors").length);
-            update_table_contents(pizza_table_row_tmpl, {"data": input});
+        ajax_load("pizza", fetch_pizza_parameters(), function(input){
+            //update_table_header("Pizza(s)", input.length, get_filter("vendors").length);
+            //update_table_contents(pizza_table_row_tmpl, {"data": input});
+            get_table().empty().append(pizza_grid_tmpl({"items": input}));
             hide_loader(get_table());
         })
     });
+}
+
+function fetch_pizza_parameters(){
+    return {
+        "vendor": JSON.stringify(get_filter("vendors")),
+        "base_style": JSON.stringify(get_filter("crusts")),
+        "toppings": JSON.stringify(get_filter("toppings")),
+        "diameter": JSON.stringify(get_num_filter("sizes")),
+        "slices": JSON.stringify(get_num_filter("slices")),
+        "page": page,
+        "sort_by": sort_by,
+        "sort_dir": sort_dir,
+    };
 }
 
 function update_table_contents(tmpl, data){
@@ -255,7 +272,7 @@ function update_table_contents(tmpl, data){
     }
 }
 
-function get_filters(){
+function get_pizza_filters(){
     return {
         "vendors": JSON.stringify(get_filter("vendors")),
         "base_style": JSON.stringify(get_filter("crusts")),

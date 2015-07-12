@@ -31,6 +31,7 @@ def pizza():
         style=request.args.get("style"),
         base_style=request.args.get("base_style"),
         diameter=request.args.get("diameter", []),
+        vendor=request.args.get("vendor", []),
         slices=request.args.get("slices", []),
         sort_by=request.args.get("sort_by"),
         sort_dir=request.args.get("sort_dir"),
@@ -109,7 +110,7 @@ def sides_prices():
 @app.route('/vendors')
 @documentor.doc()
 def vendors():
-    return json_response(db.vendor_info)
+    return json_response(db.distinct("pizzas", "vendor"))
 
 ### Stats API ####
 
