@@ -114,25 +114,19 @@
         <div id="sl-filter-wrapper" class="col-lg-3"></div>
         <div id="sl-table-wrapper-wrapper" class="col-lg-9">
             <div id="sl-table-control" class="col-lg-12">
-                <!--<span>-->
-                    <!--<div class="btn-group">-->
-                        <!--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Sort ascending"><i class="fa fa-sort-amount-asc"></i> </button>-->
-                        <!--<button class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Sort descending"><i class="fa fa-sort-amount-desc"></i> </button>-->
-                    <!--</div>-->
-                <!--</span>-->
                 <span>
                     <div class="btn-group" role="group" aria-label="...">
                         <button id="sl-sort-desc" sort_dir="-1" type="button" class="btn btn-primary"><i class="fa fa-sort-amount-desc"></i></button>
                         <button id="sl-sort-asc" sort_dir="1" type="button" class="btn btn-white"><i class="fa fa-sort-amount-asc"></i></button>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span id="sl-sorted-by">Score</span>
-                            <span class="caret"></span>
+                                <span id="sl-sorted-by-label">Score</span>
+                                <span class="caret"></span>
                             </button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Score</a></li>
-                                    <li><a href="#">Price</a></li>
-                                </ul>
+                            <ul id="sl-sort-by" class="dropdown-menu">
+                                <li><a href="#">Score</a></li>
+                                <li><a href="#">Price</a></li>
+                            </ul>
                         </div>
                     </div>
                 </span>

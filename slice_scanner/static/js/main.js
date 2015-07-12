@@ -3,6 +3,7 @@ var FADE = 300;
 var TASK_DELAY = 800;
 
 /* Globals */
+var refresh_function = null;
 var sort_by = "score";
 var sort_dir = -1;
 var page = 0;
@@ -133,6 +134,8 @@ function load_pizza_page(){
 }
 
 function draw_pizza_page(){
+    refresh_function = fetch_pizza;
+
     draw_table_template();
 
     // Add filters
@@ -172,18 +175,6 @@ function add_filter(tmpl, dom, id, items, theme, style, active){
         "active": active
     }));
     //    $(dom).find(".sl-btn").on("click", function(){$(this).toggleClass("sl-btn-active")});
-}
-
-function add_sort_handlers(){
-    $("#sl-sort-desc").on("click", sort_handler);
-    $("#sl-sort-asc").on("click", sort_handler);
-}
-
-function sort_handler(){
-    $(this).addClass("btn-primary").removeClass("btn-white");
-    $(this).siblings().addClass("btn-white").removeClass("btn-primary");
-    sort_dir = $(this).attr("sort_dir");
-    fetch_pizza();
 }
 
 function add_filter_handler(func){
@@ -303,7 +294,33 @@ function toaster(){
     }, 1300);
 }
 
-/* Helpers */
+/* Sorting */
+
+function add_sort_handlers(){
+    $("#sl-sort-desc").on("click", sort_dir_handler);
+    $("#sl-sort-asc").on("click", sort_dir_handler);
+    $("#sl-sort-by li a").on("click", sort_by_handler);
+}
+
+function sort_by_handler(){
+    var sort_value = $(this).text();
+    sort_by = sort_value.toLowerCase();
+    $("#sl-sorted-by-label").text(sort_value);
+    refresh_data();
+}
+
+function sort_dir_handler(){
+    $(this).addClass("btn-primary").removeClass("btn-white");
+    $(this).siblings().addClass("btn-white").removeClass("btn-primary");
+    sort_dir = $(this).attr("sort_dir");
+    refresh_data();
+}
+
+/* Loading */
+
+function refresh_data(){
+    refresh_function();
+}
 
 function ajax_load(func, args, callback){
     return $.ajax({
