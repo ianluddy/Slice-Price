@@ -104,9 +104,12 @@ class Pizza(Product):
     def _clean_toppings(self, topping_list):
         toppings = []
         for topping in topping_list:
+            ignore = False
             for ignored in self.ignored_toppings:
-                if ignored not in topping.lower():
-                    toppings.append(topping)
+                if ignored in topping.lower():
+                    ignore = True
+            if not ignore:
+                toppings.append(topping)
         return toppings
 
     def _valid(self):
