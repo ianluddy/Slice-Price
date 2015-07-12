@@ -10,25 +10,49 @@ class Pizza(Product):
         "Thin": ["thin"],
         "Stuffed": ["stuffed", "decadence", "cheesy bites"],
         "Italian": ["italian"],
-        "Pan": ["classic", "pan"], # TODO = verify that classic and pan are the same thing
+        "Pan": ["classic", "pan", "original"], # TODO = verify that classic and pan are the same thing
         "Gluten Free": ["gluten"],
     }
 
     # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "Bacon", and "Spicy Minced Beef" to "Beef"
     topping_normaliser = {
+        "Aubergines": ["aubergine"],
+        "BBQ Sauce": ["bbq"],
+        "Tomato Sauce": ["domino's own tomato sauce"],
         "Bacon": ["bacon"],
         "Spinach": ["spinach"],
         "Onions": ["onion"],
+        "Sausage": ["sausage"],
         "Olives": ["olives"],
-        "Peppers": ["green and red peppers", "mixed peppers"],
-        "Tomato Sauce": ["domino's own tomato sauce"],
-        "Tomatoes": ["tomatoes"],
-        "Chicken": ["chicken breast strips"],
+        "Pineapple": ["pineapple"],
+        "Chillies": ["chilli"],
+        "Ham": ["ham"],
+        "Mushrooms": ["mushrooms"],
+        "Peppers": ["red peppers", "mixed peppers"],
+        "Tomatoes": ["tomatoes", "tomato", "sunblush"],
+        "Chicken": ["chicken breast strips", "chargrilled chicken"],
         "Jalapenos": ["jalap"],
         "Pepperoni": ["pepperoni"],
         "Beef": ["beef"],
         "Pork": ["pork"],
+        "Pesto": ["pesto"],
+        "Piri": ["piri"],
+        "Sweetcorn": ["sweetcorn"],
+        "Tandoori Chicken": ["tandoori chicken"],
+        "Pepper Confit": ["pepper confit"],
         "Create your own": ["freestyle", "create"], # TODO - put this somewhere else
+    }
+
+    # Toppings we don't care about
+    ignored_toppings = [
+        "cheese",
+        "seasoning"
+    ]
+
+    # Sauce normaliser.
+    sauce_normaliser = {
+        "BBQ Sauce": ["bbq"],
+        "Tomato Sauce": ["tomato"]
     }
 
     # Pizza style normaliser. For normalising "Vegi Supreme" to "Vegetarian"
@@ -46,7 +70,9 @@ class Pizza(Product):
         self.base = kwargs["base"]
         self.diameter = kwargs["diameter"]
         self.slices = kwargs["slices"]
-        self.toppings = [self._normalise_data(self.topping_normaliser, topping) for topping in kwargs["toppings"]]
+        toppings, sauce = self._organise_toppings(self._clean_toppings(kwargs["toppings"]))
+        self.sauce = self._normalise_data(self.sauce_normaliser, sauce)
+        self.toppings = [self._normalise_data(self.topping_normaliser, topping) for topping in toppings]
         self.style = self._normalise_data(self.style_normaliser, self.name)
         self.base_style = self._normalise_data(self.base_normaliser, self.base)
         self.description = self._description(self.base, kwargs["toppings"])
@@ -63,6 +89,25 @@ class Pizza(Product):
             self.diameter,
             self.img,
         )
+
+    @staticmethod
+    def _organise_toppings(topping_list):
+        toppings = []
+        sauce = "tomato" # assume tomato unless we find some saucy info
+        for topping in topping_list:
+            if "sauce" in topping.lower():
+                sauce = topping
+            else:
+                toppings.append(topping)
+        return toppings, sauce
+
+    def _clean_toppings(self, topping_list):
+        toppings = []
+        for topping in topping_list:
+            for ignored in self.ignored_toppings:
+                if ignored not in topping.lower():
+                    toppings.append(topping)
+        return toppings
 
     def _valid(self):
         valid = super(Pizza, self)._valid()
