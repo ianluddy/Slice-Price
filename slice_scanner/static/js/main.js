@@ -16,6 +16,7 @@ var title_tmpl, filter_group_tmpl, pizza_table_head_tmpl, pizza_table_row_tmpl, 
     table_title_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl;
 
 $(document).ready(function () {
+    $(document).ajaxStart(function() { Pace.restart(); });
     ajax_load("stats", {}, update_counts);
     ajax_load("vendors", {}, function(input){vendor_info = input;});
     cache_elements();
