@@ -12,8 +12,7 @@ var stats = {};
 var page_title, page_main;
 var pizza_info = {};
 var vendor_info = [];
-var title_tmpl, filter_group_tmpl, pizza_table_head_tmpl, pizza_table_row_tmpl, table_tmpl, table_page_tmpl,
-    table_title_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl;
+var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl, range_filter_group_tmpl;
 
 $(document).ready(function () {
     ajax_load("stats", {}, update_counts);
@@ -22,7 +21,6 @@ $(document).ready(function () {
     page_title = $("#page_title");
     setInterval(run_tasks, TASK_DELAY);
     toaster("Welcome!", "Use the filters to find your ideal Pizza!");
-
     $.when(
         ajax_load('templates.html', {}, attach_templates)
     ).done(templates_loaded);
@@ -37,6 +35,8 @@ function load_pizza_page(){
             ajax_load("pizza/toppings", {}, function(input){pizza_info["toppings"] = input;}),
             ajax_load("pizza/styles", {}, function(input){pizza_info["styles"] = input;}),
             ajax_load("pizza/sizes", {}, function(input){pizza_info["sizes"] = input;}),
+            ajax_load("pizza/prices", {}, function(input){pizza_info["prices"] = input;}),
+            ajax_load("pizza/scores", {}, function(input){pizza_info["scores"] = input;}),
             ajax_load("pizza/diameters", {}, function(input){pizza_info["diameters"] = input;}),
             ajax_load("pizza/slices", {}, function(input){pizza_info["slices"] = input;})
         ).done(function(){ draw_product_page(add_pizza_filters, fetch_pizza) });
@@ -44,11 +44,13 @@ function load_pizza_page(){
 }
 
 function add_pizza_filters(){
-    add_filter(filter_group_tmpl, "vendors", vendor_info, "danger", "btn-outline", "active");
-    add_filter(filter_group_tmpl, "crusts", pizza_info["bases"], "warning", "btn-outline", "active");
-    add_filter(filter_group_tmpl, "toppings", pizza_info["toppings"], "primary", "btn-outline", "");
-    add_filter(filter_group_tmpl, "sizes", pizza_info["diameters"], "info", "btn-circle btn-outline", "active");
-    add_filter(filter_group_tmpl, "slices", pizza_info["slices"], "info", "btn-circle btn-outline", "active");
+    add_filter("vendors", vendor_info, "active");
+    add_filter("crusts", pizza_info["bases"], "active");
+    add_filter("toppings", pizza_info["toppings"], "");
+    add_range_filter("size", pizza_info["diameters"].min, pizza_info["diameters"].max, 0.5, "", '"');
+    add_range_filter("slices", pizza_info["slices"].min, pizza_info["slices"].max, 2);
+    add_range_filter("price", pizza_info["prices"].min, pizza_info["prices"].max, 1, "\u00A3");
+    add_range_filter("score", pizza_info["scores"].min, pizza_info["scores"].max, 1);
 }
 
 function fetch_pizza(){
@@ -60,8 +62,10 @@ function fetch_pizza_parameters(){
         "vendor": JSON.stringify(get_filter("vendors")),
         "base_style": JSON.stringify(get_filter("crusts")),
         "toppings": JSON.stringify(get_filter("toppings")),
-        "diameter": JSON.stringify(get_num_filter("sizes")),
-        "slices": JSON.stringify(get_num_filter("slices")),
+        "diameter": JSON.stringify(get_range_filter("size")),
+        "slices": JSON.stringify(get_range_filter("slices")),
+        "price": JSON.stringify(get_range_filter("price")),
+        "score": JSON.stringify(get_range_filter("score")),
         "page": page,
         "sort_by": sort_by,
         "sort_dir": sort_dir,
@@ -79,11 +83,8 @@ function templates_loaded(){
 function compile_templates(){
     title_tmpl = Handlebars.compile($("#title_tmpl").html());
     filter_group_tmpl = Handlebars.compile($("#filter_group_tmpl").html());
-    pizza_table_head_tmpl = Handlebars.compile($("#pizza_table_head_tmpl").html());
-    pizza_table_row_tmpl = Handlebars.compile($("#pizza_table_row_tmpl").html());
-    table_tmpl = Handlebars.compile($("#table_tmpl").html());
+    range_filter_group_tmpl = Handlebars.compile($("#range_filter_group_tmpl").html());
     table_page_tmpl = Handlebars.compile($("#table_page_tmpl").html());
-    table_title_tmpl = Handlebars.compile($("#table_title_tmpl").html());
     spinner_tmpl = Handlebars.compile($("#spinner_tmpl").html());
     no_result_tmpl = Handlebars.compile($("#no_result_tmpl").html());
     pizza_grid_tmpl = Handlebars.compile($("#pizza_grid_tmpl").html());
@@ -95,18 +96,35 @@ function attach_templates(input){
 
 /* Filters */
 
-function add_filter(tmpl, id, items, theme, style, active){
-    $(get_filter_wrapper()).append(tmpl({
+function add_filter(id, items, active){
+    $(get_filter_wrapper()).append(filter_group_tmpl({
         "id": id,
         "title": id.toUpperCase(),
         "items": items,
-        "theme": theme,
-        "style": style,
         "active": active
     }));
 }
 
-function init_filters() {
+function add_range_filter(id, min, max, step, prefix, postfix){
+    $(get_filter_wrapper()).append(range_filter_group_tmpl({
+        "id": id,
+        "title": id.toUpperCase(),
+    }));
+    $("#" + id + "_range").ionRangeSlider({
+        min: min,
+        max: max,
+        type: 'double',
+        step: step,
+        prefix: prefix,
+        postfix: postfix,
+        maxPostfix: "",
+        prettify: true,
+        hasGrid: true,
+        onFinish: function(){queue_task(fetch_function)}
+    });
+}
+
+function create_filters() {
     $(".sl-btn").on("click", function () {
         $(this).toggleClass("sl-btn-active")
     });
@@ -128,12 +146,9 @@ function get_filter(id){
     return undefined;
 }
 
-function get_num_filter(id){
-    var filtered = [];
-    $("#" + id + " .sl-btn-active").each(function(){filtered.push(parseFloat($(this).attr("filter_id")))});
-    if (filtered.length > 0)
-        return filtered;
-    return undefined;
+function get_range_filter(id){
+    var range = $("#" + id + "_range").attr("value").split(";");
+    return [parseFloat(range[0]), parseFloat(range[1])];
 }
 
 /* Page */
@@ -154,6 +169,7 @@ function update_counts(input){
     $("#dessert_cnt").text(input["desserts"]);
     $("#drink_cnt").text(input["drinks"]);
     $("#combo_cnt").text(input["combos"]);
+    $("#vendor_cnt").text(input["vendors"]);
 }
 
 function draw_product_page(add_filters, fetcher){
@@ -162,7 +178,7 @@ function draw_product_page(add_filters, fetcher){
     remove_filter_handler();
     add_filters();
     add_filter_handler();
-    init_filters();
+    create_filters();
     hide_loader(page_main);
     add_sort_handlers();
     fetcher();

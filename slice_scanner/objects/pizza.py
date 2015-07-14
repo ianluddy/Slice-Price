@@ -28,7 +28,7 @@ class Pizza(Product):
         "Chillies": ["chilli"],
         "Ham": ["ham"],
         "Mushrooms": ["mushrooms"],
-        "Peppers": ["red peppers", "mixed peppers"],
+        "Peppers": ["red peppers", "mixed peppers", "green peppers"],
         "Tomatoes": ["tomatoes", "tomato", "sunblush"],
         "Chicken": ["chicken breast strips", "chargrilled chicken"],
         "Jalapenos": ["jalap"],
@@ -46,7 +46,8 @@ class Pizza(Product):
     # Toppings we don't care about
     ignored_toppings = [
         "cheese",
-        "seasoning"
+        "seasoning",
+        "herbs",
     ]
 
     # Sauce normaliser.

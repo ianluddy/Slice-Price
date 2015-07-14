@@ -60,9 +60,11 @@ class Database():
                 "toppings": self._all(kwargs.get("toppings")),
                 "style": self._in(kwargs.get("style")),
                 "base_style": self._in(kwargs.get("base_style")),
-                "diameter": self._in(kwargs.get("diameter")),
                 "vendor": self._in(kwargs.get("vendor")),
-                "slices": self._in(kwargs.get("slices"))
+                "diameter": self._in_range(kwargs.get("diameter")),
+                "slices": self._in_range(kwargs.get("slices")),
+                "price": self._in_range(kwargs.get("price")),
+                "score": self._in_range(kwargs.get("score"))
             },
             sort_by=kwargs.get("sort_by"),
             sort_dir=kwargs.get("sort_dir"),
@@ -104,30 +106,41 @@ class Database():
 
     #### Internal ####
 
-    def _all(self, arguments):
+    @staticmethod
+    def _all(arguments):
         if arguments not in [None, []]:
             return {"$all": json.loads(arguments)}
 
-    def _gt(self, arguments):
+    @staticmethod
+    def _gt(arguments):
         if arguments not in [None, []]:
             return {"$gt": arguments}
 
-    def _lt(self, arguments):
+    @staticmethod
+    def _lt(arguments):
         if arguments not in [None, []]:
             return {"$lt": arguments}
 
-    def _in(self, arguments):
+    @staticmethod
+    def _in(arguments):
         if arguments is not None:
-            if arguments == []:
+            if not arguments:
                 return {"$in": arguments}
             return {"$in": json.loads(arguments)}
 
-    def _serialise(self, cursor):
-        return [self._serialise_document(obj) for obj in cursor]
+    @staticmethod
+    def _in_range(arguments):
+        if arguments is not None:
+            range = json.loads(arguments)
+            return {"$gte": range[0], "$lte": range[1]}
 
-    def _serialise_document(self, object):
+    @staticmethod
+    def _serialise_document(object):
         del object["_id"] # Delete unserialisable mongo id
         return object
+
+    def _serialise(self, cursor):
+        return [self._serialise_document(obj) for obj in cursor]
 
     def _get_collection(self, collection_name):
         return getattr(self.db, collection_name)

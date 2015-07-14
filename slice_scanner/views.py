@@ -33,6 +33,8 @@ def pizza():
         diameter=request.args.get("diameter", []),
         vendor=request.args.get("vendor", []),
         slices=request.args.get("slices", []),
+        price=request.args.get("price", []),
+        score=request.args.get("score", []),
         sort_by=request.args.get("sort_by"),
         sort_dir=request.args.get("sort_dir"),
         page=request.args.get("page"),
@@ -46,7 +48,7 @@ def pizza_toppings():
 @app.route('/pizza/diameters')
 @documentor.doc()
 def pizza_diameters():
-    return json_response(db.distinct("pizzas", "diameter"), sort=True)
+    return json_response(db.range("pizzas", "diameter"))
 
 @app.route('/pizza/styles')
 @documentor.doc()
@@ -56,7 +58,7 @@ def pizza_styles():
 @app.route('/pizza/slices')
 @documentor.doc()
 def pizza_slices():
-    return json_response(db.distinct("pizzas", "slices"), sort=True)
+    return json_response(db.range("pizzas", "slices"))
 
 @app.route('/pizza/bases')
 @documentor.doc()
@@ -66,7 +68,7 @@ def pizza_bases():
 @app.route('/pizza/sizes')
 @documentor.doc()
 def pizza_sizes():
-    return json_response(db.distinct("pizzas", "size"), sort=True)
+    return json_response(db.range("pizzas", "size"))
 
 @app.route('/pizza/prices')
 @documentor.doc()

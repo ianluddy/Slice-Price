@@ -7529,7 +7529,7 @@ body.skin-3 {
 .sl-btn.focus, .sl-btn:focus, .sl-btn:hover{
     opacity: 0.5 !important;
 }
-.sl-btn.active{
+.sl-btn.active, .sl-btn.focus.active, .sl-btn.active:focus, .sl-btn.active:hover{
     opacity: 1 !important;
 }
 .sl-btn{
@@ -7607,6 +7607,18 @@ body.skin-3 {
 }
 .sl-product-img.Papa.Johns{
     background-size: 150%;
+}
+.sl-product-description{
+    display: block;
+    display: -webkit-box;
+    max-width: 400px;
+    max-height: 96px;
+    margin: 0 auto;
+    line-height: 1.4;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .sl-product-vendor{
     position: absolute;
