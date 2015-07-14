@@ -33,17 +33,6 @@ class Dominos(Vendor):
         self._wait_for_css(".store-details-row .btn-secondary")
         self._script('$(".store-details-row .btn-secondary").click()')
 
-    def _acknowledge_dialog(self, containing_text, confirm):
-        self._wait_for_css(".modal", timeout=0.5)
-        for modal in self.web_driver.find_elements_by_class_name("modal"):
-            if modal.is_displayed():
-                if containing_text in modal.text.encode("utf-8").lower():
-                    if confirm:
-                        modal.find_elements_by_class_name("btn-positive")[0].click()
-                    else:
-                        modal.find_elements_by_class_name("btn-negative")[0].click()
-                    self._wait_for_css_to_clear(".modal-backdrop.fade.in", timeout=2)
-
     #### Sides ####
 
     def _get_sides(self):

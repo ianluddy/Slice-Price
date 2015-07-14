@@ -135,8 +135,8 @@ class Pizza(Product):
         )
 
     def _score(self):
-        # Overall score
-        return int(( float(self._area()) * float(len(self.toppings)) / float(self.price) ) * 10)
+        # Overall score (area * toppings[incl cheese] / price)
+        return int(( float(self._area()) * float(len(self.toppings) + 1) / float(self.price) ) * 10)
 
     def _area(self):
         # Area in square inches
