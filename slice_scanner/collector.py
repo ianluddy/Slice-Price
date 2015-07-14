@@ -9,16 +9,15 @@ class Collector(object):
     def __init__(self, frequency, queue):
         self.cron = CronTab(frequency)
         self.vendors = [
-            papa_johns.PapaJohns(queue),
-            pizza_hut.PizzaHut(queue),
+            # papa_johns.PapaJohns(queue),
+            # pizza_hut.PizzaHut(queue),
             dominos.Dominos(queue),
-            pizza_express.PizzaExpress(queue),
+            # pizza_express.PizzaExpress(queue),
         ]
 
     def _start_webdriver(self):
-        # return webdriver.Chrome('C:\\chromeDRIVER.exe', service_args=['--ignore-ssl-errors=true'])
-        return webdriver.PhantomJS('C:\\phantomjs.exe', service_args=['--ignore-ssl-errors=true'])
-        # return webdriver.Firefox()
+        return webdriver.Chrome('C:\\chromeDRIVER.exe', service_args=['--ignore-ssl-errors=true'])
+        # return webdriver.PhantomJS('C:\\phantomjs.exe', service_args=['--ignore-ssl-errors=true'])
 
     def _collect(self):
         web_driver = self._start_webdriver()

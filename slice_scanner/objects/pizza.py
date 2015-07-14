@@ -118,7 +118,7 @@ class Pizza(Product):
         for required in ["toppings", "size", "diameter", "base", "slices"]:
             if getattr(self, required) is None:
                 return False
-        return valid
+        return self.price > 0
 
     def _hash(self):
         to_hash = u""

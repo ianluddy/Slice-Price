@@ -4,7 +4,7 @@ from slice_scanner.objects.vendor import Vendor
 class Dominos(Vendor):
 
     id = "Dominos Pizza"
-    site = "https://www.dominos.co.uk"
+    site = "https://www.dominos.ie"
 
     diameter_reference = {
         "large": 13.5,
@@ -27,12 +27,11 @@ class Dominos(Vendor):
         return []
 
     def _login(self):
-        self.web_driver.get("https://www.dominos.co.uk")
-        self._wait_for_alert()
-        self.web_driver.find_element_by_id("txtPostcode").send_keys("sw116ru")
-        self.web_driver.find_element_by_id("btnStoreSearch").click()
-        self._wait_for_css(".btn.btn-neutral.btn-large")
-        self.web_driver.find_element_by_css_selector(".btn.btn-neutral.btn-large").click()
+        self.web_driver.get(self.site)
+        self._script('$($("#store-finder-search select option").get(7)).prop("selected", "selected").trigger("change")')
+        self._script('$("#store-finder-search .btn-primary").click()')
+        self._wait_for_css(".store-details-row .btn-secondary")
+        self._script('$(".store-details-row .btn-secondary").click()')
 
     def _acknowledge_dialog(self, containing_text, confirm):
         self._wait_for_css(".modal", timeout=0.5)
@@ -50,7 +49,7 @@ class Dominos(Vendor):
     def _get_sides(self):
         return []
 
-        self.web_driver.get("https://www.dominos.co.uk/menu")
+        self.web_driver.get("%s/menu" % self.site)
         self._wait_for_alert(timeout=1)
 
         while not self._sides_ready():
@@ -108,12 +107,9 @@ class Dominos(Vendor):
     #### Pizzas ####
 
     def _get_pizzas(self):
-        for product_id, product in self._get_pizza_links().iteritems():
-            self._parse_pizza_group(product["href"], product["img"])
-
-    def _get_pizza_links(self):
 
         def _mark_pizzas_unparsed(identifier):
+            self._wait_for_css(identifier)
             self._script('$("%s").each(function(){$(this).addClass("unparsed")})' % identifier)
 
         def _get_next_unparsed_id():
@@ -123,111 +119,69 @@ class Dominos(Vendor):
             return self._script('return $(".product.unparsed").length') == 0
 
         def _get_product_img(product_id):
-            identifier = ".pizza.product[data-productid='%s'] .details .product-image" % product_id
+            identifier = ".pizza.product[data-productid='%s'] .product-image" % product_id
             return self._script('return $("%s").attr("lazy-src").toString();' % identifier)
 
-        def _get_product_link(product_id):
-            identifier = ".pizza.product[data-productid='%s'] .section-footer a" % product_id
-            return self._script('return $("%s").attr("href");' % identifier)
+        def _get_product_links():
+            product_links = {}
+            while not _all_products_parsed():
+                product_id = _get_next_unparsed_id()
+                product_links[product_id] = _get_product_img(product_id)
+            return product_links
 
-        product_links = {}
+        def _follow_product_link(product_id):
+            self._script('$(".pizza.product[data-productid=%s] button").click()' % product_id)
 
-        self._wait_for_cl("pizza")
-        self._wait_for_js()
-
-        speciality = "[id='Speciality Pizzas'] .pizza"
-        gourmet = "[id='Gourmet Pizzas'] .pizza"
-
-        self._wait_for_css(speciality)
-        self._wait_for_css(gourmet)
-
-        _mark_pizzas_unparsed(speciality)
-        _mark_pizzas_unparsed(gourmet)
-
-        while not _all_products_parsed():
-            product_id = _get_next_unparsed_id()
-            product_links[product_id] = {
-                "href": "%s%s" % (self.site, _get_product_link(product_id)),
-                "img": _get_product_img(product_id)
-            }
-
-        return product_links
-
-    def _parse_pizza_group(self, link, img):
-
-        def _wait_for_load():
-            self.web_driver.get(link)
+        def _return_to_menu():
+            self.web_driver.get("%s/menu" % self.site)
             self._wait_for_alert(timeout=0.5)
             self._wait_for_alert_to_clear(timeout=0.5)
-            self._wait_for_css(".pizza-name > h1")
 
-        def _open_size_panel():
-            self._wait_for_id("size")
-            if self._get_css("#size.selected"):
-                return None
-            self.web_driver.find_element_by_id("size").click()
-            self._wait_for_cl("pizza-size")
+        def _get_pizza_title():
+            self._wait_for_css("h1.pizza-name")
+            return self._script('return $("h1.pizza-name").first().text()')
 
-        def _open_crust_panel():
-            self._wait_for_id("crust")
-            if self._get_css("#crust.selected"):
-                return None
-            self.web_driver.find_element_by_id("crust").click()
-            self._wait_for_cl("crust-type")
+        def _get_pizza_toppings():
+            self._wait_for_css(".topping")
+            toppings = []
+            for i in range( self._script('return $(".topping.is-selected").length') ):
+                toppings.append(self._script('return $($(".topping.is-selected").get(%s)).text()' % i).strip())
+            return toppings
 
-        def _get_size_elements():
-            _open_size_panel()
-            return self.web_driver.find_elements_by_class_name("pizza-size")
+        def _size_count():
+            self._wait_for_css("li.pizza-size")
+            return self._script('return $("li.pizza-size").length')
 
-        def _get_sizes():
-            return [btn.text.encode("utf-8").lower() for btn in _get_size_elements()]
+        def _choose_size(index):
+            return self._script('return $($("li.pizza-size").get(%s)).click().text()' % index).strip().split(" ")[0]
 
-        def _get_size_btn(size):
-            for btn in _get_size_elements():
-                if btn.text.encode("utf-8").lower() == size:
-                    return btn
+        def _get_price():
+            return self._script('return $(".pizza-price:first").text()')[1:]
 
-        def _get_selected_price():
-            return self._get_str_fl(self._get_css_str('.pizza-price > h2'))
+        def _crust_count():
+            self._wait_for_css(".carousel-content.product")
+            return self._script('return $(".carousel-content .product").length')
 
-        def _get_selected_title():
-            return self._get_css_str('.pizza-name > h1')
-
-        def _get_selected_toppings():
-            return [t.strip() for t in self._get_css_str('.selected-toppings p').split(",")]
-
-        def _crusts_remaining():
-            return int(self._script('return $("button.crust-type").length')) > 0
-
-        def _select_crust():
+        def _choose_crust(index):
             return self._script(
-                '$(".crust-item").first().find("button.crust-type").click(); $(".crust-item").first().remove();'
+                'return $($(".carousel-content .product").get(%s)).click().find("p.product-title").text()'
+                % index
             )
 
-        def _get_selected_crust():
-            return self._get_css_str('button.crust-type:first')
+        _mark_pizzas_unparsed("[id='Speciality Pizzas'] .pizza")
+        _mark_pizzas_unparsed("[id='Gourmet Pizzas'] .pizza")
 
-        def _get_pizzas_per_size(size_txt):
-            _get_size_btn(size_txt).click()
-            self._acknowledge_dialog("selected crust is not available", True)
-            size = size_txt.split(" ")[0]
-            _open_crust_panel()
-            self._wait_for_js()
-            while _crusts_remaining():
-                crust = _get_selected_crust()
-                _select_crust()
+        for product_id, product_img in _get_product_links().iteritems():
+            _follow_product_link(product_id)
+            toppings = _get_pizza_toppings()
+            title = _get_pizza_title()
+            for i in range(_size_count()):
+                size = _choose_size(i)
                 self._wait_for_js()
-                self._new_pizza(
-                    title,
-                    toppings,
-                    size,
-                    _get_selected_price(),
-                    crust,
-                    img
-                )
+                for j in range(_crust_count()):
+                    crust = _choose_crust(j)
+                    self._wait_for_js()
+                    self._new_pizza(title, toppings, size, _get_price(), crust, product_img)
+                _choose_crust(0)
 
-        _wait_for_load()
-        title = _get_selected_title()
-        toppings = _get_selected_toppings()
-        for size in _get_sizes():
-            _get_pizzas_per_size(size)
+            _return_to_menu()
