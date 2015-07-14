@@ -16,8 +16,8 @@ class Collector(object):
         ]
 
     def _start_webdriver(self):
-        return webdriver.Chrome('C:\\chromeDRIVER.exe', service_args=['--ignore-ssl-errors=true'])
-        # return self.web_driver = webdriver.PhantomJS('C:\\phantomjs.exe', service_args=['--ignore-ssl-errors=true'])
+        # return webdriver.Chrome('C:\\chromeDRIVER.exe', service_args=['--ignore-ssl-errors=true'])
+        return webdriver.PhantomJS('C:\\phantomjs.exe', service_args=['--ignore-ssl-errors=true'])
         # return webdriver.Firefox()
 
     def _collect(self):

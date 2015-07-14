@@ -9,10 +9,10 @@ def read_config_file(config_file):
         cfg_json = json.loads(f.read())
     return cfg_json
 
-def list_to_string(list):
+def list_to_title_string(list):
     string = ""
     for item in list:
-        string += item + ", "
+        string += item.title() + ", "
     return string[0:len(string) - 2]
 
 def make_uuid(string):
@@ -29,8 +29,8 @@ def raw_response(response_string):
     response.mimetype = "text/plain"
     return response
 
-def json_response(response):
-    if type(response) is list:
+def json_response(response, sort=False):
+    if sort and type(response) is list:
         response = sorted(response)
     if type(response) in [dict, list]:
         response = json.dumps(response)
@@ -55,3 +55,6 @@ def strip_dict(dictionary):
 
 def float_to_two_places(x):
     return int(x * 100) / 100.0
+
+def capitalise(string):
+    return string.title()

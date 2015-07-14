@@ -89,7 +89,16 @@
 
 <script id="no_result_tmpl" type="text/x-handlebars-template">
     <div id="no_result">
-        <h5><span class="fa fa-thumbs-o-down"></span>No Results! Try a different search</h5>
+        <div class="widget style1 yellow-bg">
+            <div class="row">
+                <div class="col-xs-4">
+                    <i class="fa fa-thumbs-o-down fa-5x"></i>
+                </div>
+                <div class="col-xs-8 text-right">
+                    <h2> No Results! Try a different search </h2>
+                </div>
+            </div>
+        </div>
     </div>
 </script>
 
@@ -131,6 +140,7 @@
                     </div>
                 </span>
             </div>
+            <br/>
             <div id="sl-table-wrapper" class="col-lg-12">
             </div>
         </div>
@@ -142,26 +152,31 @@
         <div class="col-md-4 sl-grid-product">
             <div class="ibox">
                 <div class="ibox-content product-box">
-                    <div class="sl-product-vendor"><img src="/img/{{vendor}}.png" width="90" height="30"></div>
-                    <div class="sl-product-img product-imitation" style="background-image: url({{this.img}})"></div>
+                    <div class="sl-product-vendor">
+                        <img src="/img/{{vendor}}.png" width="90" height="30">
+                    </div>
+                    <div class="sl-product-img product-imitation {{vendor}}" style="background-image: url({{this.img}})"></div>
                     <div class="product-desc">
                         <span class="product-price">
                             {{ this.price }}
                         </span>
-                        <small class="text-muted">{{this.size}} ({{this.diameter}}") {{ this.base }}</small>
+                        <small class="text-muted">{{ this.diameter }}"</small>
                         <a href="#" class="product-name">{{ this.name }}</a>
                         <div class="small m-t-xs">
-                            {{#each this.toppings}}
-                                <span class="label sl-label">{{ this  }}</span>
-                            {{/each}}
+                            {{ this.description }}
                         </div>
                         <div class="small m-t-xs">
                             <strong>Score:</strong> {{ this.score }}
                         </div>
-                        <div class="small m-t-xs">
-                            <strong>Crust:</strong> {{ this.base }}
-                        </div>
                     </div>
+                    <!--<div class="sl-product-stats">-->
+                        <!--<div class="small m-t-xs">-->
+                            <!--<strong>Cost Per Square Inch:</strong> {{ this.cost_psi }}-->
+                        <!--</div>-->
+                        <!--<div class="small m-t-xs">-->
+                            <!--<strong>Area Per Slice:</strong> {{ this.area_per_slice }}-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>

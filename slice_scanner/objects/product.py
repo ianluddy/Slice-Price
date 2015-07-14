@@ -7,7 +7,7 @@ class Product():
     def __init__(self, **kwargs):
         self.vendor = kwargs["vendor"]
         self.name = kwargs["name"]
-        self.price = kwargs["price"]
+        self.price = float(kwargs["price"])
         self.description = kwargs["description"] if kwargs.get("description") else None
         self.img = kwargs.get("img")
         self.quantity = kwargs.get("quantity", 1)

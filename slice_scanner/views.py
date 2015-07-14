@@ -41,32 +41,32 @@ def pizza():
 @app.route('/pizza/toppings')
 @documentor.doc()
 def pizza_toppings():
-    return json_response(db.distinct("pizzas", "toppings"))
+    return json_response(db.distinct("pizzas", "toppings"), sort=True)
 
 @app.route('/pizza/diameters')
 @documentor.doc()
 def pizza_diameters():
-    return json_response(db.distinct("pizzas", "diameter"))
+    return json_response(db.distinct("pizzas", "diameter"), sort=True)
 
 @app.route('/pizza/styles')
 @documentor.doc()
 def pizza_styles():
-    return json_response(db.distinct("pizzas", "style"))
+    return json_response(db.distinct("pizzas", "style"), sort=True)
 
 @app.route('/pizza/slices')
 @documentor.doc()
 def pizza_slices():
-    return json_response(db.distinct("pizzas", "slices"))
+    return json_response(db.distinct("pizzas", "slices"), sort=True)
 
 @app.route('/pizza/bases')
 @documentor.doc()
 def pizza_bases():
-    return json_response(db.distinct("pizzas", "base_style"))
+    return json_response(db.distinct("pizzas", "base_style"), sort=True)
 
 @app.route('/pizza/sizes')
 @documentor.doc()
 def pizza_sizes():
-    return json_response(db.distinct("pizzas", "size"))
+    return json_response(db.distinct("pizzas", "size"), sort=True)
 
 @app.route('/pizza/prices')
 @documentor.doc()
@@ -93,7 +93,7 @@ def sides():
 @app.route('/sides/types')
 @documentor.doc()
 def sides_types():
-    return json_response(db.distinct("sides", "type"))
+    return json_response(db.distinct("sides", "type"), sort=True)
 
 @app.route('/sides/scores')
 @documentor.doc()
@@ -110,7 +110,7 @@ def sides_prices():
 @app.route('/vendors')
 @documentor.doc()
 def vendors():
-    return json_response(db.distinct("pizzas", "vendor"))
+    return json_response(db.distinct("pizzas", "vendor"), sort=True)
 
 ### Stats API ####
 

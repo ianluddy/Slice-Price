@@ -1,4 +1,4 @@
-from ..utils import list_to_string, float_to_two_places
+from ..utils import list_to_title_string, float_to_two_places
 from hashlib import md5
 from product import Product
 
@@ -128,9 +128,9 @@ class Pizza(Product):
         return md5(to_hash).hexdigest()
 
     def _description(self, base, toppings):
-        return "%s Base with %s" % (
-            base.replace("Crust", "").replace("Base", "").strip(),
-            list_to_string(toppings)
+        return "%s Base with %s." % (
+            base.lower().replace("crust", "").replace("base", "").strip().title(),
+            list_to_title_string(toppings)
         )
 
     def _score(self):

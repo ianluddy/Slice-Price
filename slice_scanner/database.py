@@ -74,7 +74,8 @@ class Database():
 
         result = self._get_collection(collection_name).find(strip_dict(query))
         if sort_by is not None:
-            result = result.sort(sort_by, int(sort_dir) if sort_dir is not None else 1) # 1 = ascending, -1 = descending
+            sort_dir = 1 if sort_dir is None else int(sort_dir) # 1 = ascending, -1 = descending
+            result = result.sort(sort_by, sort_dir)
         if page is not None:
             result = result.limit(self.PAGE_SIZE).skip(int(page) * self.PAGE_SIZE)
 
