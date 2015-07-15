@@ -20,7 +20,7 @@
 
 <script id="range_filter_group_tmpl" type="text/x-handlebars-template">
     <div id="{{id}}" class="col-lg-12 sl-filter-group sl-range-filter-group">
-        <h4>{{title}}</h4>
+        <h4 class="hint--right hint--bounce" data-hint="Score = Area * Toppings / Price">{{title}}</h4>
         <div id="{{id}}_range"></div>
     </div>
 </script>
@@ -96,7 +96,7 @@
                     <div class="sl-product-img product-imitation {{vendor}}" style="background-image: url({{this.img}})"></div>
                     <div class="product-desc">
                         <span class="product-price">
-                            {{ this.price }}
+                            &#8364; {{decimal this.price}}
                         </span>
                         <small class="text-muted">{{ this.diameter }}"</small>
                         <a href="#" class="product-name">{{ this.name }}</a>
@@ -104,7 +104,7 @@
                             {{ this.description }}
                         </div>
                         <div class="small m-t-xs">
-                            <strong>Score:</strong> {{ this.score }}
+                            <strong class="hint--right hint--bounce" data-hint="Score = Area * Toppings / Price">Score:</strong> {{ this.score }}
                         </div>
                     </div>
                     <!--<div class="sl-product-stats">-->

@@ -47,10 +47,10 @@ function add_pizza_filters(){
     add_filter("vendors", vendor_info, "active");
     add_filter("crusts", pizza_info["bases"], "active");
     add_filter("toppings", pizza_info["toppings"], "");
+    add_range_filter("score", pizza_info["scores"].min, pizza_info["scores"].max, 1);
+    add_range_filter("price", pizza_info["prices"].min, pizza_info["prices"].max, 1,  "&#8364; ");
     add_range_filter("size", pizza_info["diameters"].min, pizza_info["diameters"].max, 0.5, "", '"');
     add_range_filter("slices", pizza_info["slices"].min, pizza_info["slices"].max, 2);
-    add_range_filter("price", pizza_info["prices"].min, pizza_info["prices"].max, 1, "\u00A3");
-    add_range_filter("score", pizza_info["scores"].min, pizza_info["scores"].max, 1);
 }
 
 function fetch_pizza(){
