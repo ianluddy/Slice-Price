@@ -12,7 +12,7 @@ var stats = {};
 var page_title, page_main;
 var pizza_info = {};
 var vendor_info = [];
-var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl, range_filter_group_tmpl;
+var tip_tmpl, title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl, range_filter_group_tmpl;
 
 $(document).ready(function () {
     ajax_load("stats", {}, update_counts);
@@ -47,7 +47,7 @@ function add_pizza_filters(){
     add_filter("vendors", vendor_info, "active");
     add_filter("crusts", pizza_info["bases"], "active");
     add_filter("toppings", pizza_info["toppings"], "");
-    add_range_filter("score", pizza_info["scores"].min, pizza_info["scores"].max, 1);
+    add_range_filter("score", pizza_info["scores"].min, pizza_info["scores"].max, 1, "", "", "Score = Area * Toppings / Price");
     add_range_filter("price", pizza_info["prices"].min, pizza_info["prices"].max, 1,  "&#8364; ");
     add_range_filter("size", pizza_info["diameters"].min, pizza_info["diameters"].max, 0.5, "", '"');
     add_range_filter("slices", pizza_info["slices"].min, pizza_info["slices"].max, 2);
@@ -81,6 +81,7 @@ function templates_loaded(){
 }
 
 function compile_templates(){
+    tip_tmpl = Handlebars.compile($("#tip_tmpl").html());
     title_tmpl = Handlebars.compile($("#title_tmpl").html());
     filter_group_tmpl = Handlebars.compile($("#filter_group_tmpl").html());
     range_filter_group_tmpl = Handlebars.compile($("#range_filter_group_tmpl").html());
@@ -105,10 +106,11 @@ function add_filter(id, items, active){
     }));
 }
 
-function add_range_filter(id, min, max, step, prefix, postfix){
+function add_range_filter(id, min, max, step, prefix, postfix, help){
     $(get_filter_wrapper()).append(range_filter_group_tmpl({
         "id": id,
         "title": id.toUpperCase(),
+        "help": help
     }));
     $("#" + id + "_range").ionRangeSlider({
         min: min,

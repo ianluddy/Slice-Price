@@ -7657,3 +7657,10 @@ body.skin-3 {
     top: 2px;
     left: 2px;
 }
+.sl-hint{
+    cursor: pointer;
+    opacity: 0.6;
+}
+.sl-hint:hover{
+    opacity: 1;
+}
