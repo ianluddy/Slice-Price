@@ -12,7 +12,7 @@ var stats = {};
 var page_title, page_main;
 var pizza_info = {};
 var vendor_info = [];
-var tip_tmpl, title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl, range_filter_group_tmpl;
+var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl, range_filter_group_tmpl;
 
 $(document).ready(function () {
     ajax_load("stats", {}, update_counts);
@@ -81,7 +81,6 @@ function templates_loaded(){
 }
 
 function compile_templates(){
-    tip_tmpl = Handlebars.compile($("#tip_tmpl").html());
     title_tmpl = Handlebars.compile($("#title_tmpl").html());
     filter_group_tmpl = Handlebars.compile($("#filter_group_tmpl").html());
     range_filter_group_tmpl = Handlebars.compile($("#range_filter_group_tmpl").html());
