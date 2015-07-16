@@ -10,16 +10,16 @@ class Collector(object):
         self.cron = CronTab(frequency)
         self.web_driver = web_driver
         self.vendors = [
-            # papa_johns.PapaJohns(queue),
-            # pizza_hut.PizzaHut(queue),
             dominos.Dominos(queue),
-            # pizza_express.PizzaExpress(queue),
+            papa_johns.PapaJohns(queue),
+            pizza_hut.PizzaHut(queue),
+            pizza_express.PizzaExpress(queue),
         ]
 
     def _start_webdriver(self):
-        if "chrome" in self.web_driver:
+        if "chrome" in self.web_driver.lower():
             return webdriver.Chrome(self.web_driver, service_args=['--ignore-ssl-errors=true'])
-        return webdriver.PhantomJS()
+        return webdriver.PhantomJS(self.web_driver)
 
     def _collect(self):
         web_driver = self._start_webdriver()
