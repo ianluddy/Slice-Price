@@ -45,5 +45,4 @@ Thread(target=Keeper(db_wrapper, pizza_queue).run).start()
 from slice_scanner import views
 
 # Run
-Thread(target=app.run).start()
-# app.run(host=cfg["web_server"]["host"], port=cfg["web_server"]["port"])
+Thread(target=app.run, args=(cfg["web_server"]["host"], cfg["web_server"]["port"]) ).start()
