@@ -1,3 +1,4 @@
+import argparse
 from Queue import Queue
 from threading import Thread
 from vendors import dominos
@@ -9,10 +10,12 @@ from flask_pymongo import PyMongo, MongoClient
 from flask import Flask
 from utils import setup_logger, read_config_file
 
+# Argument parser
+arg_parser = argparse.ArgumentParser()
+arg_parser.add_argument("-c") # Config arg
+
 # Config
-# cfg = read_config_file("D:\slice\slice.json")
-cfg = read_config_file("C:\Git\pizza\slice.json")
-print cfg
+cfg = read_config_file(arg_parser.parse_args().c)
 app = Flask(__name__, static_url_path='')
 documentor = Autodoc(app)
 
