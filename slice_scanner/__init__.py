@@ -13,7 +13,6 @@ from utils import setup_logger, read_config_file
 # Argument parser
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument("-c") # Config arg
-arg_parser.add_argument("-l") # Config arg
 args = arg_parser.parse_args()
 
 # Config
@@ -22,11 +21,11 @@ app = Flask(__name__, static_url_path='')
 documentor = Autodoc(app)
 
 # Logging
-setup_logger(app, args.l, cfg["logging"]["level"])
+setup_logger(app, cfg["logging"]["file"], cfg["logging"]["level"])
 
 # Collection
 pizza_queue = Queue()
-collector = Collector(cfg["collection_freq"], pizza_queue)
+collector = Collector(cfg["scraper"]["frequency"], cfg["scraper"]["web_driver"], pizza_queue)
 Thread(target=collector.run).start()
 
 # DB

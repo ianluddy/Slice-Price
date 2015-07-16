@@ -9,7 +9,10 @@
         "file": "D:\\pizza.log",
         "level": 20
     },
-    "collection_freq": "0 * * * *",
+    "scraper": {
+        "frequency": "0 * * * *",
+        "web_driver": "C:\\chromedriver.exe"
+    },
     "web_server": {
         "host": "localhost",
         "port": 5001

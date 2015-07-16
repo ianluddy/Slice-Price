@@ -6,8 +6,9 @@ from selenium import webdriver
 
 class Collector(object):
 
-    def __init__(self, frequency, queue):
+    def __init__(self, frequency, web_driver, queue):
         self.cron = CronTab(frequency)
+        self.web_driver = web_driver
         self.vendors = [
             # papa_johns.PapaJohns(queue),
             # pizza_hut.PizzaHut(queue),
@@ -16,7 +17,7 @@ class Collector(object):
         ]
 
     def _start_webdriver(self):
-        return webdriver.Chrome('C:\\chromeDRIVER.exe', service_args=['--ignore-ssl-errors=true'])
+        return webdriver.Chrome(self.web_driver, service_args=['--ignore-ssl-errors=true'])
         # return webdriver.PhantomJS('C:\\phantomjs.exe', service_args=['--ignore-ssl-errors=true'])
 
     def _collect(self):
@@ -36,6 +37,5 @@ class Collector(object):
     def run(self):
         logging.info("Collector Running")
         while True:
-            self._collect()
             time.sleep(self.cron.next())
-            # self._collect()
+            self._collect()
