@@ -13,14 +13,16 @@ from utils import setup_logger, read_config_file
 # Argument parser
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument("-c") # Config arg
+arg_parser.add_argument("-l") # Config arg
+args = arg_parser.parse_args()
 
 # Config
-cfg = read_config_file(arg_parser.parse_args().c)
+cfg = read_config_file(args.c)
 app = Flask(__name__, static_url_path='')
 documentor = Autodoc(app)
 
 # Logging
-setup_logger(app, cfg["logging"]["file"], cfg["logging"]["level"])
+setup_logger(app, args.l, cfg["logging"]["level"])
 
 # Collection
 pizza_queue = Queue()
