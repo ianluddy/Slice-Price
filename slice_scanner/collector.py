@@ -19,6 +19,8 @@ class Collector(object):
     def _start_webdriver(self):
         if "chrome" in self.web_driver.lower():
             return webdriver.Chrome(self.web_driver, service_args=['--ignore-ssl-errors=true'])
+        if "fire" in self.web_driver.lower():
+            return webdriver.Firefox()
         return webdriver.PhantomJS(self.web_driver)
 
     def _collect(self):
