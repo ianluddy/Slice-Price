@@ -2,8 +2,7 @@
     "database": {
         "name": "pizza",
         "host": "localhost",
-        "port": 27017,
-        "reset": false
+        "port": 27017
     },
     "logging": {
         "file": "D:\\pizza.log",

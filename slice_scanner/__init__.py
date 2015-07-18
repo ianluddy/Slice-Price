@@ -27,7 +27,7 @@ setup_logger(app, cfg["logging"]["file"], cfg["logging"]["level"])
 PyMongo(app)
 app.config['MONGO_DBNAME'] = cfg["database"]["name"]
 db_client = MongoClient(cfg["database"]["host"], cfg["database"]["port"])
-db_wrapper = Database(db_client[cfg["database"]["name"]],cfg["database"]["reset"])
+db_wrapper = Database(db_client[cfg["database"]["name"]])
 
 # Scraper
 if cfg["scraper"]["enabled"]:

@@ -9,10 +9,8 @@ class Database():
     """
     PAGE_SIZE = 15
 
-    def __init__(self, db, reset_db):
+    def __init__(self, db):
         self.db = db
-        if reset_db:
-            self.reset_database()
         self.create_indexes()
 
     def create_indexes(self):
