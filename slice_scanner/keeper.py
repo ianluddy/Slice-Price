@@ -17,5 +17,10 @@ class Keeper():
     def run(self):
         logging.info("Keeper Running")
         while True:
-            self._keep(self.queue.get())
-            self.queue.task_done()
+            try:
+                product = self.queue.get()
+                self._keep(product)
+            except Exception:
+                logging.error("Error saving object [%s]" % product, exc_info=True)
+            finally:
+                self.queue.task_done()

@@ -30,7 +30,7 @@ class Product():
         for required in ["name", "price", "vendor"]:
             if getattr(self, required) is None:
                 return False
-        return True
+        return self.price > 0
 
     @staticmethod
     def _normalise_data(normaliser, data):

@@ -21,6 +21,7 @@ class Pizza(Product):
         "Tomato Sauce": ["domino's own tomato sauce"],
         "Bacon": ["bacon"],
         "Spinach": ["spinach"],
+        "Onion Bhaji": ["bhaji"],
         "Onions": ["onion"],
         "Sausage": ["sausage"],
         "Olives": ["olives"],
@@ -118,7 +119,7 @@ class Pizza(Product):
         for required in ["toppings", "size", "diameter", "base", "slices"]:
             if getattr(self, required) is None:
                 return False
-        return self.price > 0
+        return valid
 
     def _hash(self):
         to_hash = u""

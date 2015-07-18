@@ -43,42 +43,42 @@ def pizza():
 @app.route('/pizza/toppings')
 @documentor.doc()
 def pizza_toppings():
-    return json_response(db.distinct("pizzas", "toppings"), sort=True)
+    return json_response(db.distinct("pizza", "toppings"), sort=True)
 
 @app.route('/pizza/diameters')
 @documentor.doc()
 def pizza_diameters():
-    return json_response(db.range("pizzas", "diameter"))
+    return json_response(db.range("pizza", "diameter"))
 
 @app.route('/pizza/styles')
 @documentor.doc()
 def pizza_styles():
-    return json_response(db.distinct("pizzas", "style"), sort=True)
+    return json_response(db.distinct("pizza", "style"), sort=True)
 
 @app.route('/pizza/slices')
 @documentor.doc()
 def pizza_slices():
-    return json_response(db.range("pizzas", "slices"))
+    return json_response(db.range("pizza", "slices"))
 
 @app.route('/pizza/bases')
 @documentor.doc()
 def pizza_bases():
-    return json_response(db.distinct("pizzas", "base_style"), sort=True)
+    return json_response(db.distinct("pizza", "base_style"), sort=True)
 
 @app.route('/pizza/sizes')
 @documentor.doc()
 def pizza_sizes():
-    return json_response(db.range("pizzas", "size"))
+    return json_response(db.range("pizza", "size"))
 
 @app.route('/pizza/prices')
 @documentor.doc()
 def pizza_prices():
-    return json_response(db.range("pizzas", "price"))
+    return json_response(db.range("pizza", "price"))
 
 @app.route('/pizza/scores')
 @documentor.doc()
 def pizza_scores():
-    return json_response(db.range("pizzas", "score"))
+    return json_response(db.range("pizza", "score"))
 
 ### Side API ####
 
@@ -112,7 +112,7 @@ def sides_prices():
 @app.route('/vendors')
 @documentor.doc()
 def vendors():
-    return json_response(db.distinct("pizzas", "vendor"), sort=True)
+    return json_response(db.distinct("pizza", "vendor"), sort=True)
 
 ### Stats API ####
 
@@ -120,7 +120,7 @@ def vendors():
 @documentor.doc()
 def stats():
     return json_response({
-        "pizza": db.count("pizzas"),
+        "pizza": db.count("pizza"),
         "sides": db.count("sides"),
         "desserts": db.count("desserts"),
         "drinks": db.count("drinks"),

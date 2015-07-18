@@ -23,26 +23,22 @@ documentor = Autodoc(app)
 # Logging
 setup_logger(app, cfg["logging"]["file"], cfg["logging"]["level"])
 
-# Collection
-pizza_queue = Queue()
-collector = Collector(cfg["scraper"]["frequency"], cfg["scraper"]["web_driver"], pizza_queue)
-Thread(target=collector.run).start()
-
 # DB
 PyMongo(app)
 app.config['MONGO_DBNAME'] = cfg["database"]["name"]
 db_client = MongoClient(cfg["database"]["host"], cfg["database"]["port"])
-db_wrapper = Database(
-    db_client[cfg["database"]["name"]],
-    cfg["database"]["reset"] == "true",
-    collector.vendor_info()
-)
+db_wrapper = Database(db_client[cfg["database"]["name"]],cfg["database"]["reset"])
 
-# Persistence
-Thread(target=Keeper(db_wrapper, pizza_queue).run).start()
+# Scraper
+if cfg["scraper"]["enabled"]:
+    # Collection
+    pizza_queue = Queue()
+    Thread(target=Collector(cfg["scraper"]["frequency"], cfg["scraper"]["web_driver"], pizza_queue).run).start()
 
-# Views
-from slice_scanner import views
+    # Persistence
+    Thread(target=Keeper(db_wrapper, pizza_queue).run).start()
 
-# Run
-Thread(target=app.run, args=(cfg["web_server"]["host"], cfg["web_server"]["port"]) ).start()
+# Web Server
+if cfg["web_server"]["enabled"]:
+    from slice_scanner import views
+    Thread(target=app.run, args=(cfg["web_server"]["host"], cfg["web_server"]["port"]) ).start()
