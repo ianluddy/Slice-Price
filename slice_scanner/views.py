@@ -1,5 +1,4 @@
-import os
-from flask import request, send_from_directory
+from flask import request
 from slice_scanner.utils import json_response
 from slice_scanner import app
 from slice_scanner import documentor
@@ -125,7 +124,7 @@ def stats():
         "desserts": db.count("desserts"),
         "drinks": db.count("drinks"),
         "combos": db.count("combos"),
-        "vendors": len(db.vendor_info.keys())
+        "vendors": len(db.distinct("pizza", "vendor"))
     })
 
 #### Introspector ####

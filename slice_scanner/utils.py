@@ -38,7 +38,7 @@ def json_response(response, sort=False):
     response.mimetype = "application/json"
     return response
 
-def setup_logger(app, log_file, log_level):
+def setup_logger(log_file, log_level):
     logger = logging.getLogger()
     handler = RotatingFileHandler(log_file, maxBytes=10000000, backupCount=2) # File handler
     formatter = logging.Formatter('%(asctime)s:%(levelname)s:[%(module)s:%(lineno)d]:[%(threadName)s]:%(message)s')

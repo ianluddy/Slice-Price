@@ -1,2 +1,2 @@
 #!/usr/bin/env python
-from slice_scanner import app
+from slice_scanner import *

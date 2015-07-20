@@ -17,12 +17,12 @@ class Database():
         self.db.sides.create_index("price")
         self.db.sides.create_index("score")
         self.db.sides.create_index("hash")
-        self.db.pizzas.create_index("price")
-        self.db.pizzas.create_index("score")
-        self.db.pizzas.create_index("hash")
+        self.db.pizza.create_index("price")
+        self.db.pizza.create_index("score")
+        self.db.pizza.create_index("hash")
 
     def reset_database(self):
-        self.db.pizzas.drop()
+        self.db.pizza.drop()
         self.db.meals.drop()
         self.db.desserts.drop()
         self.db.sides.drop()
@@ -34,7 +34,7 @@ class Database():
         collection.insert(json_product)
 
     def insert_pizza(self, pizza):
-        self.insert_product(self.db.pizzas, pizza)
+        self.insert_product(self.db.pizza, pizza)
 
     def insert_side(self, side):
         self.insert_product(self.db.sides, side)
@@ -52,7 +52,7 @@ class Database():
 
     def get_pizza(self, **kwargs):
         return self.query(
-            "pizzas",
+            "pizza",
             {
                 "toppings": self._all(kwargs.get("toppings")),
                 "style": self._in(kwargs.get("style")),

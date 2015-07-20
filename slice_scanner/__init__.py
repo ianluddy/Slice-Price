@@ -17,15 +17,11 @@ args = arg_parser.parse_args()
 
 # Config
 cfg = read_config_file(args.c)
-app = Flask(__name__, static_url_path='')
-documentor = Autodoc(app)
 
 # Logging
-setup_logger(app, cfg["logging"]["file"], cfg["logging"]["level"])
+setup_logger(cfg["logging"]["file"], cfg["logging"]["level"])
 
 # DB
-PyMongo(app)
-app.config['MONGO_DBNAME'] = cfg["database"]["name"]
 db_client = MongoClient(cfg["database"]["host"], cfg["database"]["port"])
 db_wrapper = Database(db_client[cfg["database"]["name"]])
 
@@ -40,5 +36,10 @@ if cfg["scraper"]["enabled"]:
 
 # Web Server
 if cfg["web_server"]["enabled"]:
+    # Create Server
+    app = Flask(__name__, static_url_path='')
+    documentor = Autodoc(app)
+
+    # Run Server
     from slice_scanner import views
     Thread(target=app.run, args=(cfg["web_server"]["host"], cfg["web_server"]["port"]) ).start()
