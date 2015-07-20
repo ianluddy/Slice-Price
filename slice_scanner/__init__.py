@@ -6,7 +6,7 @@ from database import Database
 from collector import Collector
 from keeper import Keeper
 from flask.ext.autodoc import Autodoc
-from flask_pymongo import PyMongo, MongoClient
+from flask_pymongo import MongoClient
 from flask import Flask
 from utils import setup_logger, read_config_file
 
