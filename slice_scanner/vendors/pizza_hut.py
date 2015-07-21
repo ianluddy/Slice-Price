@@ -107,5 +107,5 @@ class PizzaHut(Vendor):
         self._get_id("ajax-postcode-txt").send_keys("sw177lf")
         self._get_id("get-store-btn").click()
 
-        self._wait_for_css('.store-start-order a:first')
-        self._script('$(".store-start-order a:first").click()')
+        self._wait_for_css('.store-start-order a')
+        self._script('$(".store-start-order a").first().click()')
