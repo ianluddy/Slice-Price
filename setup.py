@@ -16,7 +16,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'slice_scanner = slice_scanner:run',
+            'slice = slice_scanner:run',
         ]
     }
 )
