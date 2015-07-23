@@ -78,6 +78,7 @@ function templates_loaded(){
     attach_templates();
     compile_templates();
     add_tab_handlers();
+    load_pizza_page();
 }
 
 function compile_templates(){

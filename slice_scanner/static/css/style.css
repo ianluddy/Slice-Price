@@ -7664,3 +7664,27 @@ body.skin-3 {
 .sl-hint:hover{
     opacity: 1;
 }
+body{
+    background-color: #f3f3f4;
+}
+#nav-bar{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 0px;
+    background-color: #121212;
+    z-index: 1010;
+}
+#page-title{
+    padding-top: 10px;
+    float: left;
+    position: relative;
+    bottom: 10px;
+}
+#page-wrapper{
+    margin: 0 auto;
+    width: 75%;
+    max-width: 1300px;
+    /*top: 55px;*/
+}
