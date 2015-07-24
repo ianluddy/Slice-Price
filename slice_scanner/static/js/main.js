@@ -20,11 +20,17 @@ $(document).ready(function () {
     page_main = $("#page_main");
     page_title = $("#page_title");
     setInterval(run_tasks, TASK_DELAY);
-    toaster("Welcome!", "Use the filters to find your ideal Pizza!");
+    //toaster("Welcome!", "Use the filters to find your ideal Pizza!");
     $.when(
         ajax_load('templates.html', {}, attach_templates)
     ).done(templates_loaded);
 });
+
+/* About */
+
+function load_about_page(){
+
+}
 
 /* Pizza */
 
@@ -78,7 +84,6 @@ function templates_loaded(){
     attach_templates();
     compile_templates();
     add_tab_handlers();
-    load_pizza_page();
 }
 
 function compile_templates(){
@@ -156,12 +161,12 @@ function get_range_filter(id){
 /* Page */
 
 function add_tab_handlers(){
-    $("#side-menu li.tab").on("click", function(){
-        $(this).addClass("active").siblings().removeClass("active");
+    $("#tabs > h3").on("click", function(){
+        $(this).addClass("active").siblings("h3").removeClass("active");
         clear();
         window[$(this).attr("target")]();
     });
-    $("#side-menu li.tab").first().click();
+    $("#tabs > h3").first().click();
 }
 
 function update_counts(input){

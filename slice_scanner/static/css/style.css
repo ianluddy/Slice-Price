@@ -7665,6 +7665,9 @@ body.skin-3 {
 body{
     background-color: #f3f3f4;
 }
+#nav-wrapper{
+    min-height: 67px;
+}
 #page-title{
     padding-top: 10px;
     float: left;
@@ -7718,5 +7721,43 @@ body{
     .sl-grid-product {
         width: 100%;
         display: block;
+    }
+}
+#tabs{
+    float: right;
+    position: relative;
+    top: 20px;
+    min-width: 287px;
+}
+#tabs > h3{
+    cursor: pointer;
+    display: inline-block;
+    font-weight: normal;
+    margin-right: 20px;
+}
+#tabs > h3:hover{
+    opacity: 0.6;
+}
+#tabs > h3.about{
+    margin-left: 30px;
+}
+#tabs > h3.active{
+    border-bottom: 2px solid;
+    padding-bottom: 2px;
+}
+@media (max-width: 625px) {
+    #page-title{
+        display: none;
+    }
+    #tabs{
+        float: left;
+    }
+    #tabs > h3.about{
+        margin-left: 0px;
+    }
+}
+@media (max-width: 420px) {
+    #tabs > h3{
+        margin-right: 5px;
     }
 }
