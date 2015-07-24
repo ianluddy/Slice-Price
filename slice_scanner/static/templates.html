@@ -63,8 +63,8 @@
 
 <script id="table_page_tmpl" type="text/x-handlebars-template">
     <div class="row">
-        <div id="sl-filter-wrapper" class="col-lg-3"></div>
-        <div id="sl-table-wrapper-wrapper" class="col-lg-9">
+        <div id="sl-filter-wrapper" class="col-sm-3"></div>
+        <div id="sl-table-wrapper-wrapper" class="col-sm-9">
             <div id="sl-table-control" class="col-lg-12">
                 <span>
                     <div class="btn-group" role="group" aria-label="...">
@@ -92,34 +92,32 @@
 
 <script id="pizza_grid_tmpl" type="text/x-handlebars-template">
     {{#each items}}
-        <div class="col-md-4 sl-grid-product">
-            <div class="ibox">
-                <div class="ibox-content product-box">
-                    <div class="sl-product-vendor">
-                        <img src="/img/{{vendor}}.png" width="90" height="30">
+        <div class="sl-grid-product">
+            <div class="ibox-content product-box">
+                <div class="sl-product-img product-imitation {{vendor}}" style="background-image: url({{this.img}})"></div>
+                <div class="product-desc">
+                    <span class="product-price">
+                        &#8364; {{decimal this.price}}
+                    </span>
+                    <small class="text-muted">{{ this.diameter }}"</small>
+                    <a href="#" class="product-name">{{ this.name }}</a>
+                    <div class="sl-product-description small m-t-xs">
+                        {{ this.description }}
                     </div>
-                    <div class="sl-product-img product-imitation {{vendor}}" style="background-image: url({{this.img}})"></div>
-                    <div class="product-desc">
-                        <span class="product-price">
-                            &#8364; {{decimal this.price}}
-                        </span>
-                        <small class="text-muted">{{ this.diameter }}"</small>
-                        <a href="#" class="product-name">{{ this.name }}</a>
-                        <div class="sl-product-description small m-t-xs">
-                            {{ this.description }}
-                        </div>
-                        <div class="small m-t-xs">
-                            <strong>Score:</strong> {{ this.score }}
-                        </div>
+                    <div class="small m-t-xs">
+                        <strong>Score:</strong> {{ this.score }}
                     </div>
-                    <!--<div class="sl-product-stats">-->
-                        <!--<div class="small m-t-xs">-->
-                            <!--<strong>Cost Per Square Inch:</strong> {{ this.cost_psi }}-->
-                        <!--</div>-->
-                        <!--<div class="small m-t-xs">-->
-                            <!--<strong>Area Per Slice:</strong> {{ this.area_per_slice }}-->
-                        <!--</div>-->
+                </div>
+                <!--<div class="sl-product-stats">-->
+                    <!--<div class="small m-t-xs">-->
+                        <!--<strong>Cost Per Square Inch:</strong> {{ this.cost_psi }}-->
                     <!--</div>-->
+                    <!--<div class="small m-t-xs">-->
+                        <!--<strong>Area Per Slice:</strong> {{ this.area_per_slice }}-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="sl-product-vendor">
+                    <img src="/img/{{vendor}}.png" width="90" height="30">
                 </div>
             </div>
         </div>
