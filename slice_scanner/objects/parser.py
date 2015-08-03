@@ -83,6 +83,12 @@ class Parser(object):
     def _script(self, script):
         return self.web_driver.execute_script(script)
 
+    def _element_count(self, selector):
+        return self._script('return $("%s").length' % selector)
+
+    def _select_next_by_class(self, classname):
+        return self._script("$('.%s:first').removeClass('%s').click()" % (classname, classname))
+
     def _wait_for_alert_to_clear(self, timeout=2):
         try:
             ui.WebDriverWait(self.web_driver, timeout).until(

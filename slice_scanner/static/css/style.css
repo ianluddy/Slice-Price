@@ -7602,6 +7602,10 @@ body.skin-3 {
 .sl-product-img.Pizza.Hut{
     background-size: 110%;
 }
+.sl-product-img.Four.Star{
+    background-size: 100%;
+    background-color: #fff;
+}
 .sl-product-img.Dominos.Pizza{
     background-size: 100%;
 }
@@ -7742,7 +7746,7 @@ body{
     margin-left: 30px;
 }
 #tabs > h3.active{
-    border-bottom: 2px solid;
+    border-bottom: 1px solid;
     padding-bottom: 2px;
 }
 @media (max-width: 625px) {

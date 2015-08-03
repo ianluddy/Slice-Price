@@ -41,9 +41,13 @@ class Vendor(Parser):
         }
 
     def _diameter_from_size(self, size):
+        if type(size) is int:
+            return size
         return self.diameter_reference.get(size.lower(), -1)
 
     def _slices_from_size(self, size):
+        if type(size) is int:
+            return size
         return self.slice_reference.get(size.lower(), -1)
 
     def _new_pizza(self, name, toppings, size, price, base, img):

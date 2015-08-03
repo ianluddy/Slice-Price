@@ -3,6 +3,7 @@ from hashlib import md5
 from product import Product
 
 class Pizza(Product):
+
     SLICES_PER_PERSON = 3
 
     # Crust normaliser. For converting "Thin & Crispy Crust" to "Thin"
@@ -10,7 +11,7 @@ class Pizza(Product):
         "Thin": ["thin"],
         "Stuffed": ["stuffed", "decadence", "cheesy bites"],
         "Italian": ["italian"],
-        "Pan": ["classic", "pan", "original"], # TODO = verify that classic and pan are the same thing
+        "Pan": ["regular", "classic", "pan", "original"], # TODO = verify that classic and pan are the same thing
         "Gluten Free": ["gluten"],
     }
 
@@ -49,6 +50,7 @@ class Pizza(Product):
         "cheese",
         "seasoning",
         "herbs",
+        "base"
     ]
 
     # Sauce normaliser.
@@ -77,7 +79,7 @@ class Pizza(Product):
         self.toppings = [self._normalise_data(self.topping_normaliser, topping) for topping in toppings]
         self.style = self._normalise_data(self.style_normaliser, self.name)
         self.base_style = self._normalise_data(self.base_normaliser, self.base)
-        self.description = self._description(self.base, kwargs["toppings"])
+        self.description = self._description(self.base, self.toppings)
 
     def __str__(self):
         return "%s %s %s %s %s %s %s %s %s" % (
@@ -125,7 +127,7 @@ class Pizza(Product):
         to_hash = u""
         to_hash += self.vendor
         to_hash += self.name
-        to_hash += self.size
+        to_hash += str(self.size)
         to_hash += self.base
         return md5(to_hash).hexdigest()
 
