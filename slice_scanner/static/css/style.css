@@ -7630,6 +7630,15 @@ body.skin-3 {
     padding-left: 4px;
     float: right;
 }
+.sl-product-vendor img{
+    width: 90px;
+    height: 30px;
+}
+.sl-product-vendor.Four.Star img{
+    width: 50px;
+    height: 60px;
+    float: right;
+}
 #sl-table-control{
     margin-bottom: 35px;
     margin-right: 50px;
@@ -7692,7 +7701,6 @@ body{
     height: 400px;
     margin-bottom: 20px;
     margin-right: 15px;
-    float: right;
     width: 22%;
 }
 
@@ -7737,7 +7745,11 @@ body{
     cursor: pointer;
     display: inline-block;
     font-weight: normal;
-    margin-right: 20px;
+    margin-right: 24px;
+}
+#tabs > h3 > .badge {
+    margin-left: 6px;
+    margin-bottom: 2px;
 }
 #tabs > h3:hover{
     opacity: 0.6;
@@ -7746,7 +7758,7 @@ body{
     margin-left: 30px;
 }
 #tabs > h3.active{
-    border-bottom: 1px solid;
+    border-bottom: 2px solid #ddd;
     padding-bottom: 2px;
 }
 @media (max-width: 625px) {

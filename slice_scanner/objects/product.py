@@ -11,6 +11,7 @@ class Product():
         self.description = kwargs["description"] if kwargs.get("description") else None
         self.img = kwargs.get("img")
         self.quantity = kwargs.get("quantity", 1)
+        self.stamp = time()
 
     def to_dict(self):
         if self._valid():
@@ -20,7 +21,7 @@ class Product():
             product_dict["price"] = self.price
             product_dict["description"] = self.description
             product_dict["img"] = self.img
-            product_dict["stamp"] = time()
+            product_dict["stamp"] = self.stamp
             product_dict["hash"] = self._hash()
             product_dict["score"] = self._score()
             return product_dict
@@ -38,7 +39,7 @@ class Product():
         if data in normaliser:
             return data
 
-        lower_case = data.lower()
+        lower_case = data.lower().strip()
 
         for key, values in normaliser.iteritems():
             for value in values:

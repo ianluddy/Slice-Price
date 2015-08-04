@@ -6,18 +6,11 @@ class FourStar(Vendor):
     id = "Four Star Pizza"
     site = "https://www.fourstarpizza.ie"
 
-    diameter_reference = {
-        "large": 13.5,
-        "medium": 11.5,
-        "small": 9.5,
-        "personal": 7
-    }
-
-    slice_reference = {
-        "large": 10,
-        "medium": 8,
-        "small": 6,
-        "personal": 4
+    slice_reference = { # TODO - verify these
+        16: 10,
+        12: 8,
+        9: 6,
+        7: 4
     }
 
     @staticmethod
@@ -42,9 +35,33 @@ class FourStar(Vendor):
         def _get_current_size():
             return self._get_str_int(self._script('return $("a.wcGroupsGroupName.wcGroupsCurrentGroup").text()'))
 
+        def _gluten_free():
+            return "gluten" in self._script('return $("a.wcGroupsGroupName.wcGroupsCurrentGroup").text()').lower()
+
+        def _get_current_toppings():
+            toppings = self._script("""
+                return $("#wiItemDescription").text()
+                """).replace("&", ",").replace("\n", "").replace("\t", "").replace("  ", " ").split(",")
+            return [t for t in toppings if t not in ["", " "]]
+
+        def _get_current_price():
+            self._wait_for_css(".wcItemPrice")
+            return self._get_str_fl(self._script('return $(".wcItemPrice").first().text()'))
+
         def _get_next_pizza_page():
             return self._script("""
             return $("a.wcGroupsGroupName:contains(' Pizza'):first").removeClass("wcGroupsGroupName").attr("href")
+            """)
+
+        def _select_crust_tab():
+            self._script("""
+            $(".wcItemModifierListTab").first().children("a").click();
+            $(".wcItemModifierListTab:contains('Base')").children("a").click();
+            """)
+
+        def _get_next_crust():
+            return self._script("""
+            return $(".wcItemModifierLabel:visible:first").removeClass("wcItemModifierLabel").children("label").text()
             """)
 
         pages = []
@@ -55,24 +72,27 @@ class FourStar(Vendor):
             self.web_driver.get(page)
 
             while self._element_count(".wcItemsItemSelectItemButton") > 0:
-                #try:
                 self._select_next_by_class("wcItemsItemSelectItemButton")
-                # except Exception:
-                #     pass # js error always thrown here, it doesnt make a difference so lets ignore it
 
                 self._wait_for_js()
                 self._wait_for_js()
-
+                _select_crust_tab()
                 self._wait_for_css("#wiItemDescription")
 
-                self._new_pizza(
-                    self._script('return $("#wiItemName").text()'),
-                    self._script('return $("#wiItemDescription").text()').split(","),
-                    _get_current_size(),
-                    10.00, #_get_price(),
-                    "Regular",
-                    self.complete_url(self._script('return $("#wiItemImage img").attr("src")'))
-                )
+                toppings = _get_current_toppings()
+                size = _get_current_size()
+                price = _get_current_price()
+                image = self.complete_url(self._script('return $("#wiItemImage img").attr("src")'))
+                title = self._script('return $("#wiItemName").text()')
 
-                # close the pizza dialog
+                if _gluten_free():
+                    self._new_pizza(title, toppings, size, price, "Gluten Free", image)
+                else:
+                    while self._element_count(".wcItemModifierLabel:visible") > 0:
+                        self._new_pizza(title, toppings, size, price, _get_next_crust(), image)
+
                 self._script('$(".ui-dialog-titlebar button").first().click()')
+                self._wait_for_js()
+
+        raw_input(" ")
+

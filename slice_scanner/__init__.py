@@ -4,6 +4,7 @@ from threading import Thread
 from vendors import dominos
 from database import Database
 from collector import Collector
+from cleaner import Cleaner
 from keeper import Keeper
 from flask.ext.autodoc import Autodoc
 from flask_pymongo import MongoClient
@@ -24,6 +25,10 @@ setup_logger(cfg["logging"]["file"], cfg["logging"]["level"])
 # DB
 db_client = MongoClient(cfg["database"]["host"], cfg["database"]["port"])
 db_wrapper = Database(db_client[cfg["database"]["name"]])
+
+# Cleaner
+if cfg["cleaner"]["enabled"]:
+    Thread(target=Cleaner(cfg["cleaner"]["frequency"], cfg["cleaner"]["data_expiry_hours"], db_wrapper).run).start()
 
 # Scraper
 if cfg["scraper"]["enabled"]:

@@ -19,20 +19,24 @@ class Pizza(Product):
     topping_normaliser = {
         "Aubergines": ["aubergine"],
         "BBQ Sauce": ["bbq"],
+        "Chorizo": ["chorizo"],
+        "Salami": ["salami"],
         "Tomato Sauce": ["domino's own tomato sauce"],
         "Bacon": ["bacon"],
         "Spinach": ["spinach"],
         "Onion Bhaji": ["bhaji"],
         "Onions": ["onion"],
+        "Oregano": ["oregano"],
         "Sausage": ["sausage"],
         "Olives": ["olives"],
         "Pineapple": ["pineapple"],
         "Chillies": ["chilli"],
         "Ham": ["ham"],
         "Mushrooms": ["mushrooms"],
-        "Peppers": ["red peppers", "mixed peppers", "green peppers"],
+        "Peppers": ["red pepper", "mixed peppers", "green pepper"],
         "Tomatoes": ["tomatoes", "tomato", "sunblush"],
-        "Chicken": ["chicken breast strips", "chargrilled chicken"],
+        "Cajun Chicken": ["cajun chicken"],
+        "Chicken": ["chicken", "chicken breast strips", "chargrilled chicken"],
         "Jalapenos": ["jalap"],
         "Pepperoni": ["pepperoni"],
         "Beef": ["beef"],
@@ -118,9 +122,16 @@ class Pizza(Product):
 
     def _valid(self):
         valid = super(Pizza, self)._valid()
+
+        # We need at least all of these to consider the pizza valid
         for required in ["toppings", "size", "diameter", "base", "slices"]:
             if getattr(self, required) is None:
                 return False
+
+        # Ignoring freestyle pizzas for the moment
+        if "Create your own" in self.toppings:
+            return False
+
         return valid
 
     def _hash(self):

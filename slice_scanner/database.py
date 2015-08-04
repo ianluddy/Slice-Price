@@ -28,10 +28,11 @@ class Database():
         self.db.sides.drop()
 
     def insert_product(self, collection, product):
-        print product
         json_product = product.to_dict()
-        collection.remove({"hash": json_product["hash"]})
-        collection.insert(json_product)
+        if json_product:
+            print product
+            collection.remove({"hash": json_product["hash"]})
+            collection.insert(json_product)
 
     def insert_pizza(self, pizza):
         self.insert_product(self.db.pizza, pizza)
@@ -67,6 +68,11 @@ class Database():
             sort_dir=kwargs.get("sort_dir"),
             page=kwargs.get("page")
         )
+
+    def remove(self, collection_name, query):
+        logging.info("Rem: col=%s qry=%s" % (collection_name, query))
+
+        self._get_collection(collection_name).remove(strip_dict(query))
 
     def query(self, collection_name, query, sort_by=None, sort_dir=None, page=None):
         logging.info("Qry: col=%s qry=%s srt=%s:%s pg=%s" % (collection_name, query, sort_by, sort_dir, page ) )

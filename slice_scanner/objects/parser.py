@@ -8,6 +8,7 @@ import abc
 class Parser(object):
     __metaclass__ = abc.ABCMeta
     web_driver = None
+    js_wait = 0.3 # Wait time we use for animaations
 
     def set_driver(self, web_driver):
         self.web_driver = web_driver
@@ -78,7 +79,7 @@ class Parser(object):
             return
 
     def _wait_for_js(self):
-        sleep(0.3)
+        sleep(self.js_wait)
 
     def _script(self, script):
         return self.web_driver.execute_script(script)
