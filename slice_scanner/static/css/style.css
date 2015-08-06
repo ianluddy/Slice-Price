@@ -7634,6 +7634,14 @@ body.skin-3 {
     width: 90px;
     height: 30px;
 }
+.sl-product-stamp{
+    float: left;
+    position: relative;
+    left: 19px;
+    top: 10px;
+    opacity: 0.5;
+    font-size: 0.9em;
+}
 .sl-product-vendor.Four.Star img{
     width: 50px;
     height: 60px;
@@ -7695,7 +7703,9 @@ body{
 .footer{
     position: inherit;
 }
-
+.product-footer{
+    display: block;
+}
 .sl-grid-product{
     display: inline-block;
     height: 400px;
