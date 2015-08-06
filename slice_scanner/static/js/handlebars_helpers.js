@@ -8,3 +8,10 @@ Handlebars.registerHelper('tip', function(position, tip) {
         '<i class="fa fa-question-circle"></i></span>'
     );
 });
+
+Handlebars.registerHelper('elapsed', function(stamp) {
+    return new Handlebars.SafeString(
+        elapsed_time(stamp * 1000)
+    );
+});
+
