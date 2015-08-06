@@ -32,10 +32,11 @@ class Pizza(Product):
         "Pineapple": ["pineapple"],
         "Chillies": ["chilli"],
         "Ham": ["ham"],
-        "Mushrooms": ["mushrooms"],
+        "Mushrooms": ["mushroom"],
         "Peppers": ["red pepper", "mixed peppers", "green pepper"],
-        "Tomatoes": ["tomatoes", "tomato", "sunblush"],
+        "Tomatoes": ["tomato", "sunblush"],
         "Cajun Chicken": ["cajun chicken"],
+        "Tandoori Chicken": ["tandoori chicken"],
         "Chicken": ["chicken", "chicken breast strips", "chargrilled chicken"],
         "Jalapenos": ["jalap"],
         "Pepperoni": ["pepperoni"],
@@ -44,7 +45,6 @@ class Pizza(Product):
         "Pesto": ["pesto"],
         "Piri": ["piri"],
         "Sweetcorn": ["sweetcorn"],
-        "Tandoori Chicken": ["tandoori chicken"],
         "Pepper Confit": ["pepper confit"],
         "Create your own": ["freestyle", "create"], # TODO - put this somewhere else
     }
