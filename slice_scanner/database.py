@@ -78,13 +78,18 @@ class Database():
         logging.info("Qry: col=%s qry=%s srt=%s:%s pg=%s" % (collection_name, query, sort_by, sort_dir, page ) )
 
         result = self._get_collection(collection_name).find(strip_dict(query))
+        count = result.count()
+
+        # Sorting
         if sort_by is not None:
             sort_dir = 1 if sort_dir is None else int(sort_dir) # 1 = ascending, -1 = descending
             result = result.sort(sort_by, sort_dir)
+
+        # Pagination
         if page is not None:
             result = result.limit(self.PAGE_SIZE).skip(int(page) * self.PAGE_SIZE)
 
-        return self._serialise(result)
+        return self._serialise(result), count
 
     def all(self, collection_name):
         return self._serialise(self._get_collection(collection_name).find())

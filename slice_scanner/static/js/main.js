@@ -13,6 +13,7 @@ var page_title, page_main;
 var pizza_info = {};
 var vendor_info = [];
 var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl, range_filter_group_tmpl;
+var count_tmpl;
 
 $(document).ready(function () {
     ajax_load("stats", {}, update_counts);
@@ -94,6 +95,7 @@ function compile_templates(){
     spinner_tmpl = Handlebars.compile($("#spinner_tmpl").html());
     no_result_tmpl = Handlebars.compile($("#no_result_tmpl").html());
     pizza_grid_tmpl = Handlebars.compile($("#pizza_grid_tmpl").html());
+    count_tmpl = Handlebars.compile($("#count_tmpl").html());
 }
 
 function attach_templates(input){
@@ -209,6 +211,11 @@ function get_filter_wrapper(){
     return $("#sl-filter-wrapper");
 }
 
+function update_count(count, total){
+    var showing = $(".sl-grid-product").count();
+    return $("#sl-table-count").html();
+}
+
 /* Sorting */
 
 function add_sort_handlers(){
@@ -237,7 +244,7 @@ function fetch(endpoint, param_func, template){
     show_loader(get_table_wrapper(), function(){
         ajax_load(endpoint, param_func(), function(input){
             if( input.length > 0 ){
-                get_table_wrapper().empty().append(template({"items": input}));
+                get_table_wrapper().empty().append(template({"items": input["data"], "count": input["count"]}));
             }else{
                 no_result();
             }

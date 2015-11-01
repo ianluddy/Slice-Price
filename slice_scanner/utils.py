@@ -29,12 +29,13 @@ def raw_response(response_string):
     response.mimetype = "text/plain"
     return response
 
-def json_response(response, sort=False):
+def json_response(response, count=None, sort=False):
     if sort and type(response) is list:
         response = sorted(response)
-    if type(response) in [dict, list]:
-        response = json.dumps(response)
-    response = make_response(response)
+    if count is not None:
+        response = make_response(json.dumps({"count": count, "data": response}))
+    else:
+        response = make_response(json.dumps(response))
     response.mimetype = "application/json"
     return response
 

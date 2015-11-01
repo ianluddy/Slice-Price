@@ -25,7 +25,7 @@ def index():
 @app.route('/pizza')
 @documentor.doc()
 def pizza():
-    return json_response(db.get_pizza(
+    data, count, total = db.get_pizza(
         toppings=request.args.get("toppings"),
         style=request.args.get("style"),
         base_style=request.args.get("base_style"),
@@ -37,7 +37,8 @@ def pizza():
         sort_by=request.args.get("sort_by"),
         sort_dir=request.args.get("sort_dir"),
         page=request.args.get("page"),
-    ))
+    )
+    return json_response(data, count=count, total=total)
 
 @app.route('/pizza/toppings')
 @documentor.doc()
