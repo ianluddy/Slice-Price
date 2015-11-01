@@ -40,9 +40,11 @@ class Pizza(Product):
         "Chicken": ["chicken", "chicken breast strips", "chargrilled chicken"],
         "Jalapenos": ["jalap"],
         "Pepperoni": ["pepperoni"],
+        "Meatballs": ["meatball"],
         "Beef": ["beef"],
         "Pork": ["pork"],
         "Pesto": ["pesto"],
+        "Goat's Cheese": ["goat"],
         "Piri": ["piri"],
         "Sweetcorn": ["sweetcorn"],
         "Pepper Confit": ["pepper confit"],
@@ -54,7 +56,8 @@ class Pizza(Product):
         "cheese",
         "seasoning",
         "herbs",
-        "base"
+        "base",
+        "sauce"
     ]
 
     # Sauce normaliser.
@@ -103,10 +106,11 @@ class Pizza(Product):
         toppings = []
         sauce = "tomato" # assume tomato unless we find some saucy info
         for topping in topping_list:
-            if "sauce" in topping.lower():
-                sauce = topping
-            else:
-                toppings.append(topping)
+            # TODO
+            # if "sauce" in topping.lower():
+            #     sauce = topping
+            # else:
+            toppings.append(topping)
         return toppings, sauce
 
     def _clean_toppings(self, topping_list):

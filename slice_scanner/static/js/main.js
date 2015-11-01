@@ -5,6 +5,7 @@ var TASK_DELAY = 800;
 /* Globals */
 var fetch_function = null;
 var sort_by = "score";
+var product_total;
 var sort_dir = -1;
 var page = 0;
 var tasks = {};
@@ -36,7 +37,7 @@ function load_about_page(){
 /* Pizza */
 
 function load_pizza_page(){
-    show_loader(page_main, function(){
+    show_loader($("body"), function(){
         $.when(
             ajax_load("pizza/bases", {}, function(input){pizza_info["bases"] = input;}),
             ajax_load("pizza/toppings", {}, function(input){pizza_info["toppings"] = input;}),
@@ -46,7 +47,10 @@ function load_pizza_page(){
             ajax_load("pizza/scores", {}, function(input){pizza_info["scores"] = input;}),
             ajax_load("pizza/diameters", {}, function(input){pizza_info["diameters"] = input;}),
             ajax_load("pizza/slices", {}, function(input){pizza_info["slices"] = input;})
-        ).done(function(){ draw_product_page(add_pizza_filters, fetch_pizza) });
+        ).done(function(){
+            draw_product_page(add_pizza_filters, fetch_pizza);
+            product_total = stats["pizza"]; // Total count for current selection
+        });
     });
 }
 
@@ -173,12 +177,12 @@ function add_tab_handlers(){
 
 function update_counts(input){
     stats = input;
-    $("#pizza_cnt").text(input["pizza"]);
-    $("#side_cnt").text(input["sides"]);
-    $("#dessert_cnt").text(input["desserts"]);
-    $("#drink_cnt").text(input["drinks"]);
-    $("#combo_cnt").text(input["combos"]);
-    $("#vendor_cnt").text(input["vendors"]);
+//    $("#pizza_cnt").text(input["pizza"]);
+//    $("#side_cnt").text(input["sides"]);
+//    $("#dessert_cnt").text(input["desserts"]);
+//    $("#drink_cnt").text(input["drinks"]);
+//    $("#combo_cnt").text(input["combos"]);
+//    $("#vendor_cnt").text(input["vendors"]);
 }
 
 function draw_product_page(add_filters, fetcher){
@@ -188,7 +192,6 @@ function draw_product_page(add_filters, fetcher){
     add_filters();
     add_filter_handler();
     create_filters();
-    hide_loader(page_main);
     add_sort_handlers();
     fetcher();
     $(document).ajaxStart(function() { Pace.restart(); });
@@ -196,6 +199,7 @@ function draw_product_page(add_filters, fetcher){
 
 function no_result(){
     get_table_wrapper().empty().append(no_result_tmpl());
+    hide_count();
 }
 
 function clear(){
@@ -212,8 +216,16 @@ function get_filter_wrapper(){
 }
 
 function update_count(count, total){
-    var showing = $(".sl-grid-product").count();
-    return $("#sl-table-count").html();
+    $("#sl-table-count").html(count_tmpl({
+        "visible": $(".sl-grid-product").length,
+        "count": count,
+        "total": total,
+        "filtered": count != total
+    }));
+}
+
+function hide_count(){
+    $("#sl-table-count").empty();
 }
 
 /* Sorting */
@@ -241,14 +253,16 @@ function sort_dir_handler(){
 /* Loading */
 
 function fetch(endpoint, param_func, template){
-    show_loader(get_table_wrapper(), function(){
+    haze_load(get_table_wrapper(), function(){
         ajax_load(endpoint, param_func(), function(input){
-            if( input.length > 0 ){
+            if( input.data.length > 0 ){
                 get_table_wrapper().empty().append(template({"items": input["data"], "count": input["count"]}));
+                update_count(input["count"], product_total);
             }else{
                 no_result();
             }
-            hide_loader(get_table_wrapper());
+            hide_haze(get_table_wrapper());
+            hide_loader($("body"));
         })
     });
 }
@@ -269,14 +283,24 @@ function ajax_load(func, args, callback){
 }
 
 function show_loader(dom, func){
-    $(dom).animate({"opacity": 0.4}, FADE).append($(spinner_tmpl()).fadeIn(FADE));
+    $(dom).append($(spinner_tmpl()).fadeIn(FADE));
+    setTimeout(func, FADE);
+}
+
+function haze_load(dom, func){
+    $(dom).animate({"opacity": 0.4}, FADE);
     setTimeout(func, FADE);
 }
 
 function hide_loader(dom){
     setTimeout(function(){
-        $(dom).animate({"opacity": 1}, FADE);
         $("#spinner").fadeOut(FADE, function(){$(this).remove()});
+    });
+}
+
+function hide_haze(dom){
+    setTimeout(function(){
+        $(dom).animate({"opacity": 1}, FADE);
     });
 }
 
@@ -316,3 +340,4 @@ function queue_task(func){
 function async(func){
     setTimeout(func, 0);
 }
+

@@ -7504,7 +7504,7 @@ body.skin-3 {
     position: absolute;
     display: none;
     left: 47%;
-    top: 40%;
+    top: 46%;
     z-index: 1000;
 }
 
@@ -7516,6 +7516,12 @@ body.skin-3 {
 }
 #sl-filter-wrapper button{
     margin: 1px;
+}
+#sl-filter-wrapper{
+    margin-bottom: 30px;
+}
+#sl-table-wrapper{
+    margin-top: 16px;
 }
 .sl-filter-group{
     margin-bottom: 11px;
@@ -7556,11 +7562,7 @@ body.skin-3 {
     background-color: #eee;
 }
 .sl-grid-product{
-    max-width: 256px;
-    /*display: inline-block;*/
-    /*min-width: 180px;*/
-    /*float: left;*/
-    /*margin-right: 20px;*/
+    max-width: 185px;
 }
 .sl-grid-product:hover .sl-product-stats{
     display: block;
@@ -7648,11 +7650,19 @@ body.skin-3 {
     float: right;
 }
 #sl-table-control{
-    margin-bottom: 35px;
-    margin-right: 50px;
+    /*margin-bottom: 35px;*/
+    /*margin-right: 50px;*/
 }
 #sl-table-control > span{
     float: right;
+}
+#sl-table-count{
+    font-size: 1.3em;
+    float: left;
+}
+#sl-table-header{
+    /*border-bottom: 1px solid #e7eaec;*/
+    height: 44px;
 }
 .cnt{
     margin-right: 10px;
@@ -7688,6 +7698,7 @@ body{
 }
 #nav-wrapper{
     min-height: 67px;
+    z-index: 1010;
 }
 #page-title{
     padding-top: 10px;
@@ -7769,7 +7780,7 @@ body{
     margin-left: 30px;
 }
 #tabs > h3.active{
-    border-bottom: 2px solid #ddd;
+    border-bottom: 1px solid #999;
     padding-bottom: 2px;
 }
 @media (max-width: 625px) {

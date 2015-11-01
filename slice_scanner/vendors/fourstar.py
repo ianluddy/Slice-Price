@@ -41,7 +41,7 @@ class FourStar(Vendor):
         def _get_current_toppings():
             toppings = self._script("""
                 return $("#wiItemDescription").text()
-                """).replace("&", ",").replace("\n", "").replace("\t", "").replace("  ", " ").split(",")
+                """).replace("&", ",").replace("\n", "").replace("\t", "").replace("-", "").replace("  ", " ").split(",")
             return [t for t in toppings if t not in ["", " "]]
 
         def _get_current_price():

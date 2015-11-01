@@ -7,7 +7,7 @@ class Database():
     """
     Wrapper for the database layer
     """
-    PAGE_SIZE = 15
+    PAGE_SIZE = 12
 
     def __init__(self, db):
         self.db = db
