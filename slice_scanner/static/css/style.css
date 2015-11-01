@@ -4971,10 +4971,6 @@ del {
   display: block;
   margin: 2px 0 5px 0;
 }
-.product-name:hover,
-.product-name:focus {
-  color: #1ab394;
-}
 .product-price {
   font-size: 14px;
   font-weight: 600;
@@ -7726,8 +7722,11 @@ body{
     height: 400px;
     margin-bottom: 20px;
     margin-right: 15px;
-    width: 185px;
+    width: 182px;
     float: left;
+}
+.sl-grid-product:hover{
+    cursor: pointer;
 }
 
 @media (max-width: 1290px) {
@@ -7828,9 +7827,3 @@ body{
         margin-left: calc(50% - 92px);
     }
 }
-
-/*@media (max-width: 420px) {*/
-    /*#tabs > h3{*/
-        /*margin-right: 5px;*/
-    /*}*/
-/*}*/

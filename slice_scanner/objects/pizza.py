@@ -133,7 +133,7 @@ class Pizza(Product):
                 return False
 
         # Ignoring freestyle pizzas for the moment
-        if "Create your own" in self.toppings:
+        if "Create your own" in self.toppings or len(self.toppings) == 0:
             return False
 
         return valid
