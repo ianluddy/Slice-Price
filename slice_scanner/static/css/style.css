@@ -7784,7 +7784,19 @@ body{
     font-weight: bold;
     padding-bottom: 2px;
 }
-@media (max-width: 885px) {
+
+#sl-filter-wrapper{
+    width: 27%;
+    display: inline-block;
+    float: left;
+}
+#sl-table-wrapper-wrapper{
+    width: 70%;
+    display: inline-block;
+    float: right;
+}
+
+@media (max-width: 900px) {
     #page-title{
         clear: both;
     }
@@ -7800,6 +7812,10 @@ body{
     }
     #tabs > h3.about{
         display: none;
+    }
+    #sl-filter-wrapper, #sl-table-wrapper-wrapper{
+        width: 100%;
+        display: block;
     }
 }
 
