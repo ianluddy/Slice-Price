@@ -7618,19 +7618,23 @@ body.skin-3 {
     display: block;
     display: -webkit-box;
     max-width: 400px;
-    max-height: 96px;
+    height: 44px;
     margin: 0 auto;
     line-height: 1.4;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 .sl-product-vendor{
     height: 32px;
     width: 100px;
     padding-left: 4px;
     float: right;
+    position: relative;
+    top: 36px;
+}
+.sl-product-vendor.Four.Star{
+    position: relative;
+    top: 8px;
 }
 .sl-product-vendor img{
     width: 90px;
