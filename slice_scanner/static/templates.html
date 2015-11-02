@@ -101,6 +101,9 @@
 <script id="pizza_grid_tmpl" type="text/x-handlebars-template">
     {{#each items}}
         <div class="sl-grid-product">
+            <div class="sl-product-vendor {{vendor}}">
+                <img src="/img/{{vendor}}.png" width="90" height="30">
+            </div>
             <div class="ibox-content product-box">
                 <div class="sl-product-img product-imitation {{vendor}}" style="background-image: url({{this.img}})"></div>
                 <div class="product-desc">
@@ -109,11 +112,11 @@
                     </span>
                     <small class="text-muted">{{ this.diameter }}"</small>
                     <div class="product-name">{{ this.name }}</div>
-                    <div class="small m-t-xs">
-                        <strong>Score:</strong> {{ this.score }}
-                    </div>
                     <div class="sl-product-description small m-t-xs">
                         {{ this.description }}
+                    </div>
+                    <div class="sl-product-score">
+                        <strong>Score:</strong> {{ this.score }}
                     </div>
                 </div>
                 <!--<div class="sl-product-stats">-->
@@ -127,12 +130,6 @@
                 <!--<div class="sl-product-stamp">-->
                     <!--{{elapsed this.stamp}}-->
                 <!--</div>-->
-
-                <div class="product-footer">
-                    <div class="sl-product-vendor {{vendor}}">
-                        <img src="/img/{{vendor}}.png" width="90" height="30">
-                    </div>
-                </div>
             </div>
         </div>
     {{/each}}
