@@ -8,11 +8,12 @@ class Pizza(Product):
 
     # Crust normaliser. For converting "Thin & Crispy Crust" to "Thin"
     base_normaliser = {
+        "Stuffed": ["stuffed", "decadence", "cheesy bites"],
+        "Other": ["garlic twist", "hotdog"],
         "Thin": ["thin", "italian"],
         "Regular": ["regular", "classic", "pan", "original"],
         "Thick": ["pan", "thick"],
-        "Gluten Free": ["gluten"],
-        "Stuffed": ["stuffed", "decadence", "cheesy bites"],
+        "Gluten Free": ["gluten"]
     }
 
     # Toppings normaliser. For normalising "Smoked Bacon Rashers" to "Bacon", and "Spicy Minced Beef" to "Beef"
@@ -46,7 +47,7 @@ class Pizza(Product):
         "Pesto": ["pesto"],
         "Goat's Cheese": ["goat"],
         "Piri": ["piri"],
-        "Sweetcorn": ["sweetcorn"],
+        "Sweetcorn": ["sweetcorn", "sweet corn"],
         "Pepper Confit": ["pepper confit"],
         "Create your own": ["freestyle", "create"], # TODO - put this somewhere else
     }
@@ -57,7 +58,8 @@ class Pizza(Product):
         "seasoning",
         "herbs",
         "base",
-        "sauce"
+        "sauce",
+        "mozzarella"
     ]
 
     # Sauce normaliser.

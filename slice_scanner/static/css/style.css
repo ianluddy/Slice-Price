@@ -7516,9 +7516,6 @@ body.skin-3 {
 #sl-filter-wrapper{
     margin-bottom: 40px;
 }
-#sl-table-wrapper{
-    margin-top: 16px;
-}
 .sl-filter-group{
     margin-bottom: 11px;
 }
@@ -7598,7 +7595,7 @@ body.skin-3 {
     background-repeat: no-repeat;
 }
 .sl-product-img.Pizza.Hut{
-    background-size: 110%;
+    background-size: 100%;
 }
 .sl-product-img.Four.Star{
     background-size: 100%;
@@ -7642,6 +7639,11 @@ body.skin-3 {
     top: 397px;
     left: 2px;
 }
+.sl-product-vendor.Pizza.Hut{
+    position: relative;
+    top: 400px;
+    left: 2px;
+}
 .sl-product-vendor img{
     width: 90px;
     height: 30px;
@@ -7669,10 +7671,10 @@ body.skin-3 {
 #sl-table-count{
     font-size: 1.3em;
     float: left;
+    text-indent: -12px;
 }
 #sl-table-header{
-    /*border-bottom: 1px solid #e7eaec;*/
-    height: 44px;
+    height: 30px;
 }
 .cnt{
     margin-right: 10px;
@@ -7814,6 +7816,7 @@ body{
         width: 100%;
         margin-bottom: 20px;
         text-align: center;
+        text-indent: 0px;
     }
     #tabs{
         float: left;
@@ -7826,6 +7829,9 @@ body{
     #sl-filter-wrapper, #sl-table-wrapper-wrapper{
         width: 100%;
         display: block;
+    }
+    #sl-table-wrapper{
+        margin-top: 16px;
     }
 }
 

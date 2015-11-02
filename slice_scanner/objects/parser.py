@@ -105,6 +105,13 @@ class Parser(object):
                 return string
             sleep(0.2)
 
+    def _get_css_attr(self, selector, attribute):
+        while True:
+            string = self._script('return $("%s").attr("%s")' % (selector, attribute))
+            if string:
+                return string
+            sleep(0.2)
+
     def _get_id_txt(self, selector):
         return self.web_driver.find_element_by_id(selector).text.encode("utf-8")
 

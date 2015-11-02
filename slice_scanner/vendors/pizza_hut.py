@@ -1,21 +1,23 @@
 from slice_scanner.objects.vendor import Vendor
 
-
 class PizzaHut(Vendor):
 
     id = "Pizza Hut"
-    site = "https://www.pizzahut.co.uk/"
+    site = "https://www.pizzahutdelivery.ie/"
 
     diameter_reference = {
         "large": 14,
+        "regular": 12,
         "medium": 12,
         "small": 9.5,
+        "personal": 7
     }
 
     slice_reference = {
         "large": 10,
         "medium": 8,
-        "small": 6
+        "small": 6,
+        "personal": 4
     }
 
     def _get_meals(self):
@@ -29,83 +31,79 @@ class PizzaHut(Vendor):
 
     def _get_pizzas(self):
 
-        def _get_pizza_count():
-            return self._script('return $(".pizza-product").length')
+        def _select_size(size):
+            self._script('$("a[data-category-name=\'%s\']").click()' % size)
+            self._wait()
 
-        def _get_pizza_title(index):
-            return self._script('return $($(".pizza-product").get(%s)).find("h3").text()' % index).strip()
+        def _get_current_pizzas():
+            _mark_unparsed()
+            while not _all_parsed():
+                _parse_next()
 
-        def _get_pizza_img(index):
-            try:
-                return self._script(
-                    'return $($(".pizza-product").get(%s)).find(".well .product-pizza").css("background-image")' %
-                    index
-                ).strip().replace("url(", "").replace(")","")
-            except:
-                return None
+        def _mark_unparsed():
+            self._script('$(".m2g-menu-product button:visible").addClass("unparsed")')
 
-        def _get_pizza_description(index):
-            return self._script('return $($(".pizza-product").get(%s)).find("p").text()' % index).strip()
+        def _all_parsed():
+            return self._script('return $(".m2g-menu-product button.unparsed:visible").length') == 0
 
-        def _mark_pizza_sizes_for_parsing():
-            return self._script('$(".pizzasize li").each(function(){ $(this).addClass("unparsed")})')
+        def _get_price():
+            return self._get_str_fl(self._get_css_str('.m2g-product-editor-price'))
 
-        def _mark_pizza_bases_for_parsing():
-            return self._script('$(".pizzabase li").each(function(){ $(this).addClass("unparsed")})')
+        def _get_toppings():
+            toppings = self._get_css_str(".m2g-product-editor-product-description").replace("\n", "").replace("-", "")\
+                .replace("  ", " ").split(",")
+            return [t for t in toppings if t not in ["", " "]]
 
-        def _select_next_pizza_base(index):
-            return self._script(
-                'return $($(".pizza-product").get(%s)).find(".pizzabase li.unparsed:first").removeClass("unparsed").find("a").click().text()' %
-                index
-            )
+        def _get_name():
+            return self._get_css_str('.m2g-product-editor-product-name').split("(")[0]
 
-        def _select_next_pizza_size(index):
-            return self._script(
-                'return $($(".pizza-product").get(%s)).find(".pizzasize li.unparsed:first").removeClass("unparsed").find("a").click().text()' %
-                index
-            ).lower()
+        def _get_size():
+            return self._get_css_str('.m2g-product-editor-product-name').replace(")", "").split("(")[1].lower()
 
-        def _get_pizza_price(index):
-            return self._script('return $($(".pizza-product").get(%s)).find(".pizza-price span:last").text()' % index).strip()
+        def _get_image():
+            return self._get_css_attr('.m2g-product-editor-product-image', 'src')
 
-        self._wait_for_css(".pizza-product")
-        self._wait_for_css(".pizzabase li")
+        def _mark_bases_unparsed():
+            self._script('$("div:visible[data-modifier-group-name*=\'Base\'] div.m2g-icon--checkbox").addClass("unparsed")')
 
-        _mark_pizza_bases_for_parsing()
+        def _all_bases_parsed():
+            return self._script('return $("div:visible[data-modifier-group-name*=\'Base\'] div.m2g-icon--checkbox.unparsed").length') == 0
 
-        for i in range(_get_pizza_count()):
-            i += 5
-            title = _get_pizza_title(i)
-            img = _get_pizza_img(i)
-            toppings = [t.strip() for t in _get_pizza_description(i).split(",")]
+        def _parse_next_base():
+            self._script('$("div:visible[data-modifier-group-name*=\'Base\'] div.m2g-icon--checkbox.unparsed").first().click().removeClass("unparsed")')
+            self._wait()
+            base = self._script('return $("div:visible[data-modifier-group-name*=\'Base\'] div.m2g-touchable[data-selection-state=on]").attr("data-modifier-name")')
+            if not base:
+                base = self._script('return $("div:visible[data-modifier-group-name*=\'Base\'] div.m2g-touchable[data-selection-state=off]").first().attr("data-modifier-name")')
+            return base.split("] ")[1]
 
-            while True:
-                base = _select_next_pizza_base(i)
-                self._wait()
-                if base:
-                    _mark_pizza_sizes_for_parsing()
-                    while True:
-                        size = _select_next_pizza_size(i)
-                        self._wait()
-                        price = self._get_str_fl(_get_pizza_price(i))
-                        if size:
-                            self._new_pizza(title, toppings, size, price, base, img)
-                        else:
-                            break
-                else:
-                    break
+        def _parse_next():
+            self._script('$(".m2g-menu-product button.unparsed:visible").first().click().removeClass("unparsed")')
+            self._wait()
+
+            _mark_bases_unparsed()
+
+            name = _get_name()
+            size = _get_size()
+            toppings = _get_toppings()
+            image = _get_image()
+
+            while not _all_bases_parsed():
+                base = _parse_next_base()
+                self._new_pizza(name, toppings, size, _get_price(), base, image)
+
+            self._script('$("button.m2g-modal-close-button").click()')
+            self._wait()
+
+        _select_size("Personal Pizzas")
+        _get_current_pizzas()
+        _select_size("Regular Pizzas")
+        _get_current_pizzas()
+        _select_size("Medium Pizzas")
+        _get_current_pizzas()
+        _select_size("Large Pizzas")
+        _get_current_pizzas()
 
     def _login(self):
-        self.web_driver.get("https://www.pizzahut.co.uk/menu/pizza")
-
-        self._wait_for_css(".btn-order")
-        self._script('$(".btn-order:first").click()')
-
-        self._wait_for_id("optCollection")
+        self.web_driver.get("http://www.pizzahutdelivery.ie/order-online.php?location_id=2633&method=delivery")
         self._wait()
-        self._get_id("optCollection").click()
-        self._get_id("ajax-postcode-txt").send_keys("sw177lf")
-        self._get_id("get-store-btn").click()
-
-        self._wait_for_css('.store-start-order a')
-        self._script('$(".store-start-order a").first().click()')

@@ -27,7 +27,10 @@ class FourStar(Vendor):
         pass
 
     def _get_sides(self):
-        return []
+        self.web_driver.get("https://weborder3.microworks.com/fourstar/Items/Index/1074")
+
+        self._script("$(a.wcGroupsGroupName:contains('Side')).click()")
+
 
     def _get_pizzas(self):
         self.web_driver.get("https://weborder3.microworks.com/fourstar/Items/Index/1074")
@@ -39,9 +42,8 @@ class FourStar(Vendor):
             return "gluten" in self._script('return $("a.wcGroupsGroupName.wcGroupsCurrentGroup").text()').lower()
 
         def _get_current_toppings():
-            toppings = self._script("""
-                return $("#wiItemDescription").text()
-                """).replace("&", ",").replace("\n", "").replace("\t", "").replace("-", "").replace("  ", " ").split(",")
+            toppings = self._get_css_str("#wiItemDescription").replace("&", ",").replace("\n", "").replace("\t", "")\
+                .replace("-", "").replace("  ", " ").split(",")
             return [t for t in toppings if t not in ["", " "]]
 
         def _get_current_price():
