@@ -81,12 +81,12 @@ class PizzaHut(Vendor):
 
             while True:
                 base = _select_next_pizza_base(i)
-                self._wait_for_js()
+                self._wait()
                 if base:
                     _mark_pizza_sizes_for_parsing()
                     while True:
                         size = _select_next_pizza_size(i)
-                        self._wait_for_js()
+                        self._wait()
                         price = self._get_str_fl(_get_pizza_price(i))
                         if size:
                             self._new_pizza(title, toppings, size, price, base, img)
@@ -102,7 +102,7 @@ class PizzaHut(Vendor):
         self._script('$(".btn-order:first").click()')
 
         self._wait_for_id("optCollection")
-        self._wait_for_js()
+        self._wait()
         self._get_id("optCollection").click()
         self._get_id("ajax-postcode-txt").send_keys("sw177lf")
         self._get_id("get-store-btn").click()

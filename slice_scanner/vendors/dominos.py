@@ -49,7 +49,7 @@ class Dominos(Vendor):
             description = self._get_side_description(side_id)
             size = "standard"
             self._select_side(side_id)
-            self._wait_for_js()
+            self._wait()
             while self._side_variants_remaining(side_id):
                 quantity = self._get_side_variant_quantity(side_id)
                 price = self._get_side_variant_price(side_id)
@@ -166,10 +166,10 @@ class Dominos(Vendor):
             title = _get_pizza_title()
             for i in range(_size_count()):
                 size = _choose_size(i)
-                self._wait_for_js()
+                self._wait()
                 for j in range(_crust_count()):
                     crust = _choose_crust(j)
-                    self._wait_for_js()
+                    self._wait()
                     self._new_pizza(title, toppings, size, _get_price(), crust, product_img)
                 _choose_crust(0)
 

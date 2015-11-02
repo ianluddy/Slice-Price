@@ -72,20 +72,21 @@ class FourStar(Vendor):
             self.web_driver.get(page)
 
             while self._element_count(".wcItemsItemSelectItemButton") > 0:
-                self._wait_for_js()
+                self._wait()
                 self._select_next_by_class("wcItemsItemSelectItemButton")
-                self._wait_for_js()
+                self._wait()
                 self._wait_for_css("#wiItemDescription")
 
                 toppings = _get_current_toppings()
                 size = _get_current_size()
+                self._wait()
                 price = _get_current_price()
                 image = self.complete_url(self._script('return $("#wiItemImage img").attr("src")'))
                 title = self._script('return $("#wiItemName").text()')
 
                 _select_crust_tab()
-                self._wait_for_js()
-                self._wait_for_js()
+                self._wait()
+                self._wait()
                 if _gluten_free():
                     self._new_pizza(title, toppings, size, price, "Gluten Free", image)
                 else:
@@ -93,6 +94,6 @@ class FourStar(Vendor):
                         self._new_pizza(title, toppings, size, price, _get_next_crust(), image)
 
                 self._script('$(".ui-dialog-titlebar button").first().click()')
-                self._wait_for_js()
+                self._wait()
 
 

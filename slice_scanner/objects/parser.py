@@ -8,7 +8,7 @@ import abc
 class Parser(object):
     __metaclass__ = abc.ABCMeta
     web_driver = None
-    js_wait = 0.3 # Wait time we use for animations
+    page_wait = 0.4 # Wait time we use for animations, ajax loading etc
 
     def set_driver(self, web_driver):
         self.web_driver = web_driver
@@ -78,8 +78,8 @@ class Parser(object):
         except TimeoutException:
             return
 
-    def _wait_for_js(self):
-        sleep(self.js_wait)
+    def _wait(self):
+        sleep(self.page_wait)
 
     def _script(self, script):
         return self.web_driver.execute_script(script)
@@ -119,7 +119,10 @@ class Parser(object):
 
     @staticmethod
     def _get_str_fl(string):
-        return float(re.findall("\d+.\d+", string)[0])
+        try:
+            return float(re.findall("\d+.\d+", string)[0])
+        except IndexError, AttributeError:
+            return None
 
     @staticmethod
     def _strip_to_ascii(string):
