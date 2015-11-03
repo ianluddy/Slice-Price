@@ -7614,6 +7614,7 @@ body.skin-3 {
     width: 100%;
     position: relative;
     bottom: 54px;
+    float: left;
 }
 .sl-product-img.Dominos.Pizza{
     background-size: 100%;
