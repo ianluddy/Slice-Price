@@ -85,22 +85,25 @@ def pizza_scores():
 @app.route('/sides')
 @documentor.doc()
 def sides():
-    return json_response(db.get_sides(
+    data, count = db.get_sides(
         type=request.args.get("type"),
+        vendor=request.args.get("vendor", []),
+        price=request.args.get("price", []),
         sort_by=request.args.get("sort_by"),
         sort_dir=request.args.get("sort_dir"),
         page=request.args.get("page")
-    ))
+    )
+    return json_response(data, count=count)
 
 @app.route('/sides/types')
 @documentor.doc()
 def sides_types():
     return json_response(db.distinct("sides", "type"), sort=True)
 
-@app.route('/sides/scores')
-@documentor.doc()
-def sides_scores():
-    return json_response(db.range("sides", "score"))
+# @app.route('/sides/scores')
+# @documentor.doc()
+# def sides_scores():
+#     return json_response(db.range("sides", "score"))
 
 @app.route('/sides/prices')
 @documentor.doc()

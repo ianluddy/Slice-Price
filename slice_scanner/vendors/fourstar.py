@@ -27,12 +27,51 @@ class FourStar(Vendor):
         pass
 
     def _get_sides(self):
-        self.web_driver.get("https://weborder3.microworks.com/fourstar/Items/Index/1074")
 
-        self._script("$(a.wcGroupsGroupName:contains('Side')).click()")
+        def _next_side_type():
+            return self._script("""
+                return $(".wcGroupsSubGroupList .wcGroupsGroupName:first").removeClass("wcGroupsGroupName").attr("href")
+            """)
 
+        def _unparsed_side_types():
+            return self._element_count('.wcGroupsSubGroupList .wcGroupsGroupName') > 0
+
+        def _unparsed_sides():
+            return self._element_count('.wcItemsItem:visible') > 0
+
+        def _side_parsed():
+            self._script('$(".wcItemsItem:visible:first").removeClass("wcItemsItem")')
+
+        def _get_name():
+            return self._get_css_str(".wcItemsItem:visible:first .wcItemsItemName")
+
+        def _get_description():
+            return self._get_css_str(".wcItemsItem:visible:first .wcItemsItemDescription")
+
+        def _get_price():
+            return self._get_str_fl(self._get_css_str(".wcItemsItem:visible:first .wcItemsItemPrice"))
+
+        def _get_image():
+            return self.complete_url(self._get_css_attr(".wcItemsItem:visible:first .wcItemsItemThumb img", "src"))
+
+        self.web_driver.get("https://weborder3.microworks.com/fourstar/Items/Index/1012")
+
+        pages = []
+        while _unparsed_side_types():
+            pages.append(self.complete_url(_next_side_type()))
+        print pages
+
+        for page in pages:
+            self.web_driver.get(page)
+            self._wait()
+            # while _unparsed_sides():
+            #     self._new_side(_get_name(), _get_price(), _get_image(), _get_description())
+            #     _side_parsed()
+            #     self._wait()
+            #     print 2
 
     def _get_pizzas(self):
+
         self.web_driver.get("https://weborder3.microworks.com/fourstar/Items/Index/1074")
 
         def _get_current_size():

@@ -12,9 +12,10 @@ var tasks = {};
 var stats = {};
 var page_title, page_main;
 var pizza_info = {};
+var side_info = {};
 var vendor_info = [];
-var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, pizza_grid_tmpl, range_filter_group_tmpl;
-var count_tmpl;
+var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, side_grid_tmpl, pizza_grid_tmpl;
+var count_tmpl, range_filter_group_tmpl;
 
 $(document).ready(function () {
     ajax_load("stats", {}, update_counts);
@@ -32,6 +33,41 @@ $(document).ready(function () {
 
 function load_about_page(){
 
+}
+
+/* Sides */
+
+function load_sides_page(){
+    show_loader($("body"), function(){
+        $.when(
+            ajax_load("sides/types", {}, function(input){side_info["types"] = input;}),
+            ajax_load("sides/prices", {}, function(input){side_info["prices"] = input;})
+        ).done(function(){
+            draw_product_page(add_side_filters, fetch_sides);
+            product_total = stats["sides"]; // Total count for current selection
+        });
+    });
+}
+
+function add_side_filters(){
+    add_filter("vendors", vendor_info, "active");
+    add_filter("types", side_info["types"], "active");
+    add_range_filter("price", side_info["prices"].min, side_info["prices"].max, 1,  "&#8364; ");
+}
+
+function fetch_sides(){
+    fetch("sides", fetch_sides_parameters, side_grid_tmpl);
+}
+
+function fetch_sides_parameters(){
+    return {
+        "vendor": JSON.stringify(get_filter("vendors")),
+        "type": JSON.stringify(get_filter("types")),
+        "price": JSON.stringify(get_range_filter("price")),
+        "page": page,
+        "sort_by": sort_by,
+        "sort_dir": sort_dir,
+    };
 }
 
 /* Pizza */
@@ -99,6 +135,7 @@ function compile_templates(){
     spinner_tmpl = Handlebars.compile($("#spinner_tmpl").html());
     no_result_tmpl = Handlebars.compile($("#no_result_tmpl").html());
     pizza_grid_tmpl = Handlebars.compile($("#pizza_grid_tmpl").html());
+    side_grid_tmpl = Handlebars.compile($("#side_grid_tmpl").html());
     count_tmpl = Handlebars.compile($("#count_tmpl").html());
 }
 
@@ -177,12 +214,6 @@ function add_tab_handlers(){
 
 function update_counts(input){
     stats = input;
-//    $("#pizza_cnt").text(input["pizza"]);
-//    $("#side_cnt").text(input["sides"]);
-//    $("#dessert_cnt").text(input["desserts"]);
-//    $("#drink_cnt").text(input["drinks"]);
-//    $("#combo_cnt").text(input["combos"]);
-//    $("#vendor_cnt").text(input["vendors"]);
 }
 
 function draw_product_page(add_filters, fetcher){
@@ -283,6 +314,7 @@ function ajax_load(func, args, callback){
 }
 
 function show_loader(dom, func){
+    $("#spinner").remove();
     $(dom).append($(spinner_tmpl()).fadeIn(FADE));
     setTimeout(func, FADE);
 }
@@ -292,7 +324,7 @@ function haze_load(dom, func){
     setTimeout(func, FADE);
 }
 
-function hide_loader(dom){
+function hide_loader(){
     setTimeout(function(){
         $("#spinner").fadeOut(FADE, function(){$(this).remove()});
     });

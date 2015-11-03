@@ -14,12 +14,13 @@ class Side(Product):
         "Potato Wedges": ["potato", "wedge"],
         "Nachos": ["nacho"],
         "Coleslaw": ["slaw"],
+        "Pasta": ["pasta", "macaroni"],
+        "Cheese": ["cheese triangle"],
     }
 
     def __init__(self, **kwargs):
         super(Side, self).__init__(**kwargs)
         self.type = self._normalise_data(self.side_normaliser, self.name)
-        self.quantity = kwargs["quantity"]
 
     def __str__(self):
         return "%s %s %s %s %s" % (
@@ -39,9 +40,6 @@ class Side(Product):
 
     def _hash(self):
         return md5(self.vendor + self.name + str(self.quantity)).hexdigest()
-
-    def _score(self):
-        return float(self.quantity) / float(self.price) * 100
 
     def to_dict(self):
         side_dict = super(Side, self).to_dict()

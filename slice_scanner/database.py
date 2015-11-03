@@ -45,6 +45,8 @@ class Database():
             "sides",
             {
                 "type": self._in(kwargs.get("type")),
+                "vendor": self._in(kwargs.get("vendor")),
+                "price": self._in_range(kwargs.get("price")),
             },
             sort_by=kwargs.get("sort_by"),
             sort_dir=kwargs.get("sort_dir"),

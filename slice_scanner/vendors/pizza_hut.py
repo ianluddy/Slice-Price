@@ -27,7 +27,48 @@ class PizzaHut(Vendor):
         return []
 
     def _get_sides(self):
-        return []
+
+        def _select_type(side_type):
+            self._wait()
+            self._script('$("a[data-category-name*=\'%s\']").click()' % side_type)
+            self._wait()
+
+        def _mark_unparsed():
+            self._script('$(".m2g-menu-product:visible").addClass("unparsed")')
+
+        def _all_parsed():
+            return self._script('return $(".m2g-menu-product.unparsed:visible").length') == 0
+
+        def _mark_parsed():
+            self._script('$(".m2g-menu-product.unparsed:visible:first").removeClass("unparsed")')
+
+        def _get_price():
+            return self._get_str_fl(self._get_css_str('.m2g-menu-product.unparsed:visible:first .m2g-menu-product-price'))
+
+        def _get_name():
+            return self._get_css_str('.m2g-menu-product.unparsed:visible:first .m2g-menu-product-name')
+
+        def _get_description():
+            return self._get_css_str('.m2g-menu-product.unparsed:visible:first .m2g-menu-product-description')
+
+        def _get_image():
+            return self._get_css_attr('.m2g-menu-product.unparsed:visible:first .m2g-menu-product-image', 'src')
+
+        def _parse_next():
+            self._new_side(_get_name(), _get_price(), _get_image(), _get_description())
+
+        def _parse_visible():
+            _mark_unparsed()
+            while not _all_parsed():
+                _parse_next()
+                _mark_parsed()
+
+        def _parse_side_page(title):
+            _select_type(title)
+            _parse_visible()
+
+        _parse_side_page("Classic Sides")
+        _parse_side_page("Premium Sides")
 
     def _get_pizzas(self):
 

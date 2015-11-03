@@ -188,5 +188,6 @@ class Pizza(Product):
             pizza_dict["cost_psi"] = self._cost_per_square_inch()
             pizza_dict["cost_per_slice"] = self._cost_per_slice()
             pizza_dict["serves"] = self._serves()
+            pizza_dict["score"] = self._score()
             return pizza_dict
         return None

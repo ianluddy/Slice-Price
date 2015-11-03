@@ -100,7 +100,7 @@
 
 <script id="pizza_grid_tmpl" type="text/x-handlebars-template">
     {{#each items}}
-        <div class="sl-grid-product">
+        <div class="sl-grid-product grid-pizza">
             <div class="sl-product-vendor {{vendor}}">
                 <img src="/img/{{vendor}}.png" width="90" height="30">
             </div>
@@ -130,6 +130,29 @@
                 <!--<div class="sl-product-stamp">-->
                     <!--{{elapsed this.stamp}}-->
                 <!--</div>-->
+            </div>
+        </div>
+    {{/each}}
+</script>
+
+<script id="side_grid_tmpl" type="text/x-handlebars-template">
+    {{#each items}}
+        <div class="sl-grid-product grid-side {{vendor}}">
+            <div class="sl-product-vendor {{vendor}}">
+                <img src="/img/{{vendor}}.png" width="90" height="30">
+            </div>
+            <div class="ibox-content product-box">
+                <div class="sl-product-img product-imitation {{vendor}}" style="background-image: url({{this.img}})"></div>
+                <div class="image-border-bottom"></div>
+                <div class="product-desc">
+                    <span class="product-price">
+                        &#8364; {{decimal this.price}}
+                    </span>
+                    <div class="product-name">{{ this.name }}</div>
+                    <div class="sl-product-description small m-t-xs">
+                        {{ this.description }}
+                    </div>
+                </div>
             </div>
         </div>
     {{/each}}

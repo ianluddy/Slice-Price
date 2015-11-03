@@ -8,7 +8,7 @@ class Product():
         self.vendor = kwargs["vendor"]
         self.name = kwargs["name"]
         self.price = float(kwargs["price"])
-        self.description = kwargs["description"] if kwargs.get("description") else None
+        self.description = kwargs["description"] if kwargs.get("description") else kwargs["name"]
         self.img = kwargs.get("img")
         self.quantity = kwargs.get("quantity", 1)
         self.stamp = time()
@@ -23,7 +23,6 @@ class Product():
             product_dict["img"] = self.img
             product_dict["stamp"] = self.stamp
             product_dict["hash"] = self._hash()
-            product_dict["score"] = self._score()
             return product_dict
         return None
 
@@ -50,8 +49,4 @@ class Product():
 
     @abc.abstractmethod
     def _hash(self):
-        """ Get product hash """
-
-    @abc.abstractmethod
-    def _score(self):
         """ Get product hash """

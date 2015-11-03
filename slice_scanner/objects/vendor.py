@@ -58,15 +58,14 @@ class Vendor(Parser):
             diameter=diameter, price=price, base=base, slices=slices, img=img
         )
 
-    def _new_side(self, name, price, size, quantity, img, description=None):
+    def _new_side(self, name, price, img, description=None):
         self._new_product(
-            Side, vendor=self.id, name=name, price=price, size=size, quantity=quantity,
-            img=img, description=description
+            Side, vendor=self.id, name=name, price=price, img=img, description=description
         )
 
     def parse(self):
         self._login()
-        wrapped_execute(self._get_pizzas)
+        # wrapped_execute(self._get_pizzas)
         wrapped_execute(self._get_sides)
         wrapped_execute(self._get_desserts)
         wrapped_execute(self._get_meals)

@@ -7546,6 +7546,9 @@ body.skin-3 {
 .ibox-content{
     min-height: 400px;
 }
+.grid-side .ibox-content{
+    min-height: 350px;
+}
 #no_result{
     margin-top: 10%;
     width: 60%;
@@ -7601,6 +7604,17 @@ body.skin-3 {
     background-size: 100%;
     background-color: #fff;
 }
+.grid-side .sl-product-img.Four.Star {
+    background-position: -5px -2px;
+    background-size: 105%;
+}
+.grid-side.Four.Star .image-border-bottom{
+    background-color: white;
+    height: 20px;
+    width: 100%;
+    position: relative;
+    bottom: 54px;
+}
 .sl-product-img.Dominos.Pizza{
     background-size: 100%;
 }
@@ -7632,7 +7646,7 @@ body.skin-3 {
 .sl-product-vendor.Four.Star{
     position: relative;
     top: 370px;
-    left: 0px;
+    left: -4px;
 }
 .sl-product-vendor.Dominos{
     position: relative;
@@ -7643,6 +7657,13 @@ body.skin-3 {
     position: relative;
     top: 400px;
     left: 2px;
+}
+.grid-side .sl-product-vendor.Four.Star{
+    top: 319px;
+    left: -4px;
+}
+.grid-side .sl-product-vendor.Pizza.Hut{
+    top: 349px;
 }
 .sl-product-vendor img{
     width: 90px;
@@ -7733,6 +7754,9 @@ body{
     margin-right: 15px;
     width: 182px;
     float: left;
+}
+.grid-side{
+    height: 350px;
 }
 .sl-grid-product:hover{
     cursor: pointer;
