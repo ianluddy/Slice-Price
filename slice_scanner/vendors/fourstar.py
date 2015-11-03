@@ -15,7 +15,7 @@ class FourStar(Vendor):
 
     @staticmethod
     def complete_url(tail):
-        return "https://weborder3.microworks.com%s" % tail
+        return "https://weborder3.microworks.com%s" % tail if tail else None
 
     def _get_meals(self):
         return []
@@ -43,7 +43,10 @@ class FourStar(Vendor):
             self._script('$(".wcItemsItem:visible:first").removeClass("wcItemsItem")')
 
         def _get_name():
-            return self._get_css_str(".wcItemsItem:visible:first .wcItemsItemName")
+            side_name = self._get_css_str(".wcItemsItem:visible:first .wcItemsItemName")
+            if _chicken_side() and not 'chicken' in side_name.lower():
+                return side_name + ' Chicken'
+            return side_name
 
         def _get_description():
             return self._get_css_str(".wcItemsItem:visible:first .wcItemsItemDescription")
@@ -54,21 +57,20 @@ class FourStar(Vendor):
         def _get_image():
             return self.complete_url(self._get_css_attr(".wcItemsItem:visible:first .wcItemsItemThumb img", "src"))
 
+        def _chicken_side():
+            return 'chicken' in self._get_css_str('.wcGroupsGroup.wcGroupsCurrentGroup .wcGroupsGroupName').lower()
+
         self.web_driver.get("https://weborder3.microworks.com/fourstar/Items/Index/1012")
 
         pages = []
         while _unparsed_side_types():
             pages.append(self.complete_url(_next_side_type()))
-        print pages
 
         for page in pages:
             self.web_driver.get(page)
-            self._wait()
-            # while _unparsed_sides():
-            #     self._new_side(_get_name(), _get_price(), _get_image(), _get_description())
-            #     _side_parsed()
-            #     self._wait()
-            #     print 2
+            while _unparsed_sides():
+                self._new_side(_get_name(), _get_price(), _get_image(), _get_description())
+                _side_parsed()
 
     def _get_pizzas(self):
 

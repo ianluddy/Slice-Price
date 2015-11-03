@@ -27,7 +27,7 @@ class Product():
         return None
 
     def _valid(self):
-        for required in ["name", "price", "vendor"]:
+        for required in ["name", "price", "vendor", "img"]:
             if getattr(self, required) is None:
                 return False
         return self.price > 0

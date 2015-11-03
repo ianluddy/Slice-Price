@@ -99,18 +99,24 @@ class Parser(object):
             return
 
     def _get_css_str(self, selector):
-        while True:
+        timeout = 1
+        wait = 0.2
+        while timeout > 0:
             string = self._script('return $("%s").text()' % selector).encode("utf-8")
             if string:
                 return string
-            sleep(0.2)
+            sleep(wait)
+            timeout -= wait
 
     def _get_css_attr(self, selector, attribute):
-        while True:
+        timeout = 1
+        wait = 0.2
+        while timeout > 0:
             string = self._script('return $("%s").attr("%s")' % (selector, attribute))
             if string:
                 return string
-            sleep(0.2)
+            sleep(wait)
+            timeout -= wait
 
     def _get_id_txt(self, selector):
         return self.web_driver.find_element_by_id(selector).text.encode("utf-8")
