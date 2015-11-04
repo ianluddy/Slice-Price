@@ -1,7 +1,7 @@
 {
     "database": {
         "name": "slice",
-        "host": "52.18.34.44",
+        "host": "52.31.46.181",
         "port": 27017
     },
     "logging": {
