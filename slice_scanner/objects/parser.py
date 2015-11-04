@@ -1,8 +1,10 @@
+from selenium.webdriver.support.select import Select
 import selenium.webdriver.support.ui as ui
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 import re
+import logging
 import abc
 
 class Parser(object):
@@ -90,6 +92,9 @@ class Parser(object):
     def _select_next_by_class(self, classname):
         return self._script("$('.%s:first').removeClass('%s').click()" % (classname, classname))
 
+    def _select_dropdown_option(self, dropdown_id, option_index):
+        Select(self.web_driver.find_element_by_id(dropdown_id)).select_by_index(option_index)
+
     def _wait_for_alert_to_clear(self, timeout=2):
         try:
             ui.WebDriverWait(self.web_driver, timeout).until(
@@ -128,6 +133,7 @@ class Parser(object):
         try:
             return int(re.search(r'\d+', string).group())
         except AttributeError:
+            logging.error("Parsing error [%s]" % string, exc_info=True)
             return None
 
     @staticmethod
@@ -135,6 +141,7 @@ class Parser(object):
         try:
             return float(re.findall("\d+.\d+", string)[0])
         except IndexError, AttributeError:
+            logging.error("Parsing error [%s]" % string, exc_info=True)
             return None
 
     @staticmethod

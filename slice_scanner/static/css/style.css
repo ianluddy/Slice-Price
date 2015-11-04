@@ -7620,7 +7620,7 @@ body.skin-3 {
     background-size: 100%;
 }
 .sl-product-img.Papa.Johns{
-    background-size: 150%;
+    background-size: 100%;
 }
 .sl-product-description{
     display: block;
@@ -7648,6 +7648,11 @@ body.skin-3 {
     position: relative;
     top: 370px;
     left: -4px;
+}
+.sl-product-vendor.Papa.Johns{
+    position: relative;
+    top: 394px;
+    left: 10px;
 }
 .sl-product-vendor.Dominos{
     position: relative;

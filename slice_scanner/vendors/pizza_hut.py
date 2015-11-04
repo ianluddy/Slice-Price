@@ -6,10 +6,10 @@ class PizzaHut(Vendor):
     site = "https://www.pizzahutdelivery.ie/"
 
     diameter_reference = {
-        "large": 14,
-        "regular": 12,
-        "medium": 12,
-        "small": 9.5,
+        "large": 13.5,
+        "regular": 11.5,
+        "medium": 11.5,
+        "small": 9,
         "personal": 7
     }
 

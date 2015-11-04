@@ -10,9 +10,9 @@ class Collector(object):
         self.cron = CronTab(frequency)
         self.web_driver = web_driver
         self.vendors = [
-            fourstar.FourStar(queue),
+            # fourstar.FourStar(queue),
             # dominos.Dominos(queue),
-            # papa_johns.PapaJohns(queue),
+            papa_johns.PapaJohns(queue),
             # pizza_hut.PizzaHut(queue),
         ]
 
