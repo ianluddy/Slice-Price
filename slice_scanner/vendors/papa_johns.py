@@ -18,14 +18,11 @@ class PapaJohns(Vendor):
         "large": 10
     }
 
-    def _get_meals(self):
-        return []
-
     def _get_desserts(self):
-        return []
+        pass
 
     def _get_sides(self):
-        return []
+        pass
 
     def _get_pizzas(self):
 

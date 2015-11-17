@@ -20,11 +20,8 @@ class PizzaHut(Vendor):
         "personal": 4
     }
 
-    def _get_meals(self):
-        return []
-
     def _get_desserts(self):
-        return []
+        pass
 
     def _get_sides(self):
 

@@ -19,7 +19,8 @@ class Parser(object):
 
     @abc.abstractmethod
     def parse(self):
-        """ Get list of Pizzas """
+        # Parse data from vendors
+        pass
 
     #### DOM ####
 

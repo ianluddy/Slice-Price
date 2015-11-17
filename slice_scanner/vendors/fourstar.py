@@ -17,11 +17,8 @@ class FourStar(Vendor):
     def complete_url(tail):
         return "https://weborder3.microworks.com%s" % tail if tail else None
 
-    def _get_meals(self):
-        return []
-
     def _get_desserts(self):
-        return []
+        pass
 
     def _login(self):
         pass

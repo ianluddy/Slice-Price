@@ -15,7 +15,7 @@ var pizza_info = {};
 var side_info = {};
 var vendor_info = [];
 var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, side_grid_tmpl, pizza_grid_tmpl;
-var count_tmpl, range_filter_group_tmpl;
+var count_tmpl, range_filter_group_tmpl, about_tmpl;
 
 $(document).ready(function () {
     ajax_load("stats", {}, update_counts);
@@ -32,7 +32,7 @@ $(document).ready(function () {
 /* About */
 
 function load_about_page(){
-
+    $(page_main).append(about_tmpl());
 }
 
 /* Sides */
@@ -55,8 +55,8 @@ function add_side_filters(){
     add_range_filter("price", side_info["prices"].min, side_info["prices"].max, 1,  "&#8364; ");
 }
 
-function fetch_sides(){
-    fetch("sides", fetch_sides_parameters, side_grid_tmpl);
+function fetch_sides(page){
+    fetch("sides", fetch_sides_parameters, side_grid_tmpl, page);
 }
 
 function fetch_sides_parameters(){
@@ -100,8 +100,8 @@ function add_pizza_filters(){
     add_range_filter("slices", pizza_info["slices"].min, pizza_info["slices"].max, 2);
 }
 
-function fetch_pizza(){
-    fetch("pizza", fetch_pizza_parameters, pizza_grid_tmpl);
+function fetch_pizza(page){
+    fetch("pizza", fetch_pizza_parameters, pizza_grid_tmpl, page);
 }
 
 function fetch_pizza_parameters(){
@@ -132,6 +132,7 @@ function compile_templates(){
     filter_group_tmpl = Handlebars.compile($("#filter_group_tmpl").html());
     range_filter_group_tmpl = Handlebars.compile($("#range_filter_group_tmpl").html());
     table_page_tmpl = Handlebars.compile($("#table_page_tmpl").html());
+    about_tmpl = Handlebars.compile($("#about_tmpl").html());
     spinner_tmpl = Handlebars.compile($("#spinner_tmpl").html());
     no_result_tmpl = Handlebars.compile($("#no_result_tmpl").html());
     pizza_grid_tmpl = Handlebars.compile($("#pizza_grid_tmpl").html());
@@ -283,11 +284,13 @@ function sort_dir_handler(){
 
 /* Loading */
 
-function fetch(endpoint, param_func, template){
+function fetch(endpoint, param_func, template, page){
     haze_load(get_table_wrapper(), function(){
         ajax_load(endpoint, param_func(), function(input){
             if( input.data.length > 0 ){
-                get_table_wrapper().empty().append(template({"items": input["data"], "count": input["count"]}));
+                if( page == 0 )
+                    get_table_wrapper().empty();
+                get_table_wrapper().prepend(template({"items": input["data"], "count": input["count"]}));
                 update_count(input["count"], product_total);
             }else{
                 no_result();
@@ -299,7 +302,7 @@ function fetch(endpoint, param_func, template){
 }
 
 function refresh_data(){
-    fetch_function();
+    fetch_function(0);
 }
 
 function ajax_load(func, args, callback){

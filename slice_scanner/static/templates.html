@@ -157,3 +157,36 @@
         </div>
     {{/each}}
 </script>
+
+<script id="about_tmpl" type="text/x-handlebars-template">
+    <div class="container-fluid about-wrapper">
+        <div class="col-sm-6">
+            <h2>About</h2>
+            <p>
+                Slice Scanner is a web application which aggregates data from the top pizza vendors in the country and presents
+                them to the discerning pizza lover. I used Bootstrap for the UI which is served up by a Flask application.
+                I used Selenium to scrape the data and AWS for deployment.
+            </p>
+            <p>
+                Slice Scanner was just a bit of fun and a chance to play with tools like Selenium and AWS, but if you have any feedback I'd like to hear it!
+                <div>
+                    <img src="/img/me.jpg" width="140" height="140">
+                    <a class="portfolio" href="http://www.ianluddy.com">ianluddy.com</a>
+                </div>
+            </p>
+        </div>
+        <div class="col-sm-6 vendor-list">
+            <h2>Resources</h2>
+            <div class="resource">
+                <div><a href="https://www.python.org/">Python</a></div>
+                <div><a href="http://flask.pocoo.org/">Flask</a></div>
+                <div><a href="https://jquery.com/">jQuery</a></div>
+                <div><a href="http://handlebarsjs.com/">Handlebars</a></div>
+                <div><a href="http://getbootstrap.com/">Bootstrap</a></div>
+                <div><a href="http://www.seleniumhq.org/">Selenium</a></div>
+                <div><a href="https://aws.amazon.com/">AWS</a></div>
+                <div><a href="http://ionden.com/a/plugins/ion.rangeSlider/en.html">Ion Range Slider</a></div>
+            </div>
+        </div>
+    </div>
+</script>

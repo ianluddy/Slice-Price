@@ -68,26 +68,25 @@ class Vendor(Parser):
         wrapped_execute(self._get_pizzas)
         wrapped_execute(self._get_sides)
         wrapped_execute(self._get_desserts)
-        wrapped_execute(self._get_meals)
 
     #### Implement ####
 
     @abc.abstractmethod
     def _login(self):
         """ Login to site, set address etc. """
+        pass
 
     @abc.abstractmethod
     def _get_pizzas(self):
         """ Get list of Pizzas """
-
-    @abc.abstractmethod
-    def _get_meals(self):
-        """ Get list of Meals """
+        pass
 
     @abc.abstractmethod
     def _get_sides(self):
         """ Get list of Sides """
+        pass
 
     @abc.abstractmethod
     def _get_desserts(self):
         """ Get list of Desserts """
+        pass
