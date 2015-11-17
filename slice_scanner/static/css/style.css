@@ -7847,13 +7847,6 @@ body{
 .about-wrapper h2{
     margin-bottom: 15px;
 }
-.about-wrapper img{
-    border-radius: 140px;
-    border: 6px solid #ddd;
-}
-.about-wrapper a.portfolio{
-    padding-left: 14px;
-}
 .about-wrapper a{
     display: block;
     color: #1ab394;
@@ -7893,8 +7886,17 @@ body{
         margin-top: 16px;
     }
 }
-
-@media (max-width: 550px) {
+@media (max-width: 767px) {
+    .about-wrapper{
+        text-align: center;
+    }
+}
+@media (max-width: 722px) {
+    .sl-grid-product{
+        margin-left: 10%;
+    }
+}
+@media (max-width: 611px) {
     .sl-grid-product{
         margin-left: calc(50% - 92px);
     }
