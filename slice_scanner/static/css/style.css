@@ -7881,6 +7881,7 @@ body{
     #sl-filter-wrapper, #sl-table-wrapper-wrapper{
         width: 100%;
         display: block;
+        text-align: center;
     }
     #sl-table-wrapper{
         margin-top: 16px;
