@@ -24,7 +24,7 @@
 </script>
 
 <script id="range_filter_group_tmpl" type="text/x-handlebars-template">
-    <div id="{{id}}" class="col-lg-12 sl-filter-group sl-range-filter-group">
+    <div id="{{id}}" class=" sl-filter-group sl-range-filter-group">
         <h4>
             {{title}}
             {{#if help}}
@@ -78,14 +78,23 @@
                             <button id="sl-sort-desc" sort_dir="-1" type="button" class="btn btn-primary"><i class="fa fa-sort-amount-desc"></i></button>
                             <button id="sl-sort-asc" sort_dir="1" type="button" class="btn btn-white"><i class="fa fa-sort-amount-asc"></i></button>
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span id="sl-sorted-by-label">Score</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul id="sl-sort-by" class="dropdown-menu">
-                                    <li><a href="#">Score</a></li>
-                                    <li><a href="#">Price</a></li>
-                                </ul>
+                                {{#if show_score_sorter}}
+                                    <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span id="sl-sorted-by-label">Score</span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul id="sl-sort-by" class="dropdown-menu">
+                                        <li><a id="score_option" href="#">Score</a></li>
+                                        <li><a id="price_option" href="#">Price</a></li>
+                                    </ul>
+                                {{else}}
+                                    <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span id="sl-sorted-by-label">Price</span>
+                                    </button>
+                                    <ul id="sl-sort-by" class="dropdown-menu">
+                                        <li><a id="price_option" href="#">Price</a></li>
+                                    </ul>
+                                {{/if}}
                             </div>
                         </div>
                     </span>
@@ -101,6 +110,55 @@
 <script id="pizza_grid_tmpl" type="text/x-handlebars-template">
     {{#each items}}
         <div class="sl-grid-product grid-pizza">
+            <div class="sl-product-stats">
+                <div class="sl-product-stats-body">
+                    <div class="small m-t-xs">
+                        <strong>Area</strong>
+                        <br/>
+                        {{ this.area }} in<sup>2</sup>
+                    </div>
+                    <div class="small m-t-xs">
+                        <strong>Area Per Slice</strong>
+                        <br/>
+                        {{ this.area_per_slice }} in<sup>2</sup>
+                    </div>
+                    <div class="small m-t-xs">
+                        <strong>Cost</strong>
+                        <br/>
+                        &#8364; {{decimal this.price }}
+                    </div>
+                    <div class="small m-t-xs">
+                        <strong>Cost Per Slice</strong>
+                        <br/>
+                        &#8364; {{decimal this.cost_per_slice }}
+                    </div>
+                    <div class="small m-t-xs">
+                        <strong>Cost Per Square Inch</strong>
+                        <br/>
+                        &#8364; {{decimal this.cost_psi }}
+                    </div>
+                    <div class="small m-t-xs">
+                        <strong>Slices</strong>
+                        <br/>
+                        {{ this.slices }}
+                    </div>
+                    <div class="small m-t-xs">
+                        <strong>Diameter</strong>
+                        <br/>
+                        {{ this.diameter }}"
+                    </div>
+                    <div class="small m-t-xs">
+                        <strong>Base</strong>
+                        <br/>
+                        {{ this.base }}
+                    </div>
+                    <div class="small m-t-xs">
+                        <strong>Score</strong>
+                        <br/>
+                        {{ this.score }}
+                    </div>
+                </div>
+            </div>
             <div class="sl-product-vendor {{vendor}}">
                 <img src="/img/{{vendor}}.png" width="90" height="30">
             </div>
@@ -119,17 +177,6 @@
                         <strong>Score:</strong> {{ this.score }}
                     </div>
                 </div>
-                <!--<div class="sl-product-stats">-->
-                    <!--<div class="small m-t-xs">-->
-                        <!--<strong>Cost Per Square Inch:</strong> {{ this.cost_psi }}-->
-                    <!--</div>-->
-                    <!--<div class="small m-t-xs">-->
-                        <!--<strong>Area Per Slice:</strong> {{ this.area_per_slice }}-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="sl-product-stamp">-->
-                    <!--{{elapsed this.stamp}}-->
-                <!--</div>-->
             </div>
         </div>
     {{/each}}

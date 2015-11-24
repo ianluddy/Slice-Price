@@ -7559,6 +7559,7 @@ body.skin-3 {
 }
 .sl-grid-product{
     max-width: 185px;
+    text-align: left !important;
 }
 .sl-grid-product:hover .sl-product-stats{
     display: block;
@@ -7570,17 +7571,29 @@ body.skin-3 {
     margin-bottom: 3px;
 }
 .sl-product-stats{
-    display: none;
     position: absolute;
-    top: 0px;
-    background-color: #222;
-    color: #fff;
-    bottom: 300px;
-    left: 0px;
-    right: 0px;
-    opacity: 0.7;
-    padding: 18px;
+    width: 184px;
+}
+.sl-product-stats-body{
+    opacity: 0;
+    background-color: #fff;
+    padding-left: 18px;
+    padding-top: 10px;
     font-size: 1.2em;
+    height: 400px;
+    width: 100%;
+    position: relative;
+    top: 30px;
+    z-index: 100;
+    border: 1px solid #ddd;
+	-ms-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+.sl-product-stats-body:hover, .sl-product-stats-body:active, .sl-product-stats-body:focus{
+    opacity: 0.9;
 }
 .sl-product-size{
     font-size: 14px;

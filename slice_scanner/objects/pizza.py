@@ -38,7 +38,7 @@ class Pizza(Product):
         "Tomatoes": ["tomato", "sunblush"],
         "Cajun Chicken": ["cajun chicken"],
         "Tandoori Chicken": ["tandoori chicken"],
-        "Chicken": ["chicken", "chicken breast strips", "chargrilled chicken"],
+        "Chicken": ["chicken", "chicken breast strips", "char"],
         "Jalapenos": ["jalap"],
         "Pepperoni": ["pepperoni"],
         "Meatballs": ["meatball"],

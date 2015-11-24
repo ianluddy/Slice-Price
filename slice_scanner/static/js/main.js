@@ -43,7 +43,7 @@ function load_sides_page(){
             ajax_load("sides/types", {}, function(input){side_info["types"] = input;}),
             ajax_load("sides/prices", {}, function(input){side_info["prices"] = input;})
         ).done(function(){
-            draw_product_page(add_side_filters, fetch_sides);
+            draw_product_page(add_side_filters, fetch_sides, false);
             product_total = stats["sides"]; // Total count for current selection
         });
     });
@@ -55,8 +55,8 @@ function add_side_filters(){
     add_range_filter("price", side_info["prices"].min, side_info["prices"].max, 1,  "&#8364; ");
 }
 
-function fetch_sides(page){
-    fetch("sides", fetch_sides_parameters, side_grid_tmpl, page);
+function fetch_sides(){
+    fetch("sides", fetch_sides_parameters, side_grid_tmpl);
 }
 
 function fetch_sides_parameters(){
@@ -65,7 +65,7 @@ function fetch_sides_parameters(){
         "type": JSON.stringify(get_filter("types")),
         "price": JSON.stringify(get_range_filter("price")),
         "page": page,
-        "sort_by": sort_by,
+        "sort_by": "price", // Only sortable on price for the moment
         "sort_dir": sort_dir,
     };
 }
@@ -84,7 +84,7 @@ function load_pizza_page(){
             ajax_load("pizza/diameters", {}, function(input){pizza_info["diameters"] = input;}),
             ajax_load("pizza/slices", {}, function(input){pizza_info["slices"] = input;})
         ).done(function(){
-            draw_product_page(add_pizza_filters, fetch_pizza);
+            draw_product_page(add_pizza_filters, fetch_pizza, true);
             product_total = stats["pizza"]; // Total count for current selection
         });
     });
@@ -100,8 +100,8 @@ function add_pizza_filters(){
     add_range_filter("slices", pizza_info["slices"].min, pizza_info["slices"].max, 2);
 }
 
-function fetch_pizza(page){
-    fetch("pizza", fetch_pizza_parameters, pizza_grid_tmpl, page);
+function fetch_pizza(){
+    fetch("pizza", fetch_pizza_parameters, pizza_grid_tmpl, true);
 }
 
 function fetch_pizza_parameters(){
@@ -206,9 +206,11 @@ function get_range_filter(id){
 
 function add_tab_handlers(){
     $("#tabs > h3").on("click", function(){
-        $(this).addClass("active").siblings("h3").removeClass("active");
-        clear();
-        window[$(this).attr("target")]();
+        if( !$(this).hasClass("active") ){
+            $(this).addClass("active").siblings("h3").removeClass("active");
+            clear();
+            window[$(this).attr("target")]();
+        }
     });
     $("#tabs > h3").first().click();
 }
@@ -217,9 +219,10 @@ function update_counts(input){
     stats = input;
 }
 
-function draw_product_page(add_filters, fetcher){
+function draw_product_page(add_filters, fetcher, show_score_sorter){
     fetch_function = fetcher;
-    $(page_main).append(table_page_tmpl());
+    $(page_main).append(table_page_tmpl({"show_score_sorter": show_score_sorter}));
+    sort_dir = -1;
     remove_filter_handler();
     add_filters();
     add_filter_handler();
@@ -284,13 +287,18 @@ function sort_dir_handler(){
 
 /* Loading */
 
-function fetch(endpoint, param_func, template, page){
+function fetch(endpoint, param_func, template, show_score_option){
     haze_load(get_table_wrapper(), function(){
         ajax_load(endpoint, param_func(), function(input){
             if( input.data.length > 0 ){
-                if( page == 0 )
-                    get_table_wrapper().empty();
-                get_table_wrapper().prepend(template({"items": input["data"], "count": input["count"]}));
+                get_table_wrapper().empty();
+                get_table_wrapper().prepend(
+                    template({
+                        "items": input["data"],
+                        "count": input["count"],
+                        "score_sort": show_score_option
+                    })
+                );
                 update_count(input["count"], product_total);
             }else{
                 no_result();

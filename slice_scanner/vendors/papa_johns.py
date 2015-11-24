@@ -55,6 +55,7 @@ class PapaJohns(Vendor):
             return _get_description().replace("&", ",").split(",")
 
         def _get_description():
+            self._wait_for_css('.product-desc')
             return self._get_css_str('.product-desc')
 
         def _get_price():

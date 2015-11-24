@@ -6,8 +6,8 @@ class Side(Product):
     # Sides normaliser. For converting "Frank's RedHot Wings" to "Chicken"
     side_normaliser = {
         "Combo": ["mix box", "combo"],
-        "Dip": ["dip"],
         "Chicken": ["wing", "chick", "kicker"],
+        "Dip": ["dip"],
         "Fries": ["fries", "fry"],
         "Garlic Bread": ["garlic pizza", "garlic bread"],
         "Dough Balls": ["dough ball"],
