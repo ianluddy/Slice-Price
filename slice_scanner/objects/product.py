@@ -7,6 +7,7 @@ class Product():
     def __init__(self, **kwargs):
         self.vendor = kwargs["vendor"]
         self.name = kwargs["name"]
+        self.url = kwargs["url"]
         self.price = float(kwargs["price"])
         self.description = kwargs["description"] if kwargs.get("description") else kwargs["name"]
         self.img = kwargs.get("img")
@@ -23,6 +24,7 @@ class Product():
             product_dict["img"] = self.img
             product_dict["stamp"] = self.stamp
             product_dict["hash"] = self._hash()
+            product_dict["url"] = self.url
             return product_dict
         return None
 

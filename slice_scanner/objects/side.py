@@ -6,16 +6,17 @@ class Side(Product):
     # Sides normaliser. For converting "Frank's RedHot Wings" to "Chicken"
     side_normaliser = {
         "Combo": ["mix box", "combo"],
-        "Chicken": ["wing", "chick", "kicker"],
-        "Dip": ["dip"],
+        "Chicken": ["wing", "chick", "kicker", "dipper"],
+        "Dip": ["dips"],
         "Fries": ["fries", "fry"],
         "Garlic Bread": ["garlic pizza", "garlic bread"],
-        "Dough Balls": ["dough ball"],
+        "Dough Balls": ["dough ball", "papa's bites"],
         "Potato Wedges": ["potato", "wedge"],
         "Nachos": ["nacho"],
         "Coleslaw": ["slaw"],
         "Pasta": ["pasta", "macaroni"],
         "Cheese": ["cheese triangle"],
+        "Sausages": ["sausage"],
     }
 
     def __init__(self, **kwargs):

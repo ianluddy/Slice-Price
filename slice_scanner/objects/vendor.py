@@ -60,7 +60,7 @@ class Vendor(Parser):
 
     def _new_side(self, name, price, img, description=None):
         self._new_product(
-            Side, vendor=self.id, name=name, price=price, img=img, description=description
+            Side, vendor=self.id, name=name, price=price, img=img, description=description, url=self.site
         )
 
     def parse(self):
@@ -84,9 +84,4 @@ class Vendor(Parser):
     @abc.abstractmethod
     def _get_sides(self):
         """ Get list of Sides """
-        pass
-
-    @abc.abstractmethod
-    def _get_desserts(self):
-        """ Get list of Desserts """
         pass
