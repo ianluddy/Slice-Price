@@ -4,7 +4,7 @@ from slice_scanner.objects.vendor import Vendor
 class FourStar(Vendor):
 
     id = "Four Star Pizza"
-    site = "https://www.fourstarpizza.ie"
+    site = "http://www.fourstarpizza.ie"
 
     slice_reference = { # TODO - verify these
         16: 10,

@@ -55,7 +55,7 @@ class Vendor(Parser):
         diameter = self._diameter_from_size(size)
         self._new_product(
             Pizza, vendor=self.id, name=name, toppings=toppings, size=size,
-            diameter=diameter, price=price, base=base, slices=slices, img=img
+            diameter=diameter, price=price, base=base, slices=slices, img=img, url=self.site
         )
 
     def _new_side(self, name, price, img, description=None):

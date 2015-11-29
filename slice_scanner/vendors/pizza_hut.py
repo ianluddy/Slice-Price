@@ -3,7 +3,7 @@ from slice_scanner.objects.vendor import Vendor
 class PizzaHut(Vendor):
 
     id = "Pizza Hut"
-    site = "https://www.pizzahutdelivery.ie/"
+    site = "http://www.pizzahutdelivery.ie"
 
     diameter_reference = {
         "large": 13.5,

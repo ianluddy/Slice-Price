@@ -83,6 +83,7 @@ class Pizza(Product):
         self.base = kwargs["base"]
         self.diameter = kwargs["diameter"]
         self.slices = kwargs["slices"]
+        self.url = kwargs.get("url")
         toppings, sauce = self._organise_toppings(self._clean_toppings(kwargs["toppings"]))
         self.sauce = self._normalise_data(self.sauce_normaliser, sauce)
         self.toppings = [self._normalise_data(self.topping_normaliser, topping) for topping in toppings]
@@ -181,7 +182,7 @@ class Pizza(Product):
     def to_dict(self):
         pizza_dict = super(Pizza, self).to_dict()
         if pizza_dict:
-            for key in ["diameter", "slices", "base", "size", "toppings", "style", "base_style", "description"]:
+            for key in ["diameter", "slices", "base", "size", "toppings", "style", "base_style", "description", "url"]:
                 pizza_dict[key] = getattr(self, key)
             pizza_dict["area"] = self._area()
             pizza_dict["area_per_slice"] = self._area_per_slice()

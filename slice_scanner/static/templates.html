@@ -24,7 +24,7 @@
 </script>
 
 <script id="range_filter_group_tmpl" type="text/x-handlebars-template">
-    <div id="{{id}}" class=" sl-filter-group sl-range-filter-group">
+    <div id="{{id}}" class=" sl-filter-group col-lg-12 sl-range-filter-group">
         <h4>
             {{title}}
             {{#if help}}
@@ -111,7 +111,7 @@
     {{#each items}}
         <div class="sl-grid-product grid-pizza">
             <div class="sl-product-stats">
-                <div class="sl-product-stats-body">
+                <div onclick="window.open('{{ this.url }}', '_blank');" class="sl-product-stats-body">
                     <div class="small m-t-xs">
                         <strong>Area</strong>
                         <br/>
