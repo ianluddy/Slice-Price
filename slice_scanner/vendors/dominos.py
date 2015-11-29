@@ -20,17 +20,12 @@ class Dominos(Vendor):
         "personal": 4
     }
 
-    def _get_desserts(self):
-        pass
-
     def _login(self):
         self.web_driver.get(self.site)
         self._script('$($("#store-finder-search select option").get(7)).prop("selected", "selected").trigger("change")')
         self._script('$("#store-finder-search .btn-primary").click()')
         self._wait_for_css(".store-details-row .btn-secondary")
         self._script('$(".store-details-row .btn-secondary").click()')
-
-    #### Sides ####
 
     def _get_sides(self):
 

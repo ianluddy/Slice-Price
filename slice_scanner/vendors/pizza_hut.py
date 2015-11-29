@@ -15,13 +15,15 @@ class PizzaHut(Vendor):
 
     slice_reference = {
         "large": 10,
+        "regular": 8,
         "medium": 8,
         "small": 6,
         "personal": 4
     }
 
-    def _get_desserts(self):
-        pass
+    def _login(self):
+        self.web_driver.get("http://www.pizzahutdelivery.ie/order-online.php?location_id=2633&method=delivery")
+        self._wait()
 
     def _get_sides(self):
 
@@ -141,7 +143,3 @@ class PizzaHut(Vendor):
         _get_current_pizzas()
         _select_size("Large Pizzas")
         _get_current_pizzas()
-
-    def _login(self):
-        self.web_driver.get("http://www.pizzahutdelivery.ie/order-online.php?location_id=2633&method=delivery")
-        self._wait()

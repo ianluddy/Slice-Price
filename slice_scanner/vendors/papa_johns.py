@@ -18,11 +18,54 @@ class PapaJohns(Vendor):
         "large": 10
     }
 
-    def _get_desserts(self):
-        pass
+    def _login(self):
+        self.web_driver.get("https://order.papajohns.ie/")
+        self._wait_for_css("#countyList")
+        self._script('$("#countyList ul ul a:first").click()')
+        self._wait()
+        self._script('$(".button.startOrder-link").click()')
+        self._wait()
+        self._wait()
+        self._script('$("#orderSetupSteps input:first").click()')
+        self._wait()
+        self._script('$("#OrderSetupSubmit").click()')
+        self._wait()
 
     def _get_sides(self):
-        pass
+
+        def _mark_sides_unparsed():
+            return self._script('$(".row").addClass("unparsed")')
+
+        def _mark_side_parsed():
+            return self._script('$(".row.unparsed:first").removeClass("unparsed")')
+
+        def _remaining_unparsed_sides():
+            return self._element_count(".row.unparsed")
+
+        def _get_name():
+            return self._get_css_str(".row.unparsed:first .product-name").strip()
+
+        def _get_image():
+            return self._get_css_attr(".row.unparsed:first .product-image img", "src")
+
+        def _get_price():
+            return self._get_str_fl(self._get_css_str(".row.unparsed:first .product-price-value").strip())
+
+        def _get_description():
+            return self._get_css_str(".row.unparsed:first .product-desc-with-image")
+
+        self._wait()
+        self._script('$("a:visible:contains(\'%s\')").click()' % 'Sides')
+        self._wait()
+        self._wait()
+        self._wait()
+        _mark_sides_unparsed()
+        self._wait()
+        while _remaining_unparsed_sides() > 0:
+            self._new_side(_get_name(), _get_price(), _get_image(), _get_description())
+            self._wait()
+            _mark_side_parsed()
+            self._wait()
 
     def _get_pizzas(self):
 
@@ -105,16 +148,3 @@ class PapaJohns(Vendor):
 
         _parse_pizza_category("Finest")
         _parse_pizza_category("Classics")
-
-    def _login(self):
-        self.web_driver.get("https://order.papajohns.ie/")
-        self._wait_for_css("#countyList")
-        self._script('$("#countyList ul ul a:first").click()')
-        self._wait()
-        self._script('$(".button.startOrder-link").click()')
-        self._wait()
-        self._wait()
-        self._script('$("#orderSetupSteps input:first").click()')
-        self._wait()
-        self._script('$("#OrderSetupSubmit").click()')
-        self._wait()

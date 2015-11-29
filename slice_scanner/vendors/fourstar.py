@@ -8,6 +8,7 @@ class FourStar(Vendor):
 
     slice_reference = { # TODO - verify these
         16: 10,
+        14: 10,
         12: 8,
         9: 6,
         7: 4
@@ -16,9 +17,6 @@ class FourStar(Vendor):
     @staticmethod
     def complete_url(tail):
         return "https://weborder3.microworks.com%s" % tail if tail else None
-
-    def _get_desserts(self):
-        pass
 
     def _login(self):
         pass
