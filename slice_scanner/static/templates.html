@@ -84,15 +84,15 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul id="sl-sort-by" class="dropdown-menu">
-                                        <li><a id="score_option" href="#">Score</a></li>
-                                        <li><a id="price_option" href="#">Price</a></li>
+                                        <li><a id="score_option">Score</a></li>
+                                        <li><a id="price_option">Price</a></li>
                                     </ul>
                                 {{else}}
                                     <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span id="sl-sorted-by-label">Price</span>
                                     </button>
                                     <ul id="sl-sort-by" class="dropdown-menu">
-                                        <li><a id="price_option" href="#">Price</a></li>
+                                        <li><a id="price_option" >Price</a></li>
                                     </ul>
                                 {{/if}}
                             </div>
@@ -184,7 +184,7 @@
 
 <script id="side_grid_tmpl" type="text/x-handlebars-template">
     {{#each items}}
-        <div class="sl-grid-product grid-side {{vendor}}">
+        <div  onclick="window.open('{{ this.url }}', '_blank');" class="sl-grid-product grid-side {{vendor}}">
             <div class="sl-product-vendor {{vendor}}">
                 <img src="/img/{{vendor}}.png" width="90" height="30">
             </div>

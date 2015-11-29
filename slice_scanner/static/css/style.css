@@ -7621,6 +7621,9 @@ body.skin-3 {
     background-position: -5px -2px;
     background-size: 105%;
 }
+.grid-side .sl-product-img.Papa.Johns {
+    background-size: 100%;
+}
 .grid-side.Four.Star .image-border-bottom{
     background-color: white;
     height: 20px;
@@ -7684,6 +7687,9 @@ body.skin-3 {
 .grid-side .sl-product-vendor.Pizza.Hut{
     top: 349px;
 }
+.grid-side .sl-product-vendor.Papa.Johns{
+    top: 344px;
+}
 .sl-product-vendor img{
     width: 90px;
     height: 30px;
@@ -7702,8 +7708,7 @@ body.skin-3 {
     float: right;
 }
 #sl-table-control{
-    /*margin-bottom: 35px;*/
-    /*margin-right: 50px;*/
+    z-index: 150;
 }
 #sl-table-control > span{
     float: right;
@@ -7868,6 +7873,9 @@ body{
 }
 .about-wrapper a:hover{
     opacity: 0.6;
+}
+#sl-sort-by, #score_option, #price_option{
+    z-index: 150;
 }
 @media (max-width: 900px) {
     #nav-wrapper{

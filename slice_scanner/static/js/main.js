@@ -51,7 +51,7 @@ function load_sides_page(){
 
 function add_side_filters(){
     add_filter("vendors", vendor_info, "active");
-    add_filter("types", side_info["types"], "active");
+    add_filter("types", side_info["types"]);
     add_range_filter("price", side_info["prices"].min, side_info["prices"].max, 1,  "&#8364; ");
 }
 
