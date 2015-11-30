@@ -31,6 +31,9 @@ class Dominos(Vendor):
         def _mark_sides_unparsed():
             self._script('$("#Sides .product").addClass("unparsed")')
 
+        def _sides_ready():
+            return self._element_count('#Sides .product:visible') > 0
+
         def _mark_side_parsed():
             self._script('$("#Sides .product.unparsed:first").removeClass("unparsed")')
 
@@ -38,15 +41,15 @@ class Dominos(Vendor):
             return self._element_count("#Sides .product.unparsed") > 0
 
         def _get_side_title():
-            return self._get_css_str('#Sides .product.unparsed:first .product-title')
+            return self._get_css_str('#Sides .product.unparsed:first .product-title:first')
 
         def _get_side_image():
-            return self._get_css_attr('#Sides .product.unparsed:first img', 'src')
+            return self._get_css_attr('#Sides .product.unparsed:first img', 'lazy-src')
 
         def _get_side_price():
             return self._get_str_fl(self._get_css_str('#Sides .product.unparsed:first .product-price'))
 
-        while not self._element_count('#Sides .product'):
+        while not _sides_ready():
             self._wait()
 
         _mark_sides_unparsed()
