@@ -17,3 +17,4 @@ https://play.google.com/store/apps/details?id=iandroid.volcoholic
 * [Selenium](http://www.seleniumhq.org/)
 * [AWS](http://aws.amazon.com/)
 * [Ion Range Slider](http://ionden.com/a/plugins/ion.rangeSlider/en.html)
+* [Font Awesome](http://fontawesome.io/)

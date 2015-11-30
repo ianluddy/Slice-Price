@@ -16,6 +16,7 @@ var side_info = {};
 var vendor_info = [];
 var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, side_grid_tmpl, pizza_grid_tmpl;
 var count_tmpl, range_filter_group_tmpl, about_tmpl;
+var ajax_loading = false;
 
 $(document).ready(function () {
     ajax_load("stats", {}, update_counts);
@@ -23,7 +24,7 @@ $(document).ready(function () {
     page_main = $("#page_main");
     page_title = $("#page_title");
     setInterval(run_tasks, TASK_DELAY);
-    //toaster("Welcome!", "Use the filters to find your ideal Pizza!");
+    toaster("Hello!", "Use the filters to compare Pizzas from around the country :)");
     $.when(
         ajax_load('templates.html', {}, attach_templates)
     ).done(templates_loaded);
@@ -38,6 +39,7 @@ function load_about_page(){
 /* Sides */
 
 function load_sides_page(){
+    ajax_loading = true;
     show_loader($("body"), function(){
         $.when(
             ajax_load("sides/types", {}, function(input){side_info["types"] = input;}),
@@ -73,6 +75,7 @@ function fetch_sides_parameters(){
 /* Pizza */
 
 function load_pizza_page(){
+    ajax_loading = true;
     show_loader($("body"), function(){
         $.when(
             ajax_load("pizza/bases", {}, function(input){pizza_info["bases"] = input;}),
@@ -206,7 +209,7 @@ function get_range_filter(id){
 
 function add_tab_handlers(){
     $("#tabs > h3").on("click", function(){
-        if( !$(this).hasClass("active") ){
+        if( !$(this).hasClass("active") && !ajax_loading){
             $(this).addClass("active").siblings("h3").removeClass("active");
             clear();
             window[$(this).attr("target")]();
@@ -305,6 +308,7 @@ function fetch(endpoint, param_func, template, show_score_option){
             }
             hide_haze(get_table_wrapper());
             hide_loader($("body"));
+            ajax_loading = false;
         })
     });
 }

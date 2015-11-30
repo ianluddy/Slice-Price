@@ -1,4 +1,3 @@
-from time import sleep
 from slice_scanner.objects.vendor import Vendor
 
 class Dominos(Vendor):
@@ -29,62 +28,38 @@ class Dominos(Vendor):
 
     def _get_sides(self):
 
-        def _sides_ready():
-            return int(self._script('return $("#Sides .product").length')) > 0
+        def _mark_sides_unparsed():
+            self._script('$("#Sides .product").addClass("unparsed")')
 
-        def _get_side_name(side_id):
-            return self._get_css_str("#Sides #%s h1:first" % str(side_id))
+        def _mark_side_parsed():
+            self._script('$("#Sides .product.unparsed:first").removeClass("unparsed")')
 
-        def _side_variants_remaining(side_id):
-            return self._script('return $("#%s .product-variants > .variant").length' % str(side_id)) > 0
+        def _unparsed_sides_remaining():
+            return self._element_count("#Sides .product.unparsed") > 0
 
-        def _get_side_variant_description(side_id):
-            return self._get_css_str('#%s .product-variants > .variant:first h1' % str(side_id))
+        def _get_side_title():
+            return self._get_css_str('#Sides .product.unparsed:first .product-title')
 
-        def _get_side_variant_quantity(side_id):
-            quantity = self._get_str_int(_get_side_variant_description(side_id))
-            if quantity:
-                return quantity
-            return 1
+        def _get_side_image():
+            return self._get_css_attr('#Sides .product.unparsed:first img', 'src')
 
-        def _get_side_variant_price(side_id):
-            return self._get_str_fl(
-                self._get_css_str('#%s .product-variants > .variant:first h2' % str(side_id) )
-            )
+        def _get_side_price():
+            return self._get_str_fl(self._get_css_str('#Sides .product.unparsed:first .product-price'))
 
-        def _mark_side_variant_parsed(side_id):
-            self._script('$("#%s .product-variants > .variant").first().removeClass("variant").hide()' % str(side_id))
-
-        def _get_side_description(side_id):
-            return self._get_css_str("#Sides #%s p:first" % str(side_id))
-
-        def _select_side(side_id):
-            self._script('$("#%s .btn-positive[resource-name=Choose]").click()' % str(side_id))
-
-        def _get_side_ids():
-            return list(set(self._script('return $("#Sides .product").map(function(){ return parseInt($(this).attr("id"));}).get();')))
-
-        self.web_driver.get("%s/menu" % self.site)
-        self._wait_for_alert(timeout=1)
-
-        while not _sides_ready():
-            sleep(0.3)
-
-        for side_id in _get_side_ids():
-            name = _get_side_name(side_id)
-            description = _get_side_description(side_id)
-            size = "standard"
-            _select_side(side_id)
+        while not self._element_count('#Sides .product'):
             self._wait()
-            while _side_variants_remaining(side_id):
-                quantity = _get_side_variant_quantity(side_id)
-                price = _get_side_variant_price(side_id)
-                self._new_side(
-                    name, price, size, quantity, None, description
-                )
-                _mark_side_variant_parsed(side_id)
 
-    #### Pizzas ####
+        _mark_sides_unparsed()
+        self._wait()
+        while _unparsed_sides_remaining():
+            self._new_side(
+                _get_side_title(),
+                _get_side_price(),
+                _get_side_image(),
+                _get_side_title()
+            )
+            _mark_side_parsed()
+            self._wait()
 
     def _get_pizzas(self):
 

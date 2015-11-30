@@ -67,7 +67,6 @@ class Vendor(Parser):
         self._login()
         wrapped_execute(self._get_pizzas)
         wrapped_execute(self._get_sides)
-        wrapped_execute(self._get_desserts)
 
     #### Implement ####
 
