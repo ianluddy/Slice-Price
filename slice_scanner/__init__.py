@@ -1,4 +1,7 @@
 import argparse
+from tornado.wsgi import WSGIContainer
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
 from Queue import Queue
 from threading import Thread
 from vendors import dominos
@@ -41,10 +44,14 @@ if cfg["scraper"]["enabled"]:
 
 # Web Server
 if cfg["web_server"]["enabled"]:
-    # Create Server
+    # Create App
     app = Flask(__name__, static_url_path='')
     documentor = Autodoc(app)
 
-    # Run Server
+    # Create Views
     from slice_scanner import views
-    Thread(target=app.run, args=(cfg["web_server"]["host"], cfg["web_server"]["port"]) ).start()
+
+    # Run with Tornado
+    http_server = HTTPServer(WSGIContainer(app))
+    http_server.listen(cfg["web_server"]["port"], address=cfg["web_server"]["host"])
+    IOLoop.instance().start()
