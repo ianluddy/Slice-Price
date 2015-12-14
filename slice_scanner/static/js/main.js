@@ -322,9 +322,11 @@ function ajax_load(func, args, callback){
         url: func,
         data: args
     }).done(function(input){
-        //console.log(input);
+        console.log(input);
         if (callback)
             callback(input);
+    }).error(function(request, error){
+        console.log(error);
     });
 }
 
