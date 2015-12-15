@@ -13,13 +13,13 @@ var stats = {};
 var page_title, page_main;
 var pizza_info = {};
 var side_info = {};
-var vendor_info = [];
+var vendor_info = ["Dominos Pizza", "Four Star Pizza", "Papa Johns", "Pizza Hut"];
 var title_tmpl, filter_group_tmpl, table_page_tmpl, spinner_tmpl, no_result_tmpl, side_grid_tmpl, pizza_grid_tmpl;
 var count_tmpl, range_filter_group_tmpl, about_tmpl;
 var ajax_loading = false;
 
 $(document).ready(function () {
-    ajax_load("vendors", {}, function(input){vendor_info = input;});
+    ajax_load("vendors", {}, function(input){vendor_info = input;}, 5000);
     ajax_load("stats", {}, update_counts);
     page_main = $("#page_main");
     page_title = $("#page_title");
@@ -317,10 +317,11 @@ function refresh_data(){
     fetch_function(0);
 }
 
-function ajax_load(func, args, callback){
+function ajax_load(func, args, callback, timeout){
     return $.ajax({
         url: func,
-        data: args
+        data: args,
+        timeout: timeout == undefined ? 10000 : timeout
     }).done(function(input){
         console.log(input);
         if (callback)
