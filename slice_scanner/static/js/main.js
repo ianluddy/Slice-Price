@@ -19,14 +19,14 @@ var count_tmpl, range_filter_group_tmpl, about_tmpl;
 var ajax_loading = false;
 
 $(document).ready(function () {
+    ajax_load("vendors", {}, function(input){vendor_info = input;});
+    ajax_load("stats", {}, update_counts);
     page_main = $("#page_main");
     page_title = $("#page_title");
     setInterval(run_tasks, TASK_DELAY);
     toaster("Hello!", "Use the filters to compare Pizzas from around the country :)");
     $.when(
         ajax_load('templates.html', {}, attach_templates),
-        ajax_load("vendors", {}, function(input){vendor_info = input;}),
-        ajax_load("stats", {}, update_counts)
     ).done(templates_loaded);
 });
 
