@@ -30,7 +30,7 @@ def pizza():
         style=request.args.get("style"),
         base_style=request.args.get("base_style"),
         diameter=request.args.get("diameter", []),
-        vendor=request.args.get("vendor", []),
+        vendor=request.args.get("vendor"),
         slices=request.args.get("slices", []),
         price=request.args.get("price", []),
         score=request.args.get("score", []),
