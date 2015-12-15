@@ -26,7 +26,7 @@ $(document).ready(function () {
     setInterval(run_tasks, TASK_DELAY);
     toaster("Hello!", "Use the filters to compare Pizzas from around the country :)");
     $.when(
-        ajax_load('templates.html', {}, attach_templates),
+        ajax_load('templates.html', {}, attach_templates)
     ).done(templates_loaded);
 });
 
