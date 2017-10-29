@@ -23,7 +23,8 @@ args = arg_parser.parse_args()
 cfg = read_config_file(args.c)
 
 # Logging
-setup_logger(cfg["logging"]["file"], cfg["logging"]["level"])
+if cfg["logging"]["enabled"]:
+    setup_logger(cfg["logging"]["file"], cfg["logging"]["level"])
 
 # DB
 db_client = MongoClient(cfg["database"]["host"], cfg["database"]["port"])

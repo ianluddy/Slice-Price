@@ -1,16 +1,20 @@
 {
     "database": {
         "name": "slice",
-        "host": "52.31.46.181",
+        "host": "localhost",
         "port": 27017
     },
     "logging": {
-        "file": "D:\\pizza.log",
-        "level": 20
+        "file": "slice.log",
+        "level": 20,
+        "enabled": false
     },
     "scraper": {
         "frequency": "0 * * * *",
-        "web_driver": "C:\\chromedriver.exe",
+        "web_driver": "/Users/ianluddy/dev/slice_scanner/chromedriver",
+        "enabled": true
+    },
+    "cleaner": {
         "enabled": false
     },
     "web_server": {
