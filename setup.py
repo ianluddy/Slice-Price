@@ -11,7 +11,6 @@ setup(
     zip_safe=False,
     install_requires=[
         "flask",
-        "flask_autodoc",
         "flask_pymongo"
     ],
     entry_points={
