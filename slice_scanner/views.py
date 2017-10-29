@@ -51,7 +51,6 @@ def pizza_sizes():
     return json_response(db.range("pizza", "size"))
 
 @app.route('/pizza/prices')
-@documentor.doc()
 def pizza_prices():
     return json_response(db.range("pizza", "price"))
 
