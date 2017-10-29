@@ -9,7 +9,7 @@ from database import Database
 from collector import Collector
 from cleaner import Cleaner
 from keeper import Keeper
-#from flask.ext.autodoc import Autodoc
+from flask.ext.autodoc import Autodoc
 from flask_pymongo import MongoClient
 from flask import Flask
 from utils import setup_logger, read_config_file
@@ -47,7 +47,7 @@ if cfg["scraper"]["enabled"]:
 if cfg["web_server"]["enabled"]:
     # Create App
     app = Flask(__name__, static_url_path='')
-    # documentor = Autodoc(app)
+    documentor = Autodoc(app)
 
     # Create Views
     from slice_scanner import views
