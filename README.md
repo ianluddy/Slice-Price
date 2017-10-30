@@ -5,7 +5,7 @@ I used Bootstrap for the UI which is served up by a Flask application running be
 
 Slice Scanner was just a bit of fun and a chance to play with tools like Selenium and AWS, but if you have any feedback I'd like to hear it!
 
-http://www.slicescanner.ie/
+http://www.slicescanner.com/
 
 #### Stack
 
