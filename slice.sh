@@ -14,7 +14,7 @@ start() {
         echo;
     else
         echo "Starting Slice Server..."
-        sudo python /home/ec2-user/slice_scanner/app.py -c /home/ec2-user/slice.json > /dev/null 2>&1 &
+        sudo python /home/ec2-user/slice_scanner/app.py -c /home/ec2-user/slice_scanner/slice.json > /dev/null 2>&1 &
         ### Create the lock file ###
         touch /var/lock/subsys/slice
         echo "Slice Running"
@@ -37,6 +37,7 @@ stop() {
         echo;
     fi
 }
+
 # Status
 status() {
     if running $1;
@@ -58,5 +59,22 @@ running() {
     fi
 }
 
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    status
+    ;;
+  running)
+    running
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status}"
+esac
+
 ### main logic ###
-"slice" 80L, 1484C
+#slice 80L, 1484C
