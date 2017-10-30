@@ -7,16 +7,19 @@ class Side(Product):
     side_normaliser = {
         "Combo": ["mix box", "combo"],
         "Chicken": ["wing", "chick", "kicker", "dipper"],
-        "Dip": ["dips"],
-        "Fries": ["fries", "fry"],
+        "Dip": ["dips", "dip"],
+        "Fries": ["fries", "fry", "chips"],
         "Garlic Bread": ["garlic pizza", "garlic bread"],
-        "Dough Balls": ["dough ball", "papa's bites"],
+        "Dough Balls": ["dough ball", "papa's bites", "dough"],
         "Potato Wedges": ["potato", "wedge"],
         "Nachos": ["nacho"],
         "Coleslaw": ["slaw"],
         "Pasta": ["pasta", "macaroni"],
-        "Cheese": ["cheese triangle"],
+        "Cheese": ["cheese triangle", "mozzarella"],
         "Sausages": ["sausage"],
+        "Meatballs": ["meatball"],
+        "Rocket": ["rocket"],
+        "Oil": ["oil"],
     }
 
     def __init__(self, **kwargs):
