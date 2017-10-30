@@ -127,7 +127,7 @@ function fetch_pizza_parameters(){
 function templates_loaded(){
     attach_templates();
     compile_templates();
-    add_tab_handlers();
+    load_pizza_page();
 }
 
 function compile_templates(){
@@ -206,17 +206,6 @@ function get_range_filter(id){
 }
 
 /* Page */
-
-function add_tab_handlers(){
-    $("#tabs > h3").on("click", function(){
-        if( !$(this).hasClass("active") && !ajax_loading){
-            $(this).addClass("active").siblings("h3").removeClass("active");
-            clear();
-            window[$(this).attr("target")]();
-        }
-    });
-    $("#tabs > h3").first().click();
-}
 
 function update_counts(input){
     stats = input;
